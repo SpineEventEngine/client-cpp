@@ -1,13 +1,9 @@
 #!/usr/bin/env bash
 
-mkdir -p _build
-cd _build
+echo "GRPC in $1"
 
-mkdir -p generated
-cd generated
-cmake ../../generated
-cmake --build .
-cd ..
+mkdir -p .build
+cd .build
 
-cmake -DGRPC_SRC_DIR=$1 ..
+cmake -DGRPC_INSTALL_DIR=$1 ..
 cmake --build . -- -j5

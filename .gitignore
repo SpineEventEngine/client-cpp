@@ -33,3 +33,7 @@
 
 #IDE
 .idea
+
+#Generated & external dependencies
+dependencies/
+.build
