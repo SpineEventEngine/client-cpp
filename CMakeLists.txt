@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.9)
 project(spine)
 
+file (STRINGS "VERSION" VERSION)
+
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
@@ -38,5 +40,6 @@ set(SOURCE_LIB_FILES
         src/common.cpp src/common.h)
 
 
-add_library(${CMAKE_PROJECT_NAME} STATIC ${SOURCE_LIB_FILES} ${GENERATED_FILES} )
-add_dependencies(${CMAKE_PROJECT_NAME} spine_generated)
+set(LIBRARY_NAME ${CMAKE_PROJECT_NAME}-${VERSION})
+add_library(${LIBRARY_NAME} STATIC ${SOURCE_LIB_FILES} ${GENERATED_FILES} )
+add_dependencies(${LIBRARY_NAME} spine_generated)
