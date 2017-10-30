@@ -36,7 +36,7 @@ link_directories(${GRPC_SRC_DIR}/libs/opt)
 file(GLOB_RECURSE GENERATED_FILES ${GENERATED_DIR}/spine/*.pb.cc)
 
 set(SOURCE_LIB_FILES
-        common.cpp common.h)
+        src/common.cpp src/common.h)
 
 
 add_library(${CMAKE_PROJECT_NAME} STATIC ${SOURCE_LIB_FILES} ${GENERATED_FILES} )
