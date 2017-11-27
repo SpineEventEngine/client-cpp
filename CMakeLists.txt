@@ -37,7 +37,7 @@ link_directories(${GRPC_INSTALL_DIR}/lib)
 file(GLOB_RECURSE GENERATED_FILES ${GENERATED_DIR}/spine/*.pb.cc)
 
 set(SOURCE_LIB_FILES
-        src/common.cpp src/common.h)
+        src/common.cc src/common.h src/actor_request_factory.cc src/actor_request_factory.h src/command_factory.cc src/command_factory.h src/topic_factory.cc src/topic_factory.h src/query_factory.cc src/query_factory.h)
 
 
 set(LIBRARY_NAME ${CMAKE_PROJECT_NAME}-${VERSION})
