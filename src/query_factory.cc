@@ -24,7 +24,7 @@ std::unique_ptr<Query> QueryFactory::all(const std::string& type_url) {
     Target *target = Target::default_instance().New();
     target->set_type(type_url);
 
-    std::unique_ptr<Query> query = Query::default_instance().New();
+    std::unique_ptr<Query> query { Query::default_instance().New() };
 
     query->set_allocated_id(createQueryId());
 
