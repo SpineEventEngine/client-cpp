@@ -6,6 +6,8 @@ file (STRINGS "VERSION" VERSION)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
+find_package(POCO REQUIRED)
+
 set(PROTO_DIR ${CMAKE_HOME_DIRECTORY}/dependencies/spine)
 
 set(GENERATED_DIR ${CMAKE_BINARY_DIR}/generated)
@@ -29,6 +31,7 @@ foreach(proto_file ${SPINE_PROTO})
 endforeach()
 
 
+include_directories(${Poco_INCLUDE_DIRS})
 include_directories(${GENERATED_DIR})
 include_directories(${GRPC_INSTALL_DIR}/include)
 link_directories(${GRPC_INSTALL_DIR}/lib)
