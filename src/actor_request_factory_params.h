@@ -18,13 +18,10 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef SPINE_ACTORREQUESTFACTORY_H
-#define SPINE_ACTORREQUESTFACTORY_H
+#ifndef SPINE_ACTORREQUESTFACTORYPARAMS_H
+#define SPINE_ACTORREQUESTFACTORYPARAMS_H
 
 #include <memory>
-#include <spine/time/zone.pb.h>
-
-#include "actor_request_factory_params.h"
 
 namespace spine {
 
@@ -38,36 +35,41 @@ namespace time {
 }
 namespace client {
 
-class ActorRequestFactoryParams;
-class CommandFactory;
-class TopicFactory;
-class QueryFactory;
+    class CommandFactory;
+    class TopicFactory;
+    class QueryFactory;
 
-class ActorRequestFactory
+class ActorRequestFactoryParams
 {
 public:
-    ActorRequestFactory create(const ActorRequestFactoryParams& params);
+    ActorRequestFactoryParams create();
+
+    const std::unique_ptr<core::UserId>& actor() const;
+    const std::unique_ptr<core::TenantId>& tenant_id() const;
+    const std::unique_ptr<time::ZoneOffset>& zone_offset() const;
+
+    void set_actor(const std::unique_ptr<core::UserId>& actor);
+    void set_tenant_id(const std::unique_ptr<core::TenantId>& tenant_id);
+    void set_zone_offset(const std::unique_ptr<time::ZoneOffset>& zone_offset);
+
+    ActorRequestFactoryParams& with_actor(const std::unique_ptr<core::UserId>& actor);
+    ActorRequestFactoryParams& with_tenant_id(const std::unique_ptr<core::TenantId>& tenant_id);
+    ActorRequestFactoryParams& with_zone_offset(const std::unique_ptr<time::ZoneOffset>& zone_offset);
 
 public:
-    std::unique_ptr<CommandFactory> command();
-    std::unique_ptr<TopicFactory> topic();
-    std::unique_ptr<QueryFactory> query();
-    std::unique_ptr<core::ActorContext> actor_context() const;
-
-public:
-    const std::unique_ptr<core::UserId> &actor() const;
-    const std::unique_ptr<core::TenantId> &tenant_id() const;
-    const std::unique_ptr<time::ZoneOffset> &zone_offset() const;
+    ActorRequestFactoryParams(const ActorRequestFactoryParams&);
 
 private:
-    ActorRequestFactory(const ActorRequestFactoryParams& params);
+    ActorRequestFactoryParams() = default;
 
 private:
-    ActorRequestFactoryParams params_;
+    std::unique_ptr<spine::core::UserId> actor_;
+    std::unique_ptr<spine::core::TenantId> tenant_id_;
+    std::unique_ptr<spine::time::ZoneOffset> zone_offset_;
 };
 
 } //namespace client
 } //namespace spine
 
 
-#endif //SPINE_ACTORREQUESTFACTORY_H
+#endif //SPINE_ACTORREQUESTFACTORYPARAMS_H

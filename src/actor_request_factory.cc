@@ -1,6 +1,22 @@
-//
-// Created by Vladimir Moiseiev on 12/11/17.
-//
+/*
+ * Copyright 2017, TeamDev Ltd. All rights reserved.
+ *
+ * Redistribution and use in source and/or binary forms, with or without
+ * modification, must retain the above copyright notice and the following
+ * disclaimer.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
 
 #include "actor_request_factory.h"
 
@@ -12,82 +28,49 @@
 using namespace spine;
 using namespace spine::client;
 
-ActorRequestFactory::ActorRequestFactory(const ActorRequestFactory::Builder& builder)
-    : actor_( new core::UserId(builder.get_actor()))
-    , tenant_id_(new core::TenantId(builder.get_tenant_id()))
-    , zone_offset_(new time::ZoneOffset(builder.get_zone_offset()))
+ActorRequestFactory::ActorRequestFactory(const ActorRequestFactoryParams& params)
+        : params_(params)
 {
+    if (!params.zone_offset())
+    {
+        params_.set_zone_offset(std::make_unique<spine::time::ZoneOffset>(spine::time::ZoneOffset::default_instance()));
+    }
 }
 
 std::unique_ptr<CommandFactory> ActorRequestFactory::command()
 {
-    return std::unique_ptr<CommandFactory>();
+    return std::make_unique<CommandFactory>();
 }
 
 std::unique_ptr<TopicFactory> ActorRequestFactory::topic()
 {
-    return std::unique_ptr<TopicFactory>();
+    return std::make_unique<TopicFactory>(*this);
 }
 
 std::unique_ptr<QueryFactory> ActorRequestFactory::query()
 {
-    return std::unique_ptr<QueryFactory>();
+    return std::make_unique<QueryFactory>(*this);
 }
 
 std::unique_ptr<core::ActorContext> ActorRequestFactory::actor_context() const
 {
-    std::unique_ptr<core::ActorContext> actor_context {
-            get_actor_context(new core::UserId(*actor_),
-                              new time::ZoneOffset(*zone_offset_),
-                              new core::TenantId(*tenant_id_),
+    std::unique_ptr<core::ActorContext> actor_context{
+            get_actor_context(new core::UserId(*params_.actor()),
+                              new time::ZoneOffset(*params_.zone_offset()),
+                              new core::TenantId(*params_.tenant_id()),
                               get_timestamp())
     };
     return actor_context;
 }
 
-ActorRequestFactory::Builder &ActorRequestFactory::Builder::set_actor(const spine::core::UserId &actor)
+ActorRequestFactory ActorRequestFactory::create(const ActorRequestFactoryParams& params)
 {
-    Builder::actor_.reset(spine::core::UserId::default_instance().New());
-    Builder::actor_->CopyFrom(actor);
-    return *this;
+    return ActorRequestFactory(params);
 }
 
-ActorRequestFactory::Builder &ActorRequestFactory::Builder::set_tenant_id(const spine::core::TenantId &tenant_id)
-{
-    Builder::tenant_id_.reset(spine::core::TenantId::default_instance().New());
-    Builder::tenant_id_->CopyFrom(tenant_id);
-    return *this;
-}
+const std::unique_ptr<core::UserId>& ActorRequestFactory::actor() const { return params_.actor(); }
 
-ActorRequestFactory::Builder &ActorRequestFactory::Builder::set_zone_offset(const spine::time::ZoneOffset &zone_offset)
-{
-    Builder::zone_offset_.reset(spine::time::ZoneOffset::default_instance().New());
-    Builder::zone_offset_->CopyFrom(zone_offset);
-    return *this;
-}
+const std::unique_ptr<core::TenantId>& ActorRequestFactory::tenant_id() const { return params_.tenant_id(); }
 
-const spine::core::UserId &ActorRequestFactory::Builder::get_actor() const
-{
-    return *actor_;
-}
+const std::unique_ptr<time::ZoneOffset>& ActorRequestFactory::zone_offset() const { return params_.zone_offset(); }
 
-const spine::core::TenantId &ActorRequestFactory::Builder::get_tenant_id() const
-{
-    return *tenant_id_;
-}
-
-const spine::time::ZoneOffset &ActorRequestFactory::Builder::get_zone_offset() const
-{
-    return *zone_offset_;
-}
-
-std::unique_ptr<ActorRequestFactory> ActorRequestFactory::Builder::build()
-{
-    if( !zone_offset_ )
-    {
-        set_zone_offset( spine::time::ZoneOffset::default_instance() );
-    }
-
-
-    return std::unique_ptr<ActorRequestFactory> { new ActorRequestFactory(*this) };
-}

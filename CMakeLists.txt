@@ -1,10 +1,22 @@
 cmake_minimum_required(VERSION 3.9)
+# Fix behavior of CMAKE_CXX_STANDARD when targeting macOS.
+#if (POLICY CMP0025)
+#    cmake_policy(SET CMP0025 NEW)
+#endif ()
 project(spine)
+
+
 
 file (STRINGS "VERSION" VERSION)
 
-set(CMAKE_CXX_STANDARD 11)
+set_source_files_properties(*.cc PROPERTIES LANGUAGE CXX)
+
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+
+add_definitions(-std=gnu++14)
 
 find_package(POCO REQUIRED)
 
@@ -49,9 +61,12 @@ set(SOURCE_LIB_FILES
         src/topic_factory.cc
         src/topic_factory.h
         src/query_factory.cc
-        src/query_factory.h)
+        src/query_factory.h src/actor_request_factory_params.cc src/actor_request_factory_params.h)
 
 
 set(LIBRARY_NAME ${CMAKE_PROJECT_NAME}-${VERSION})
 add_library(${LIBRARY_NAME} STATIC ${SOURCE_LIB_FILES} ${GENERATED_FILES} )
 add_dependencies(${LIBRARY_NAME} spine_generated)
+
+set_property(TARGET ${LIBRARY_NAME} PROPERTY CXX_STANDARD 14)
+set(CXX_STANDARD_REQUIRED true)
