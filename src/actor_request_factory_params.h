@@ -61,6 +61,8 @@ public:
     ActorRequestFactoryParams(ActorRequestFactoryParams&&);
     ActorRequestFactoryParams() = default;
 
+    ActorRequestFactoryParams& operator=(ActorRequestFactoryParams&&);
+
 private:
     std::unique_ptr<spine::core::UserId> actor_;
     std::unique_ptr<spine::core::TenantId> tenant_id_;

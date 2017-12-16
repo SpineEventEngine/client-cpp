@@ -52,7 +52,7 @@ TEST_F(ActorRequestFactoryShould, BeEmpty)
 }
 TEST_F(ActorRequestFactoryShould, BeEmptyWithFactoryMethod)
 {
-    const ActorRequestFactoryParams params = ActorRequestFactoryParams::create();
+    auto params = ActorRequestFactoryParams::create();
 
     ASSERT_FALSE(params.actor());
     ASSERT_FALSE(params.tenant_id());
@@ -74,10 +74,10 @@ TEST_F(ActorRequestFactoryShould, BeFilled)
 
 TEST_F(ActorRequestFactoryShould, BeFilledWithFactoryMethod)
 {
-    ActorRequestFactoryParams params = ActorRequestFactoryParams::create()
-            .with_actor(std::make_unique<UserId>())
-            .with_tenant_id(std::make_unique<TenantId>())
-            .with_zone_offset(std::make_unique<ZoneOffset>());
+    auto params = static_cast<ActorRequestFactoryParams&&>(ActorRequestFactoryParams::create()
+                .with_actor(std::make_unique<UserId>())
+                .with_tenant_id(std::make_unique<TenantId>())
+                .with_zone_offset(std::make_unique<ZoneOffset>()));
 
 
     ASSERT_TRUE(params.actor());
