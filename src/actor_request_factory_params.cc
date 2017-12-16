@@ -31,12 +31,19 @@ ActorRequestFactoryParams::ActorRequestFactoryParams(const ActorRequestFactoryPa
           tenant_id_(std::make_unique<spine::core::TenantId>(*rhs.tenant_id())),
           zone_offset_(std::make_unique<spine::time::ZoneOffset>(*rhs.zone_offset()))
 {
+}
+
+ActorRequestFactoryParams::ActorRequestFactoryParams(ActorRequestFactoryParams&& rhs)
+        : actor_(std::move(rhs.actor_)),
+          tenant_id_(std::move(rhs.tenant_id_)),
+          zone_offset_(std::move(rhs.zone_offset_))
+{
 
 }
 
 ActorRequestFactoryParams ActorRequestFactoryParams::create()
 {
-    return ActorRequestFactoryParams();
+    return std::move(ActorRequestFactoryParams());
 }
 
 const std::unique_ptr<spine::core::UserId>& ActorRequestFactoryParams::actor() const
@@ -72,19 +79,23 @@ void ActorRequestFactoryParams::set_zone_offset(const std::unique_ptr<spine::tim
 ActorRequestFactoryParams&
 ActorRequestFactoryParams::with_tenant_id(const std::unique_ptr<spine::core::TenantId>& tenant_id)
 {
+    set_tenant_id(tenant_id);
     return *this;
 }
 
 ActorRequestFactoryParams& ActorRequestFactoryParams::with_actor(const std::unique_ptr<spine::core::UserId>& actor)
 {
+    set_actor(actor);
     return *this;
 }
 
 ActorRequestFactoryParams&
 spine::client::ActorRequestFactoryParams::with_zone_offset(const std::unique_ptr<spine::time::ZoneOffset>& zone_offset)
 {
+    set_zone_offset(zone_offset);
     return *this;
 }
+
 
 
 

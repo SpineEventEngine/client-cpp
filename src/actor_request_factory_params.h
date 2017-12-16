@@ -42,7 +42,7 @@ namespace client {
 class ActorRequestFactoryParams
 {
 public:
-    ActorRequestFactoryParams create();
+    static ActorRequestFactoryParams create();
 
     const std::unique_ptr<core::UserId>& actor() const;
     const std::unique_ptr<core::TenantId>& tenant_id() const;
@@ -58,8 +58,7 @@ public:
 
 public:
     ActorRequestFactoryParams(const ActorRequestFactoryParams&);
-
-private:
+    ActorRequestFactoryParams(ActorRequestFactoryParams&&);
     ActorRequestFactoryParams() = default;
 
 private:

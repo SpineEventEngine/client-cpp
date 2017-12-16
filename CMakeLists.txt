@@ -5,8 +5,6 @@ cmake_minimum_required(VERSION 3.9)
 #endif ()
 project(spine)
 
-
-
 file (STRINGS "VERSION" VERSION)
 
 set_source_files_properties(*.cc PROPERTIES LANGUAGE CXX)
@@ -19,6 +17,10 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 add_definitions(-std=gnu++14)
 
 find_package(POCO REQUIRED)
+
+enable_testing()
+find_package(GTest REQUIRED)
+include_directories(${GTEST_INCLUDE_DIRS})
 
 set(PROTO_DIR ${CMAKE_HOME_DIRECTORY}/dependencies/spine)
 
@@ -43,9 +45,11 @@ foreach(proto_file ${SPINE_PROTO})
 endforeach()
 
 
+include_directories(src)
 include_directories(${Poco_INCLUDE_DIRS})
 include_directories(${GENERATED_DIR})
 include_directories(${GRPC_INSTALL_DIR}/include)
+
 link_directories(${GRPC_INSTALL_DIR}/lib)
 
 
@@ -61,12 +65,22 @@ set(SOURCE_LIB_FILES
         src/topic_factory.cc
         src/topic_factory.h
         src/query_factory.cc
-        src/query_factory.h src/actor_request_factory_params.cc src/actor_request_factory_params.h)
+        src/query_factory.h
+        src/actor_request_factory_params.cc
+        src/actor_request_factory_params.h)
+
+set(TEST_SRCS
+        test/actor_request_factory_test.cc)
 
 
 set(LIBRARY_NAME ${CMAKE_PROJECT_NAME}-${VERSION})
 add_library(${LIBRARY_NAME} STATIC ${SOURCE_LIB_FILES} ${GENERATED_FILES} )
 add_dependencies(${LIBRARY_NAME} spine_generated)
 
-set_property(TARGET ${LIBRARY_NAME} PROPERTY CXX_STANDARD 14)
-set(CXX_STANDARD_REQUIRED true)
+#include(GoogleTest)
+add_executable(runTests ${TEST_SRCS} )
+target_link_libraries(runTests GTest::GTest GTest::Main ${LIBRARY_NAME} libprotobuf.a)
+
+#gtest_add_tests(AllTests runTests)
+#set_property(TARGET ${LIBRARY_NAME} PROPERTY CXX_STANDARD 14)
+#set(CXX_STANDARD_REQUIRED true)
