@@ -1,16 +1,52 @@
-//
-// Created by Vladimir Moiseiev on 12/11/17.
-//
+/*
+ * Copyright 2017, TeamDev Ltd. All rights reserved.
+ *
+ * Redistribution and use in source and/or binary forms, with or without
+ * modification, must retain the above copyright notice and the following
+ * disclaimer.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
 
 #ifndef SPINE_TOPICFACTORY_H
 #define SPINE_TOPICFACTORY_H
 
+#include <string>
+#include <Poco/UUIDGenerator.h>
+
+#include <spine/client/entities.pb.h>
+#include <spine/client/subscription.pb.h>
+
+#include "actor_request_factory.h"
+
 namespace spine {
 namespace client {
 
+class ActorRequestFactory;
+
 class TopicFactory
 {
+public:
+    TopicFactory(const ActorRequestFactory & actor_request_factory);
 
+public:
+    std::unique_ptr<Topic> all(const std::string& type_url);
+
+private:
+    std::unique_ptr<Topic> for_target(std::unique_ptr<Target> &&);
+private:
+    std::unique_ptr<core::ActorContext> actor_context_;
+    Poco::UUIDGenerator uuid_generator_;
 };
 
 }} //namespace
