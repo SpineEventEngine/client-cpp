@@ -74,7 +74,7 @@ TEST_F(ActorRequestFactoryShould, BeFilled)
 
 TEST_F(ActorRequestFactoryShould, BeFilledWithFactoryMethod)
 {
-    auto params = static_cast<ActorRequestFactoryParams&&>(ActorRequestFactoryParams::create()
+    ActorRequestFactoryParams params = (ActorRequestFactoryParams::create()
                 .with_actor(std::make_unique<UserId>())
                 .with_tenant_id(std::make_unique<TenantId>())
                 .with_zone_offset(std::make_unique<ZoneOffset>()));

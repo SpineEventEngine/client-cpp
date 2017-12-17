@@ -39,7 +39,7 @@ ActorRequestFactory::ActorRequestFactory(const ActorRequestFactoryParams& params
 
 std::unique_ptr<CommandFactory> ActorRequestFactory::command()
 {
-    return std::make_unique<CommandFactory>();
+    return std::make_unique<CommandFactory>(*this);
 }
 
 std::unique_ptr<TopicFactory> ActorRequestFactory::topic()
