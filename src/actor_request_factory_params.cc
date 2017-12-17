@@ -41,6 +41,11 @@ ActorRequestFactoryParams::ActorRequestFactoryParams(ActorRequestFactoryParams&&
 
 }
 
+ActorRequestFactoryParams& ActorRequestFactoryParams::operator=(const ActorRequestFactoryParams& that)
+{
+    return *this;
+}
+
 ActorRequestFactoryParams& ActorRequestFactoryParams::operator=(ActorRequestFactoryParams&& that)
 {
     actor_.swap(that.actor_);
@@ -51,7 +56,8 @@ ActorRequestFactoryParams& ActorRequestFactoryParams::operator=(ActorRequestFact
 
 ActorRequestFactoryParams ActorRequestFactoryParams::create()
 {
-    return ActorRequestFactoryParams();
+    ActorRequestFactoryParams params;
+    return params;
 }
 
 const std::unique_ptr<spine::core::UserId>& ActorRequestFactoryParams::actor() const
@@ -103,6 +109,8 @@ spine::client::ActorRequestFactoryParams::with_zone_offset(const std::unique_ptr
     set_zone_offset(zone_offset);
     return *this;
 }
+
+
 
 
 

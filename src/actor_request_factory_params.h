@@ -25,19 +25,22 @@
 
 namespace spine {
 
-namespace core{
+namespace core
+{
     class ActorContext;
     class UserId;
     class TenantId;
 }
-namespace time {
+namespace time
+{
     class ZoneOffset;
 }
-namespace client {
+namespace client
+{
 
-    class CommandFactory;
-    class TopicFactory;
-    class QueryFactory;
+class CommandFactory;
+class TopicFactory;
+class QueryFactory;
 
 class ActorRequestFactoryParams
 {
@@ -61,6 +64,7 @@ public:
     ActorRequestFactoryParams(ActorRequestFactoryParams&&);
     ActorRequestFactoryParams() = default;
 
+    ActorRequestFactoryParams& operator=(const ActorRequestFactoryParams&);
     ActorRequestFactoryParams& operator=(ActorRequestFactoryParams&&);
 
 private:
