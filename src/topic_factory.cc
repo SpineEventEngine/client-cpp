@@ -43,7 +43,7 @@ std::unique_ptr<Topic> TopicFactory::for_target(std::unique_ptr<Target>&& target
     Topic* topic = Topic::default_instance().New();
     topic->set_allocated_id(topic_id);
     topic->set_allocated_target(target.release());
-    topic->set_allocated_context(new ::spine::core::ActorContext(*actor_context_));
+    topic->set_allocated_context(copy_actor_context(*actor_context_));
 
     return std::unique_ptr<Topic>(topic);
 }

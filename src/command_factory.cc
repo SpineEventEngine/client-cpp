@@ -83,9 +83,7 @@ google::protobuf::Any* to_any(const google::protobuf::Message& message)
 spine::core::CommandContext* get_command_context(const std::unique_ptr<ActorContext>& actor_context)
 {
     spine::core::CommandContext *command_context = spine::core::CommandContext::default_instance().New();
-    ActorContext* new_actor_context = ActorContext::default_instance().New();
-    new_actor_context->CopyFrom(*actor_context);
-    command_context->set_allocated_actor_context(new_actor_context);
+    command_context->set_allocated_actor_context(copy_actor_context(*actor_context));
 
     return command_context;
 }

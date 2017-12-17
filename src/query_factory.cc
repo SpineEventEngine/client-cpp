@@ -27,8 +27,7 @@ std::unique_ptr<Query> QueryFactory::all(const std::string& type_url) {
     std::unique_ptr<Query> query { Query::default_instance().New() };
 
     query->set_allocated_id(createQueryId());
-
-    query->set_allocated_context(new ::spine::core::ActorContext(*actor_context_));
+    query->set_allocated_context(copy_actor_context(*actor_context_));
     query->set_allocated_target(target);
 
     return query;

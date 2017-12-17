@@ -2,6 +2,8 @@
 // Created by Vladimir Moiseiev on 4/10/17.
 //
 
+#include <sstream>
+#include "query_factory.h"
 #include "common.h"
 
 
@@ -38,25 +40,25 @@ spine::core::CommandId *get_command_id(const char *value) {
 }
 
 spine::core::ActorContext *
-get_actor_context(google::protobuf::Timestamp *timestamp, spine::core::UserId *actor, spine::time::ZoneOffset *offset) {
+get_actor_context(spine::core::UserId *actor, spine::time::ZoneOffset *offset, spine::core::TenantId *tenant_id,
+                  google::protobuf::Timestamp *timestamp) {
     spine::core::ActorContext *actor_context = spine::core::ActorContext::default_instance().New();
     actor_context->set_allocated_timestamp(timestamp);
     actor_context->set_allocated_actor(actor);
     actor_context->set_allocated_zone_offset(offset);
+    actor_context->set_allocated_tenant_id(tenant_id);
     return actor_context;
 }
 
-spine::core::CommandContext *
-get_command_context(google::protobuf::Timestamp *timestamp, spine::core::UserId *actor, spine::time::ZoneOffset *offset,
-                    int version) {
-    spine::core::CommandContext *command_context = spine::core::CommandContext::default_instance().New();
-    command_context->set_allocated_actor_context(
-            get_actor_context(timestamp,
-                              actor,
-                              offset));
-    command_context->set_target_version(version);
-    return command_context;
-}
+//spine::core::CommandContext *
+//get_command_context(google::protobuf::Timestamp *timestamp, spine::core::UserId *actor, spine::time::ZoneOffset *offset,
+//                    int version) {
+//    spine::core::CommandContext *command_context = spine::core::CommandContext::default_instance().New();
+//    command_context->set_allocated_actor_context(
+//            get_actor_context(actor, offset, tenant_id, timestamp));
+//    command_context->set_target_version(version);
+//    return command_context;
+//}
 
 spine::core::UserId *get_user_id(const std::string &value) {
     spine::core::UserId *userId = spine::core::UserId::default_instance().New();
@@ -75,4 +77,19 @@ spine::time::ZoneOffset *get_zone_offset(spine::time::ZoneId *zone_id) {
     zone_offset->set_amountseconds(0);
     zone_offset->set_allocated_id(zone_id);
     return zone_offset;
+}
+
+Target* create_target(const string& type_url)
+{
+    Target *target = Target::default_instance().New();
+    target->set_type(type_url);
+    return target;
+}
+
+spine::core::ActorContext* copy_actor_context(const spine::core::ActorContext& actor_context)
+{
+    spine::core::ActorContext* new_actor_context = spine::core::ActorContext::default_instance().New();
+    new_actor_context->CopyFrom(actor_context);
+
+    return new_actor_context;
 }
