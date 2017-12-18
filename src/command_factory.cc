@@ -31,7 +31,7 @@ spine::core::CommandContext* get_command_context(const std::unique_ptr<ActorCont
 spine::core::CommandContext* get_command_context(const std::unique_ptr<ActorContext>& actor_context, const int version);
 Command* get_command(CommandContext* command_context,google::protobuf::Any* any, CommandId* command_id);
 CommandId* get_command_id(const std::string& uuid);
-google::protobuf::Any* to_any(const google::protobuf::Message& message);
+
 
 CommandFactory::CommandFactory(const ActorRequestFactory& actor_request_factory)
 {
@@ -73,12 +73,6 @@ CommandId* get_command_id(const std::string& uuid)
     return command_id;
 }
 
-google::protobuf::Any* to_any(const google::protobuf::Message& message)
-{
-    google::protobuf::Any* any = google::protobuf::Any::default_instance().New();
-    any->PackFrom(message);
-    return any;
-}
 
 spine::core::CommandContext* get_command_context(const std::unique_ptr<ActorContext>& actor_context)
 {

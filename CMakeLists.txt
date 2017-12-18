@@ -70,7 +70,7 @@ set(SOURCE_LIB_FILES
         src/actor_request_factory_params.h)
 
 set(TEST_SRCS
-        test/actor_request_factory_test.cc)
+        test/actor_request_factory_test.cc test/common_test.cc)
 
 
 set(LIBRARY_NAME ${CMAKE_PROJECT_NAME}-${VERSION})

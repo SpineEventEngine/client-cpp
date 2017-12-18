@@ -93,3 +93,11 @@ spine::core::ActorContext* copy_actor_context(const spine::core::ActorContext& a
 
     return new_actor_context;
 }
+
+google::protobuf::Any* to_any(const google::protobuf::Message& message)
+{
+    google::protobuf::Any* any = google::protobuf::Any::default_instance().New();
+    any->PackFrom(message);
+    return any;
+}
+
