@@ -1,8 +1,4 @@
 cmake_minimum_required(VERSION 3.9)
-# Fix behavior of CMAKE_CXX_STANDARD when targeting macOS.
-#if (POLICY CMP0025)
-#    cmake_policy(SET CMP0025 NEW)
-#endif ()
 project(spine)
 
 file (STRINGS "VERSION" VERSION)
@@ -16,7 +12,7 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 add_definitions(-std=gnu++14)
 
-find_package(POCO REQUIRED)
+find_package(Poco REQUIRED Foundation)
 
 enable_testing()
 find_package(GTest REQUIRED)
@@ -77,10 +73,6 @@ set(LIBRARY_NAME ${CMAKE_PROJECT_NAME}-${VERSION})
 add_library(${LIBRARY_NAME} STATIC ${SOURCE_LIB_FILES} ${GENERATED_FILES} )
 add_dependencies(${LIBRARY_NAME} spine_generated)
 
-#include(GoogleTest)
 add_executable(runTests ${TEST_SRCS} )
-target_link_libraries(runTests GTest::GTest GTest::Main ${LIBRARY_NAME} libprotobuf.a)
-
-#gtest_add_tests(AllTests runTests)
-#set_property(TARGET ${LIBRARY_NAME} PROPERTY CXX_STANDARD 14)
-#set(CXX_STANDARD_REQUIRED true)
+target_link_libraries(runTests GTest::GTest GTest::Main ${LIBRARY_NAME} libprotobuf.a ${Poco_LIBRARIES})
+add_dependencies(runTests ${LIBRARY_NAME})

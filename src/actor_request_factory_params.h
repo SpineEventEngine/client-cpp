@@ -45,8 +45,6 @@ class QueryFactory;
 class ActorRequestFactoryParams
 {
 public:
-    static ActorRequestFactoryParams create();
-
     const std::unique_ptr<core::UserId>& actor() const;
     const std::unique_ptr<core::TenantId>& tenant_id() const;
     const std::unique_ptr<time::ZoneOffset>& zone_offset() const;
@@ -55,17 +53,13 @@ public:
     void set_tenant_id(const std::unique_ptr<core::TenantId>& tenant_id);
     void set_zone_offset(const std::unique_ptr<time::ZoneOffset>& zone_offset);
 
-    ActorRequestFactoryParams& with_actor(const std::unique_ptr<core::UserId>& actor);
-    ActorRequestFactoryParams& with_tenant_id(const std::unique_ptr<core::TenantId>& tenant_id);
-    ActorRequestFactoryParams& with_zone_offset(const std::unique_ptr<time::ZoneOffset>& zone_offset);
-
 public:
-    ActorRequestFactoryParams(const ActorRequestFactoryParams&);
-    ActorRequestFactoryParams(ActorRequestFactoryParams&&);
     ActorRequestFactoryParams() = default;
-
+    ActorRequestFactoryParams(const ActorRequestFactoryParams&);
     ActorRequestFactoryParams& operator=(const ActorRequestFactoryParams&);
-    ActorRequestFactoryParams& operator=(ActorRequestFactoryParams&&);
+
+    ActorRequestFactoryParams(ActorRequestFactoryParams&&) = default;
+    ActorRequestFactoryParams& operator=(ActorRequestFactoryParams&&) = default;
 
 private:
     std::unique_ptr<spine::core::UserId> actor_;

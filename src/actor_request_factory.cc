@@ -37,17 +37,17 @@ ActorRequestFactory::ActorRequestFactory(const ActorRequestFactoryParams& params
     }
 }
 
-std::unique_ptr<CommandFactory> ActorRequestFactory::command()
+std::unique_ptr<CommandFactory> ActorRequestFactory::command_factory()
 {
     return std::make_unique<CommandFactory>(*this);
 }
 
-std::unique_ptr<TopicFactory> ActorRequestFactory::topic()
+std::unique_ptr<TopicFactory> ActorRequestFactory::topic_factory()
 {
     return std::make_unique<TopicFactory>(*this);
 }
 
-std::unique_ptr<QueryFactory> ActorRequestFactory::query()
+std::unique_ptr<QueryFactory> ActorRequestFactory::query_factory()
 {
     return std::make_unique<QueryFactory>(*this);
 }
@@ -65,7 +65,8 @@ std::unique_ptr<core::ActorContext> ActorRequestFactory::actor_context() const
 
 ActorRequestFactory ActorRequestFactory::create(const ActorRequestFactoryParams& params)
 {
-    return ActorRequestFactory(params);
+    ActorRequestFactory factory = ActorRequestFactory(params);
+    return factory;
 }
 
 const std::unique_ptr<core::UserId>& ActorRequestFactory::actor() const { return params_.actor(); }

@@ -12,14 +12,17 @@
 #include <Poco/UUIDGenerator.h>
 #include <spine/core/command.pb.h>
 
-namespace spine {
-namespace core{
+namespace spine
+{
+namespace core
+{
     class Command;
     class CommandContext;
     class UserId;
     class ActorContext;
 }
-namespace client {
+namespace client
+{
 
     class ActorRequestFactory;
 
@@ -29,7 +32,7 @@ public:
     CommandFactory(const ActorRequestFactory & actor_request_factory);
 public:
     std::unique_ptr<core::Command> create(const ::google::protobuf::Message& message);
-    std::unique_ptr<core::Command> create(const ::google::protobuf::Message& message, const int target_version);
+    std::unique_ptr<core::Command> create(const ::google::protobuf::Message& message, int target_version);
 
 private:
     std::unique_ptr<core::ActorContext> actor_context_;

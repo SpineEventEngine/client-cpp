@@ -24,6 +24,8 @@
 
 #include <spine/core/user_id.pb.h>
 #include <spine/core/tenant_id.pb.h>
+#include <spine/people/person_name.pb.h>
+#include <spine/core/command.pb.h>
 
 using namespace spine::client;
 using namespace spine::core;
@@ -52,36 +54,52 @@ TEST_F(ActorRequestFactoryShould, BeEmpty)
 }
 TEST_F(ActorRequestFactoryShould, BeEmptyWithFactoryMethod)
 {
-    auto params = ActorRequestFactoryParams::create();
+    ActorRequestFactoryParams params;
 
     ASSERT_FALSE(params.actor());
     ASSERT_FALSE(params.tenant_id());
     ASSERT_FALSE(params.zone_offset());
 }
 
-TEST_F(ActorRequestFactoryShould, BeFilled)
+static const char* const USER_ID = "user_id_123";
+static const char* const TENANT_ID = "tenant_id_123";
+static const char* const ZONE_ID = "zone_id_123";
+
+TEST_F(ActorRequestFactoryShould, HaveValidParams)
 {
     ActorRequestFactoryParams params;
-    params.set_actor(std::make_unique<UserId>());
-    params.set_tenant_id(std::make_unique<TenantId>());
-    params.set_zone_offset(std::make_unique<ZoneOffset>());
+    auto actor = std::make_unique<UserId>();
+    actor->set_value(USER_ID);
 
+    auto tenant_id = std::make_unique<TenantId>();
+    tenant_id->set_value(TENANT_ID);
 
-    ASSERT_TRUE(params.actor());
-    ASSERT_TRUE(params.tenant_id());
-    ASSERT_TRUE(params.zone_offset());
-}
+    auto zone_offset = std::make_unique<ZoneOffset>();
+    ZoneId* zone_id = ZoneId::default_instance().New();
+    zone_id->set_value(ZONE_ID);
+    zone_offset->set_allocated_id(zone_id);
+    zone_offset->set_amountseconds(42);
 
-TEST_F(ActorRequestFactoryShould, BeFilledWithFactoryMethod)
-{
-    ActorRequestFactoryParams params = (ActorRequestFactoryParams::create()
-                .with_actor(std::make_unique<UserId>())
-                .with_tenant_id(std::make_unique<TenantId>())
-                .with_zone_offset(std::make_unique<ZoneOffset>()));
-
+    params.set_actor(actor);
+    params.set_tenant_id(tenant_id);
+    params.set_zone_offset(zone_offset);
 
     ASSERT_TRUE(params.actor());
     ASSERT_TRUE(params.tenant_id());
     ASSERT_TRUE(params.zone_offset());
+
+    ActorRequestFactory factory = ActorRequestFactory::create(params);
+
+    ASSERT_EQ(params.actor()->value(),factory.actor()->value());
+    ASSERT_EQ(params.tenant_id()->value(),factory.tenant_id()->value());
+    ASSERT_EQ(params.zone_offset()->id().value(),factory.zone_offset()->id().value());
+    ASSERT_EQ(params.zone_offset()->amountseconds(),factory.zone_offset()->amountseconds());
+
+    std::unique_ptr<CommandFactory> command_factory = factory.command_factory();
+    spine::people::PersonName message;
+    message.set_family_name("asdasdasd");
+    std::unique_ptr<Command> command = command_factory->create(message);
+    int x = 1;
 }
+
 

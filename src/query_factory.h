@@ -35,7 +35,7 @@ private:
     Poco::UUIDGenerator uuid_generator_;
 
 
-    Target* create_target(const std::string& type_url) const;
+    //Target* create_target(const std::string& type_url) const;
 };
 
 }} //namespace

@@ -46,12 +46,12 @@ class QueryFactory;
 class ActorRequestFactory
 {
 public:
-    ActorRequestFactory create(const ActorRequestFactoryParams& params);
+    static ActorRequestFactory create(const ActorRequestFactoryParams& params);
 
 public:
-    std::unique_ptr<CommandFactory> command();
-    std::unique_ptr<TopicFactory> topic();
-    std::unique_ptr<QueryFactory> query();
+    std::unique_ptr<CommandFactory> command_factory();
+    std::unique_ptr<TopicFactory> topic_factory();
+    std::unique_ptr<QueryFactory> query_factory();
     std::unique_ptr<core::ActorContext> actor_context() const;
 
 public:
