@@ -28,7 +28,7 @@ TEST(CommonShould, ProvideAnyFromMessage)
 {
     spine::core::CommandId command_id;
     command_id.set_uuid("123123123");
-    google::protobuf::Any* any = to_any(command_id);
+    google::protobuf::Any* any = to_any(command_id, "io.spine");
     ASSERT_TRUE(any != nullptr);
 
     spine::core::CommandId unpacked;

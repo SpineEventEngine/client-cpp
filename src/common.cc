@@ -101,3 +101,10 @@ google::protobuf::Any* to_any(const google::protobuf::Message& message)
     return any;
 }
 
+google::protobuf::Any* to_any(const google::protobuf::Message& message, const std::string& type_url)
+{
+    google::protobuf::Any* any = google::protobuf::Any::default_instance().New();
+    any->PackFrom(message, type_url);
+    return any;
+}
+

@@ -46,5 +46,6 @@ spine::client::Target* create_target(const std::string& type_url);
 spine::core::ActorContext* copy_actor_context(const spine::core::ActorContext&);
 
 google::protobuf::Any* to_any(const google::protobuf::Message& message);
+google::protobuf::Any* to_any(const google::protobuf::Message& message, const std::string& );
 
 #endif //POC_CLIENT_COMMON_H
