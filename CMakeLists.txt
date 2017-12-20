@@ -8,9 +8,12 @@ set_source_files_properties(*.cc PROPERTIES LANGUAGE CXX)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
+
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+set(BUILD_SHARED_LIBS OFF)
 
 add_definitions(-std=gnu++14)
+add_definitions(-fPIC)
 
 find_package(Poco REQUIRED Foundation)
 
@@ -23,7 +26,7 @@ include(spine-proto.cmake)
 
 include_directories(src)
 include_directories(${Poco_INCLUDE_DIRS})
-include_directories(${GENERATED_DIR})
+
 include_directories(${GRPC_INSTALL_DIR}/include)
 
 link_directories(${GRPC_INSTALL_DIR}/lib)
@@ -44,12 +47,16 @@ set(SOURCE_LIB_FILES
         src/actor_request_factory_params.h)
 
 set(TEST_SRCS
-        test/actor_request_factory_test.cc test/common_test.cc)
+        test/actor_request_factory_test.cc
+        test/common_test.cc)
 
 
 set(LIBRARY_NAME ${CMAKE_PROJECT_NAME}-${VERSION})
 add_library(${LIBRARY_NAME} STATIC ${SOURCE_LIB_FILES} ${spine_generated_files} )
 
 add_executable(runTests ${TEST_SRCS} )
-target_link_libraries(runTests GTest::GTest GTest::Main ${LIBRARY_NAME} libprotobuf.a ${Poco_LIBRARIES})
+find_library(PROTOBUF_LIB libprotobuf.a)
+target_link_libraries(runTests GTest::GTest GTest::Main ${LIBRARY_NAME}
+        ${PROTOBUF_LIB}
+        ${Poco_LIBRARIES})
 add_dependencies(runTests ${LIBRARY_NAME})

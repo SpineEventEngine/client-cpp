@@ -33,18 +33,6 @@ set(spine_proto_files
         spine/base/field_path.proto
         spine/base/field_filter.proto
         spine/base/error.proto
-        google/protobuf/timestamp.proto
-        google/protobuf/field_mask.proto
-        google/protobuf/api.proto
-        google/protobuf/duration.proto
-        google/protobuf/struct.proto
-        google/protobuf/wrappers.proto
-        google/protobuf/source_context.proto
-        google/protobuf/any.proto
-        google/protobuf/type.proto
-        google/protobuf/empty.proto
-        google/protobuf/compiler/plugin.proto
-        google/protobuf/descriptor.proto
         )
 
 set(GENERATED_DIR ${CMAKE_BINARY_DIR}/generated)
@@ -76,3 +64,5 @@ foreach(proto_file ${spine_proto_files})
     set(spine_generated_files ${spine_generated_files}
             ${GENERATED_DIR}/${pb_file})
 endforeach(proto_file)
+
+include_directories(${GENERATED_DIR})

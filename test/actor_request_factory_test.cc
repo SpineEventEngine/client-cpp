@@ -20,6 +20,7 @@
 
 #include <gtest/gtest.h>
 
+#include "command_factory.h"
 #include "actor_request_factory.h"
 
 #include <spine/core/user_id.pb.h>
