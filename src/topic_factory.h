@@ -28,6 +28,7 @@
 #include <spine/client/subscription.pb.h>
 
 #include "actor_request_factory.h"
+#include "type_url.h"
 
 namespace spine {
 namespace client {
@@ -40,7 +41,7 @@ public:
     TopicFactory(const ActorRequestFactory & actor_request_factory);
 
 public:
-    std::unique_ptr<Topic> all(const std::string& type_url);
+    std::unique_ptr<Topic> all(const type::TypeUrl& type_url);
 
 private:
     std::unique_ptr<Topic> for_target(std::unique_ptr<Target> &&);

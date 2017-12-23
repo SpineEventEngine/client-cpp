@@ -29,9 +29,9 @@ TopicFactory::TopicFactory(const ActorRequestFactory& actor_request_factory)
     actor_context_ = actor_request_factory.actor_context();
 }
 
-std::unique_ptr<Topic> TopicFactory::all(const std::string& type_url)
+std::unique_ptr<Topic> TopicFactory::all(const type::TypeUrl& type_url)
 {
-    std::unique_ptr<Target> target { create_target(type_url) };
+    std::unique_ptr<Target> target { create_target(type_url.value()) };
     return for_target(std::move(target));
 }
 
