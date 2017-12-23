@@ -16,6 +16,7 @@ add_definitions(-std=gnu++14)
 add_definitions(-fPIC)
 
 find_package(Poco REQUIRED Foundation)
+find_package(Boost REQUIRED)
 
 enable_testing()
 find_package(GTest REQUIRED)
@@ -24,8 +25,10 @@ include_directories(${GTEST_INCLUDE_DIRS})
 include(spine-proto.cmake)
 
 
+
 include_directories(src)
 include_directories(${Poco_INCLUDE_DIRS})
+include_directories(${Boost_INCLUDE_DIRS})
 
 include_directories(${GRPC_INSTALL_DIR}/include)
 
@@ -44,11 +47,11 @@ set(SOURCE_LIB_FILES
         src/query_factory.cc
         src/query_factory.h
         src/actor_request_factory_params.cc
-        src/actor_request_factory_params.h)
+        src/actor_request_factory_params.h src/type_url.cc src/type_url.h)
 
 set(TEST_SRCS
         test/actor_request_factory_test.cc
-        test/common_test.cc)
+        test/common_test.cc test/type_url_test.cc)
 
 
 set(LIBRARY_NAME ${CMAKE_PROJECT_NAME}-${VERSION})
@@ -60,3 +63,7 @@ target_link_libraries(runTests GTest::GTest GTest::Main ${LIBRARY_NAME}
         ${PROTOBUF_LIB}
         ${Poco_LIBRARIES})
 add_dependencies(runTests ${LIBRARY_NAME})
+
+find_package(Doxygen)
+set(DOXYGEN_JAVADOC_AUTOBRIEF TRUE)
+doxygen_add_docs(docs ${SOURCE_LIB_FILES})
