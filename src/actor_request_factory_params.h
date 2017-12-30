@@ -49,9 +49,9 @@ public:
     const std::unique_ptr<core::TenantId>& tenant_id() const;
     const std::unique_ptr<time::ZoneOffset>& zone_offset() const;
 
-    void set_actor(const std::unique_ptr<core::UserId>& actor);
-    void set_tenant_id(const std::unique_ptr<core::TenantId>& tenant_id);
-    void set_zone_offset(const std::unique_ptr<time::ZoneOffset>& zone_offset);
+    ActorRequestFactoryParams& set_actor(const std::unique_ptr<core::UserId>& actor);
+    ActorRequestFactoryParams& set_tenant_id(const std::unique_ptr<core::TenantId>& tenant_id);
+    ActorRequestFactoryParams& set_zone_offset(const std::unique_ptr<time::ZoneOffset>& zone_offset);
 
 public:
     ActorRequestFactoryParams() = default;

@@ -24,34 +24,40 @@
 #include <memory>
 #include <spine/time/zone.pb.h>
 
+#include "types.h"
 #include "actor_request_factory_params.h"
 
-namespace spine {
+namespace spine
+{
 
-namespace core{
+namespace core
+{
     class ActorContext;
     class UserId;
     class TenantId;
 }
-namespace time {
+namespace time
+{
     class ZoneOffset;
 }
-namespace client {
+namespace client
+{
 
 class ActorRequestFactoryParams;
-class CommandFactory;
-class TopicFactory;
-class QueryFactory;
 
+/**
+ * A factory for the various requests fired from the client-side by an actor.
+ *
+ */
 class ActorRequestFactory
 {
 public:
     static ActorRequestFactory create(const ActorRequestFactoryParams& params);
 
 public:
-    std::unique_ptr<CommandFactory> command_factory();
-    std::unique_ptr<TopicFactory> topic_factory();
-    std::unique_ptr<QueryFactory> query_factory();
+    command_factory_t command_factory();
+    topic_factory_t topic_factory();
+    query_factory_t query_factory();
     std::unique_ptr<core::ActorContext> actor_context() const;
 
 public:

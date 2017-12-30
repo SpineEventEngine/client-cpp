@@ -30,32 +30,50 @@ const std::string URL1 = std::string(PREFIX1) + "/" + std::string(TYPE1);
 
 TEST(TypeUrlShould, Create)
 {
-    TypeUrl type_url = TypeUrl::create(PREFIX1, TYPE1);
-    ASSERT_EQ(type_url.prefix(), PREFIX1);
-    ASSERT_EQ(type_url.type(), TYPE1);
-    ASSERT_EQ(type_url.value(), URL1);
+    type_url_t type_url = TypeUrl::create(PREFIX1, TYPE1);
+    ASSERT_TRUE(type_url);
+    ASSERT_EQ(type_url->prefix(), PREFIX1);
+    ASSERT_EQ(type_url->type(), TYPE1);
+    ASSERT_EQ(type_url->value(), URL1);
 }
 
 TEST(TypeUrlShould, ParseUrl)
 {
-    TypeUrl type_url = TypeUrl::parse(URL1);
-    ASSERT_EQ(type_url.prefix(), PREFIX1);
-    ASSERT_EQ(type_url.type(), TYPE1);
-    ASSERT_EQ(type_url.value(), URL1);
+    type_url_t type_url = TypeUrl::parse(URL1);
+    ASSERT_TRUE(type_url);
+    ASSERT_EQ(type_url->prefix(), PREFIX1);
+    ASSERT_EQ(type_url->type(), TYPE1);
+    ASSERT_EQ(type_url->value(), URL1);
 }
 
 TEST(TypeUrlShould, ThrowAtCreateWithInvalidParams)
 {
-    ASSERT_THROW(TypeUrl::create(PREFIX1, ""), std::invalid_argument);
-    ASSERT_THROW(TypeUrl::create("", TYPE1), std::invalid_argument);
-    ASSERT_THROW(TypeUrl::create("", ""), std::invalid_argument);
+    ASSERT_FALSE(TypeUrl::create(PREFIX1, ""));
+    ASSERT_FALSE(TypeUrl::create("", TYPE1));
+    ASSERT_FALSE(TypeUrl::create("", ""));
 }
 
 TEST(TypeUrlShould, ThrowAtParseWithInvalidParams)
 {
-    ASSERT_THROW(TypeUrl::parse(""), std::invalid_argument);
-    ASSERT_THROW(TypeUrl::parse("Type"), std::invalid_argument);
-    ASSERT_THROW(TypeUrl::parse("Type/"), std::invalid_argument);
-    ASSERT_THROW(TypeUrl::parse("/"), std::invalid_argument);
-    ASSERT_THROW(TypeUrl::parse("/sadfsad"), std::invalid_argument);
+    ASSERT_FALSE(TypeUrl::parse(""));
+    ASSERT_FALSE(TypeUrl::parse("Type"));
+    ASSERT_FALSE(TypeUrl::parse("Type/"));
+    ASSERT_FALSE(TypeUrl::parse("/"));
+    ASSERT_FALSE(TypeUrl::parse("/sadfsad"));
 }
+
+//TEST(TypeUrlShould, ThrowAtCreateWithInvalidParams)
+//{
+//    ASSERT_THROW(TypeUrl::create(PREFIX1, ""), std::invalid_argument);
+//    ASSERT_THROW(TypeUrl::create("", TYPE1), std::invalid_argument);
+//    ASSERT_THROW(TypeUrl::create("", ""), std::invalid_argument);
+//}
+//
+//TEST(TypeUrlShould, ThrowAtParseWithInvalidParams)
+//{
+//    ASSERT_THROW(TypeUrl::parse(""), std::invalid_argument);
+//    ASSERT_THROW(TypeUrl::parse("Type"), std::invalid_argument);
+//    ASSERT_THROW(TypeUrl::parse("Type/"), std::invalid_argument);
+//    ASSERT_THROW(TypeUrl::parse("/"), std::invalid_argument);
+//    ASSERT_THROW(TypeUrl::parse("/sadfsad"), std::invalid_argument);
+//}

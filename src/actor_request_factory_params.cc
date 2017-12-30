@@ -53,19 +53,22 @@ const std::unique_ptr<spine::time::ZoneOffset>& ActorRequestFactoryParams::zone_
     return zone_offset_;
 }
 
-void ActorRequestFactoryParams::set_actor(const std::unique_ptr<spine::core::UserId>& actor)
+ActorRequestFactoryParams& ActorRequestFactoryParams::set_actor(const std::unique_ptr<spine::core::UserId>& actor)
 {
     actor_ = std::make_unique<spine::core::UserId>(*actor);
+    return *this;
 }
 
-void ActorRequestFactoryParams::set_tenant_id(const std::unique_ptr<spine::core::TenantId>& tenant_id)
+ActorRequestFactoryParams& ActorRequestFactoryParams::set_tenant_id(const std::unique_ptr<spine::core::TenantId>& tenant_id)
 {
     tenant_id_ = std::make_unique<spine::core::TenantId>(*tenant_id);
+    return *this;
 }
 
-void ActorRequestFactoryParams::set_zone_offset(const std::unique_ptr<spine::time::ZoneOffset>& zone_offset)
+ActorRequestFactoryParams& ActorRequestFactoryParams::set_zone_offset(const std::unique_ptr<spine::time::ZoneOffset>& zone_offset)
 {
     zone_offset_ = std::make_unique<spine::time::ZoneOffset>(*zone_offset);
+    return *this;
 }
 
 

@@ -25,6 +25,7 @@
 #include <Poco/UUIDGenerator.h>
 #include <spine/client/query.pb.h>
 
+#include "types.h"
 #include "type_url.h"
 
 namespace spine
@@ -38,16 +39,13 @@ namespace core
 namespace client
 {
 
-class ActorRequestFactory;
-class Query;
-
 class QueryFactory
 {
 public:
     QueryFactory(const ActorRequestFactory & actor_request_factory);
 
 public:
-    std::unique_ptr<Query> all(const type::TypeUrl& type_url);
+    query_t all(const type::TypeUrl& type_url);
 
 private:
     spine::client::QueryId *createQueryId();

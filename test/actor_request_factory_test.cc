@@ -23,10 +23,7 @@
 #include "command_factory.h"
 #include "actor_request_factory.h"
 
-#include <spine/core/user_id.pb.h>
-#include <spine/core/tenant_id.pb.h>
 #include <spine/people/person_name.pb.h>
-#include <spine/core/command.pb.h>
 
 using namespace spine::client;
 using namespace spine::core;
@@ -81,9 +78,9 @@ TEST_F(ActorRequestFactoryShould, HaveValidParams)
     zone_offset->set_allocated_id(zone_id);
     zone_offset->set_amountseconds(42);
 
-    params.set_actor(actor);
-    params.set_tenant_id(tenant_id);
-    params.set_zone_offset(zone_offset);
+    params.set_actor(actor)
+            .set_tenant_id(tenant_id)
+            .set_zone_offset(zone_offset);
 
     ASSERT_TRUE(params.actor());
     ASSERT_TRUE(params.tenant_id());

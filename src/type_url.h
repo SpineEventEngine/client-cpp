@@ -22,6 +22,7 @@
 #define SPINE_TYPEURL_H
 
 #include <string>
+#include "types.h"
 
 namespace spine
 {
@@ -48,13 +49,13 @@ public:
      * @param type The name of the Protobuf type.
      *
     */
-    static TypeUrl create(const std::string& prefix, const std::string& type);
+    static type_url_t create(const std::string& prefix, const std::string& type);
     /**
     * Creates a new instance from the passed type URL.
     *
     * @param from the type URL of the Protobuf message type
     */
-    static TypeUrl parse(const std::string& from);
+    static type_url_t parse(const std::string& from);
 
     /**
      *

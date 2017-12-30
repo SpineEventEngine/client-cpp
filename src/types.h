@@ -18,39 +18,43 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef SPINE_TOPICFACTORY_H
-#define SPINE_TOPICFACTORY_H
+#ifndef SPINE_TYPES_H
+#define SPINE_TYPES_H
 
-#include <string>
-#include <Poco/UUIDGenerator.h>
+#include <memory>
 
-#include "types.h"
-
-#include <spine/client/entities.pb.h>
-#include <spine/client/subscription.pb.h>
-
-
-#include "actor_request_factory.h"
-#include "type_url.h"
-
-namespace spine {
-namespace client {
-
-class TopicFactory
+namespace spine
 {
-public:
-    TopicFactory(const ActorRequestFactory & actor_request_factory);
+    namespace type
+    {
+        class TypeUrl;
 
-public:
-    topic_t all(const type::TypeUrl& type_url);
+        using type_url_t = std::unique_ptr<TypeUrl>;
+    }
 
-private:
-    topic_t for_target(std::unique_ptr<Target> &&);
-private:
-    std::unique_ptr<core::ActorContext> actor_context_;
-    Poco::UUIDGenerator uuid_generator_;
-};
+    namespace client
+    {
+        class CommandFactory;
+        class TopicFactory;
+        class QueryFactory;
+        class ActorRequestFactory;
+        class Topic;
+        class Query;
 
-}} //namespace
+        using command_factory_t = std::unique_ptr<CommandFactory>;
+        using topic_factory_t = std::unique_ptr<TopicFactory>;
+        using query_factory_t = std::unique_ptr<QueryFactory>;
+        using actor_reques_factory_t = std::unique_ptr<ActorRequestFactory>;
+        using topic_t = std::unique_ptr<Topic>;
+        using query_t = std::unique_ptr<Query>;
 
-#endif //SPINE_TOPICFACTORY_H
+    }
+    namespace core
+    {
+        class Command;
+
+        using command_t = std::unique_ptr<Command>;
+    }
+}
+
+#endif //SPINE_TYPES_H

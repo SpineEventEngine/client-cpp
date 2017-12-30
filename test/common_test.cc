@@ -24,16 +24,34 @@
 
 #include "common.h"
 
+std::string type_url_or_empty(const google::protobuf::Message& msg)
+{
+    if ( nullptr == msg.GetDescriptor() ) return "";
+
+    const google::protobuf::FileOptions& fileOptions = msg.GetDescriptor()->file()->options();
+    const google::protobuf::RepeatedPtrField<google::protobuf::UninterpretedOption>& options = msg.GetDescriptor()->options().uninterpreted_option();
+    auto found = std::find_if(options.begin(), options.end(), [] (const google::protobuf::UninterpretedOption& o)
+        {
+            return o.name(0).name_part() == "type_url_prefix" && o.has_string_value();
+        });
+
+    if( found != options.end())
+        return (*found).string_value();
+    return "";
+}
+
 TEST(CommonShould, ProvideAnyFromMessage)
 {
     spine::core::CommandId command_id;
     command_id.set_uuid("123123123");
-    google::protobuf::Any* any = to_any(command_id, "io.spine");
+
+    const std::string& url_or_empty = type_url_or_empty(command_id);
+    google::protobuf::Any* any = to_any(command_id, url_or_empty);
     ASSERT_TRUE(any != nullptr);
 
     spine::core::CommandId unpacked;
     any->UnpackTo(&unpacked);
     ASSERT_EQ(unpacked.uuid(), command_id.uuid());
     ASSERT_TRUE(unpacked.descriptor() != nullptr);
-    ASSERT_EQ(unpacked.descriptor()->file()->package(), command_id.descriptor()->file()->package());
+//ASSERT_EQ(unpacked.descriptor()->file()->package(), command_id.descriptor()->file()->options());
 }

@@ -28,10 +28,6 @@ static const char SEPARATOR = '/';
 
 TypeUrl::TypeUrl(const std::string& prefix, const std::string& type)
 {
-    if (prefix.empty() || type.empty())
-    {
-        throw std::invalid_argument("TypeUrl::TypeUrl. Empty arguments: " + prefix + ", " + type);
-    }
     prefix_ = prefix;
     type_ = type;
 }
@@ -46,26 +42,29 @@ std::string TypeUrl::type() const
     return type_;
 }
 
-TypeUrl TypeUrl::create(const std::string& prefix, const std::string& type)
+type_url_t TypeUrl::create(const std::string& prefix, const std::string& type)
 {
-    return TypeUrl(prefix, type);
+    if (prefix.empty() || type.empty())
+    {
+        return type_url_t();
+    }
+    return type_url_t(new TypeUrl(prefix, type));
 }
 
-TypeUrl TypeUrl::parse(const std::string& from)
+type_url_t TypeUrl::parse(const std::string& from)
 {
     if (from.empty())
     {
-        throw std::invalid_argument("TypeUrl::parse. TypeURL should not be empty.");
+        return type_url_t();
     }
 
     std::vector<std::string> split_values;
     boost::split(split_values, from, [](char val) { return SEPARATOR == val;});
-    if (split_values.size() != 2)
+    if (2 == split_values.size() && !split_values[0].empty() && !split_values[1].empty())
     {
-        throw std::invalid_argument("TypeUrl::parse. Malformed TypeURL: " + from);
+        return type_url_t(new TypeUrl(split_values[0], split_values[1]));
     }
-
-    return TypeUrl(split_values[0], split_values[1]);
+    return type_url_t();
 }
 
 std::string TypeUrl::value() const
