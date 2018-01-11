@@ -49,6 +49,7 @@ public:
     CommandFactory(const ActorRequestFactory & actor_request_factory);
 public:
     command_t create(const ::google::protobuf::Message& message);
+    command_t create(const ::google::protobuf::Message& message, const std::string& type_url);
     command_t create(const ::google::protobuf::Message& message, int target_version);
 
 private:

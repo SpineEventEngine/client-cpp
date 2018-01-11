@@ -47,6 +47,15 @@ std::unique_ptr<Command> CommandFactory::create(const ::google::protobuf::Messag
     return std::unique_ptr<Command>{command};
 }
 
+std::unique_ptr<Command> CommandFactory::create(const ::google::protobuf::Message& message, const std::string& type_url)
+{
+    Command* command = get_command(
+            get_command_context(actor_context_),
+            to_any(message, type_url),
+            get_command_id(uuid_generator_.createRandom().toString()));
+    return std::unique_ptr<Command>{command};
+}
+
 std::unique_ptr<Command> CommandFactory::create(const ::google::protobuf::Message& message, const int target_version)
 {
     Command* command = get_command(
