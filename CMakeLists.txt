@@ -68,3 +68,5 @@ add_dependencies(runTests ${CPP_SPINE_LIBRARY_NAME})
 find_package(Doxygen)
 set(DOXYGEN_JAVADOC_AUTOBRIEF TRUE)
 doxygen_add_docs(docs ${SOURCE_LIB_FILES})
+
+add_subdirectory(samples/hello_world)
