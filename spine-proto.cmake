@@ -61,8 +61,8 @@ set(spine_generated_files)
 foreach(proto_file ${spine_proto_files})
     compile_proto_file(${proto_file})
     string(REPLACE .proto .pb.cc pb_file ${proto_file})
-    set(spine_generated_files ${spine_generated_files}
-            ${GENERATED_DIR}/${pb_file})
+    string(REPLACE .proto .grpc.pb.cc pb_grpc_file ${proto_file})
+    set(spine_generated_files ${spine_generated_files} ${GENERATED_DIR}/${pb_file} ${GENERATED_DIR}/${pb_grpc_file})
 endforeach(proto_file)
 
 include_directories(${GENERATED_DIR})
