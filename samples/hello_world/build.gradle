@@ -1,0 +1,149 @@
+/*
+ * Copyright 2017, TeamDev Ltd. All rights reserved.
+ *
+ * Redistribution and use in source and/or binary forms, with or without
+ * modification, must retain the above copyright notice and the following
+ * disclaimer.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+
+buildscript {
+
+    project.ext {
+
+        // Application version.
+        //
+        appVersion = '0.0.1-SNAPSHOT'
+
+        // Versions of Spine modules.
+        //
+        spineVersion = '0.10.4-SNAPSHOT'
+        spineBaseVersion = '0.10.0'
+
+        // Versions of the most definitive third-party libraries.
+        //
+        protobufGradlePluginVersion = '0.8.3'
+        guavaVersion = '20.0'
+        protobufVersion = '3.2.0'
+        slf4jVersion = '1.7.21'
+    }
+
+    ext {
+        spineRepository = 'http://maven.teamdev.com/repository/spine'
+        spineSnapshotsRepository = 'http://maven.teamdev.com/repository/spine-snapshots'
+    }
+
+    repositories {
+        jcenter()
+
+        maven { url = spineRepository }
+        maven { url = spineSnapshotsRepository }
+
+        mavenCentral()
+        mavenLocal()
+    }
+
+    dependencies {
+        classpath group: 'com.google.guava', name: 'guava', version: guavaVersion
+        classpath(group: 'com.google.protobuf', name: 'protobuf-gradle-plugin', version: protobufGradlePluginVersion) {
+            // exclude an old Guava version
+            exclude group: 'com.google.guava'
+        }
+        classpath "io.spine.tools:spine-model-compiler:$spineBaseVersion"
+    }
+}
+
+allprojects {
+    apply plugin: 'java' /* The `java` plugin is required at this level for Gradle Protobuf plugin.
+                            See https://github.com/google/protobuf-gradle-plugin#adding-the-plugin-to-your-project */
+    apply plugin: 'idea'
+
+    group = 'io.spine.hello_world'    // The group ID for this sample.
+    version = appVersion             // Version in generated output. This is the version of the code.
+
+    repositories {
+        jcenter()
+        maven {
+            url 'https://maven-central.storage.googleapis.com'      // Google's mirror of Maven Central
+            //   url 'https://oss.sonatype.org/content/repositories/snapshots' // SNAPSHOT Repository (if needed)
+        }
+
+        // If it's not found in JCenter, it must be our code.
+        maven { url = spineRepository }
+        maven { url = spineSnapshotsRepository }
+
+        mavenLocal()
+        mavenCentral()
+    }
+}
+
+// Suppress building the root project.
+rootProject.jar { onlyIf { false } }
+
+
+subprojects {
+    project.ext {
+        sourcesRootDir = "${projectDir}/src"
+        generatedRootDir = "${projectDir}/generated"
+
+        generatedJavaDir = "${generatedRootDir}/main/java"
+        generatedTestJavaDir = "${generatedRootDir}/test/java"
+
+        generatedSpineDir = "${generatedRootDir}/main/spine"
+        generatedTestSpineDir = "${generatedRootDir}/test/spine"
+
+        testArtifactsPlugin = "${rootDir}/scripts/test-artifacts.gradle"
+        generateDescriptorSetPlugin = "${rootDir}/scripts/generate-descriptor-set.gradle"
+    }
+
+    apply plugin: 'java'
+
+    sourceCompatibility = JavaVersion.VERSION_1_7
+    targetCompatibility = JavaVersion.VERSION_1_7
+
+    dependencies {
+        compile group: 'org.slf4j', name: 'slf4j-jdk14', version: slf4jVersion
+        compile ("io.spine:spine-server:${spineVersion}")
+    }
+
+    idea {
+        module {
+            sourceDirs += file(generatedJavaDir);
+            sourceDirs += file(generatedSpineDir);
+
+            testSourceDirs += file(generatedTestJavaDir)
+        }
+    }
+
+    idea.module.iml {
+        beforeMerged { module ->
+            module.dependencies.clear()
+        }
+        whenMerged { module ->
+            module.dependencies*.exported = true
+        }
+    }
+}
+
+idea.project.ipr {
+    beforeMerged { final project ->
+        project.modulePaths.clear()
+    }
+    withXml { final provider ->
+        provider.node.component
+                .find { it.@name == 'VcsDirectoryMappings' }
+                .mapping.@vcs = 'Git'
+    }
+}
