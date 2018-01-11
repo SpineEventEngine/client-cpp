@@ -136,7 +136,7 @@ function(SETUP_TARGET_FOR_COVERAGE)
 
     set(options NONE)
     set(oneValueArgs NAME)
-    set(multiValueArgs EXECUTABLE EXECUTABLE_ARGS DEPENDENCIES)
+    set(multiValueArgs EXECUTABLE EXECUTABLE_ARGS ../dependencies)
     cmake_parse_arguments(Coverage "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
 
     if(NOT LCOV_PATH)
@@ -151,15 +151,15 @@ function(SETUP_TARGET_FOR_COVERAGE)
     add_custom_target(${Coverage_NAME}
 
             # Cleanup lcov
-            COMMAND ${LCOV_PATH} --directory . --zerocounters
+            COMMAND ${LCOV_PATH} --directory .. --zerocounters
             # Create baseline to make sure untouched files show up in the report
-            COMMAND ${LCOV_PATH} -c -i -d . -o ${Coverage_NAME}.base
+            COMMAND ${LCOV_PATH} -c -i -d .. -o ${Coverage_NAME}.base
 
             # Run tests
             COMMAND ${Coverage_EXECUTABLE}
 
             # Capturing lcov counters and generating report
-            COMMAND ${LCOV_PATH} --directory . --capture --output-file ${Coverage_NAME}.info
+            COMMAND ${LCOV_PATH} --directory .. --capture --output-file ${Coverage_NAME}.info
             # add baseline counters
             COMMAND ${LCOV_PATH} -a ${Coverage_NAME}.base -a ${Coverage_NAME}.info --output-file ${Coverage_NAME}.total
             COMMAND ${LCOV_PATH} --remove ${Coverage_NAME}.total ${COVERAGE_EXCLUDES} --output-file ${PROJECT_BINARY_DIR}/${Coverage_NAME}.info.cleaned
@@ -193,7 +193,7 @@ function(SETUP_TARGET_FOR_COVERAGE_COBERTURA)
 
     set(options NONE)
     set(oneValueArgs NAME)
-    set(multiValueArgs EXECUTABLE EXECUTABLE_ARGS DEPENDENCIES)
+    set(multiValueArgs EXECUTABLE EXECUTABLE_ARGS ../dependencies)
     cmake_parse_arguments(Coverage "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
 
     if(NOT SIMPLE_PYTHON_EXECUTABLE)

@@ -15,55 +15,23 @@ set(BUILD_SHARED_LIBS OFF)
 add_definitions(-std=gnu++14)
 add_definitions(-fPIC)
 
+#common libraries
 find_package(Poco REQUIRED Foundation)
 find_package(Boost REQUIRED)
-
-enable_testing()
-find_package(GTest REQUIRED)
-include_directories(${GTEST_INCLUDE_DIRS})
-include(CodeCoverage.cmake)
-
-include(spine-proto.cmake)
-
-
 
 include_directories(include)
 include_directories(${Poco_INCLUDE_DIRS})
 include_directories(${Boost_INCLUDE_DIRS})
 
-include_directories(${GRPC_INSTALL_DIR}/include)
+include(cmake/code_coverage.cmake)
+include(cmake/spine_proto.cmake)
 
+include_directories(${GRPC_INSTALL_DIR}/include)
 link_directories(${GRPC_INSTALL_DIR}/lib)
 
+include(cmake/spine_cpp_lib.cmake)
 
-set(SOURCE_LIB_FILES
-        src/common.cc
-        src/common.h
-        src/actor_request_factory.cc
-        src/command_factory.cc
-        src/topic_factory.cc
-        src/query_factory.cc
-        src/actor_request_factory_params.cc
-        src/type_url.cc)
-
-set(TEST_SRCS
-        test/actor_request_factory_test.cc
-        test/common_test.cc
-        test/type_url_test.cc)
-
-
-set(CPP_SPINE_LIBRARY_NAME ${CMAKE_PROJECT_NAME}-${VERSION})
-add_library(${CPP_SPINE_LIBRARY_NAME} STATIC ${SOURCE_LIB_FILES} ${spine_generated_files} )
-
-add_executable(runTests ${TEST_SRCS} )
-find_library(PROTOBUF_LIB libprotobuf.a)
-target_link_libraries(runTests GTest::GTest GTest::Main ${CPP_SPINE_LIBRARY_NAME}
-        ${PROTOBUF_LIB}
-        ${Poco_LIBRARIES})
-add_dependencies(runTests ${CPP_SPINE_LIBRARY_NAME})
-
-find_package(Doxygen)
-set(DOXYGEN_JAVADOC_AUTOBRIEF TRUE)
-doxygen_add_docs(docs ${SOURCE_LIB_FILES})
+include(cmake/unit_tests.cmake)
+include(cmake/docs.cmake)
 
 add_subdirectory(samples/hello_world)
