@@ -30,7 +30,7 @@ const std::string URL1 = std::string(PREFIX1) + "/" + std::string(TYPE1);
 
 TEST(TypeUrlShould, Create)
 {
-    type_url_t type_url = TypeUrl::create(PREFIX1, TYPE1);
+    TypeUrlPtr type_url = TypeUrl::create(PREFIX1, TYPE1);
     ASSERT_TRUE(type_url);
     ASSERT_EQ(type_url->prefix(), PREFIX1);
     ASSERT_EQ(type_url->type(), TYPE1);
@@ -39,7 +39,7 @@ TEST(TypeUrlShould, Create)
 
 TEST(TypeUrlShould, ParseUrl)
 {
-    type_url_t type_url = TypeUrl::parse(URL1);
+    TypeUrlPtr type_url = TypeUrl::parse(URL1);
     ASSERT_TRUE(type_url);
     ASSERT_EQ(type_url->prefix(), PREFIX1);
     ASSERT_EQ(type_url->type(), TYPE1);

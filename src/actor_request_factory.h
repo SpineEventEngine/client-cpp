@@ -55,9 +55,9 @@ public:
     static ActorRequestFactory create(const ActorRequestFactoryParams& params);
 
 public:
-    command_factory_t command_factory();
-    topic_factory_t topic_factory();
-    query_factory_t query_factory();
+    CommandFactoryPtr command_factory();
+    TopicFactoryPtr topic_factory();
+    QueryFactoryPtr query_factory();
     std::unique_ptr<core::ActorContext> actor_context() const;
 
 public:

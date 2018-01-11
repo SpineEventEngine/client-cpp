@@ -45,8 +45,8 @@ public:
     QueryFactory(const ActorRequestFactory & actor_request_factory);
 
 public:
-    query_t all(const type::TypeUrl& type_url);
-    query_t all(const std::string& type_url);
+    QueryPtr all(const type::TypeUrl& type_url);
+    QueryPtr all(const std::string& type_url);
 
 private:
     spine::client::QueryId *createQueryId();

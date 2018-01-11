@@ -42,10 +42,10 @@ public:
     TopicFactory(const ActorRequestFactory & actor_request_factory);
 
 public:
-    topic_t all(const type::TypeUrl& type_url);
+    TopicPtr all(const type::TypeUrl& type_url);
 
 private:
-    topic_t for_target(std::unique_ptr<Target> &&);
+    TopicPtr for_target(std::unique_ptr<Target> &&);
 private:
     std::unique_ptr<core::ActorContext> actor_context_;
     Poco::UUIDGenerator uuid_generator_;

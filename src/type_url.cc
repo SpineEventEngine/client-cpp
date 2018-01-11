@@ -42,29 +42,29 @@ std::string TypeUrl::type() const
     return type_;
 }
 
-type_url_t TypeUrl::create(const std::string& prefix, const std::string& type)
+TypeUrlPtr TypeUrl::create(const std::string& prefix, const std::string& type)
 {
     if (prefix.empty() || type.empty())
     {
-        return type_url_t();
+        return TypeUrlPtr();
     }
-    return type_url_t(new TypeUrl(prefix, type));
+    return TypeUrlPtr(new TypeUrl(prefix, type));
 }
 
-type_url_t TypeUrl::parse(const std::string& from)
+TypeUrlPtr TypeUrl::parse(const std::string& from)
 {
     if (from.empty())
     {
-        return type_url_t();
+        return TypeUrlPtr();
     }
 
     std::vector<std::string> split_values;
     boost::split(split_values, from, [](char val) { return SEPARATOR == val;});
     if (2 == split_values.size() && !split_values[0].empty() && !split_values[1].empty())
     {
-        return type_url_t(new TypeUrl(split_values[0], split_values[1]));
+        return TypeUrlPtr(new TypeUrl(split_values[0], split_values[1]));
     }
-    return type_url_t();
+    return TypeUrlPtr();
 }
 
 std::string TypeUrl::value() const

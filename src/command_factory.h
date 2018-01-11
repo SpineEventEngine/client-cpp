@@ -48,9 +48,9 @@ class CommandFactory
 public:
     CommandFactory(const ActorRequestFactory & actor_request_factory);
 public:
-    command_t create(const ::google::protobuf::Message& message);
-    command_t create(const ::google::protobuf::Message& message, const std::string& type_url);
-    command_t create(const ::google::protobuf::Message& message, int target_version);
+    CommandPtr create(const ::google::protobuf::Message& message);
+    CommandPtr create(const ::google::protobuf::Message& message, const std::string& type_url);
+    CommandPtr create(const ::google::protobuf::Message& message, int target_version);
 
 private:
     std::unique_ptr<core::ActorContext> actor_context_;

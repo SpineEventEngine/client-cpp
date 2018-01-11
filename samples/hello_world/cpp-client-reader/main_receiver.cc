@@ -29,7 +29,6 @@
 #include <actor_request_factory_params.h>
 #include <common.h>
 #include <actor_request_factory.h>
-#include <type_url.h>
 
 using namespace spine::client;
 
@@ -51,7 +50,7 @@ int main ()
 
     ActorRequestFactory factory = ActorRequestFactory::create(params);
 
-    query_t query = factory.query_factory()->all("helloworld.LastHello");
+    QueryPtr query = factory.query_factory()->all("helloworld.LastHello");
 
     std::unique_ptr<QueryService::Stub> query_service = QueryService::NewStub(channel);
 

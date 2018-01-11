@@ -49,13 +49,13 @@ public:
      * @param type The name of the Protobuf type.
      *
     */
-    static type_url_t create(const std::string& prefix, const std::string& type);
+    static TypeUrlPtr create(const std::string& prefix, const std::string& type);
     /**
     * Creates a new instance from the passed type URL.
     *
     * @param from the type URL of the Protobuf message type
     */
-    static type_url_t parse(const std::string& from);
+    static TypeUrlPtr parse(const std::string& from);
 
     /**
      *

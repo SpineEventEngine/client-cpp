@@ -29,7 +29,7 @@ namespace spine
     {
         class TypeUrl;
 
-        using type_url_t = std::unique_ptr<TypeUrl>;
+        using TypeUrlPtr = std::unique_ptr<TypeUrl>;
     }
 
     namespace client
@@ -41,19 +41,19 @@ namespace spine
         class Topic;
         class Query;
 
-        using command_factory_t = std::unique_ptr<CommandFactory>;
-        using topic_factory_t = std::unique_ptr<TopicFactory>;
-        using query_factory_t = std::unique_ptr<QueryFactory>;
-        using actor_reques_factory_t = std::unique_ptr<ActorRequestFactory>;
-        using topic_t = std::unique_ptr<Topic>;
-        using query_t = std::unique_ptr<Query>;
+        using CommandFactoryPtr = std::unique_ptr<CommandFactory>;
+        using TopicFactoryPtr = std::unique_ptr<TopicFactory>;
+        using QueryFactoryPtr = std::unique_ptr<QueryFactory>;
+        using ActorRequestFactoryPtr = std::unique_ptr<ActorRequestFactory>;
+        using TopicPtr = std::unique_ptr<Topic>;
+        using QueryPtr = std::unique_ptr<Query>;
 
     }
     namespace core
     {
         class Command;
 
-        using command_t = std::unique_ptr<Command>;
+        using CommandPtr = std::unique_ptr<Command>;
     }
 }
 

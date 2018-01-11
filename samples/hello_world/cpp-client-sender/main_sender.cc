@@ -52,9 +52,9 @@ int main(int argc, char *argv[])
         .set_actor(make_user_id("user"))
         .set_zone_offset(make_zone_offset("UTC", 0));
 
-    command_factory_t command_factory = ActorRequestFactory::create(params).command_factory();
+    CommandFactoryPtr command_factory = ActorRequestFactory::create(params).command_factory();
 
-    spine::core::command_t command = command_factory->create(say_hello, "type.spine.io");
+    spine::core::CommandPtr command = command_factory->create(say_hello, "type.spine.io");
 
     std::unique_ptr<CommandService::Stub> stub = CommandService::NewStub(channel);
 
