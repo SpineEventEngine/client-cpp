@@ -52,6 +52,10 @@ get_command_context(google::protobuf::Timestamp *timestamp, spine::core::UserId 
 
 
 spine::core::UserId *get_user_id(const std::string &value);
+std::unique_ptr<spine::core::UserId> make_user_id(const std::string &value);
+std::unique_ptr<spine::core::TenantId> make_tenant_id(const std::string &value);
+std::unique_ptr<spine::time::ZoneOffset> make_zone_offset(const std::string &zone_id, int amount);
+
 
 spine::time::ZoneId *get_zone_id();
 

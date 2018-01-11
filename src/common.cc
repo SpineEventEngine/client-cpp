@@ -26,7 +26,12 @@
 using namespace spine::client;
 using namespace google::protobuf;
 
-google::protobuf::Timestamp *get_timestamp() { return google::protobuf::Timestamp::default_instance().New(); }
+google::protobuf::Timestamp *get_timestamp() 
+{
+    Timestamp* timestamp = google::protobuf::Timestamp::default_instance().New();
+    timestamp->set_seconds(time(nullptr));
+    return timestamp;
+}
 
 spine::core::EventContext *get_event_conext(google::protobuf::Any *producer_id) {
     spine::core::EventContext *event_context = spine::core::EventContext::default_instance().New();
@@ -80,6 +85,31 @@ spine::core::UserId *get_user_id(const std::string &value) {
     spine::core::UserId *userId = spine::core::UserId::default_instance().New();
     userId->set_value(value);
     return userId;
+}
+
+std::unique_ptr<spine::core::UserId> make_user_id(const std::string &value)
+{
+    auto actor = std::make_unique<spine::core::UserId>();
+    actor->set_value(value);
+    return actor;
+}
+
+std::unique_ptr<spine::core::TenantId> make_tenant_id(const std::string &value)
+{
+    auto tenant_id = std::make_unique<spine::core::TenantId>();
+    tenant_id->set_value(value);
+    return tenant_id;
+}
+
+std::unique_ptr<spine::time::ZoneOffset> make_zone_offset(const std::string &zone_id, int amount)
+{
+    spine::time::ZoneId* zone_id_ptr = spine::time::ZoneId::default_instance().New();
+    zone_id_ptr->set_value(zone_id);
+
+    std::unique_ptr<spine::time::ZoneOffset> zone_offset = std::make_unique<spine::time::ZoneOffset>();
+    zone_offset->set_allocated_id(zone_id_ptr);
+    zone_offset->set_amountseconds(amount);
+    return zone_offset;
 }
 
 spine::time::ZoneId *get_zone_id() {
