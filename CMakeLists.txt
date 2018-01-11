@@ -27,7 +27,7 @@ include(spine-proto.cmake)
 
 
 
-include_directories(src)
+include_directories(include)
 include_directories(${Poco_INCLUDE_DIRS})
 include_directories(${Boost_INCLUDE_DIRS})
 
@@ -40,19 +40,16 @@ set(SOURCE_LIB_FILES
         src/common.cc
         src/common.h
         src/actor_request_factory.cc
-        src/actor_request_factory.h
         src/command_factory.cc
-        src/command_factory.h
         src/topic_factory.cc
-        src/topic_factory.h
         src/query_factory.cc
-        src/query_factory.h
         src/actor_request_factory_params.cc
-        src/actor_request_factory_params.h src/type_url.cc src/type_url.h src/types.h)
+        src/type_url.cc)
 
 set(TEST_SRCS
         test/actor_request_factory_test.cc
-        test/common_test.cc test/type_url_test.cc)
+        test/common_test.cc
+        test/type_url_test.cc)
 
 
 set(CPP_SPINE_LIBRARY_NAME ${CMAKE_PROJECT_NAME}-${VERSION})

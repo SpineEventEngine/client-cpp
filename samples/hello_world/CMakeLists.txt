@@ -24,7 +24,7 @@ include_directories(${GRPC_INSTALL_DIR}/include)
 link_directories(${GRPC_INSTALL_DIR}/lib)
 
 #spine-cpp
-include_directories(../../src)
+include_directories(../../include)
 include_directories(../../_build/generated)
 link_directories(../../_build)
 set(CPP_SPINE_LIBRARY_NAME libspine-0.10.0.a)
