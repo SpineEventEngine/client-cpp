@@ -46,6 +46,7 @@ public:
 
 public:
     query_t all(const type::TypeUrl& type_url);
+    query_t all(const std::string& type_url);
 
 private:
     spine::client::QueryId *createQueryId();

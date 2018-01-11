@@ -49,6 +49,18 @@ std::unique_ptr<Query> QueryFactory::all(const type::TypeUrl& type_url) {
     return query;
 }
 
+std::unique_ptr<Query> QueryFactory::all(const std::string& type_url) {
+    Target* target = create_target(type_url);
+
+    std::unique_ptr<Query> query { Query::default_instance().New() };
+
+    query->set_allocated_id(createQueryId());
+    query->set_allocated_context(copy_actor_context(*actor_context_));
+    query->set_allocated_target(target);
+
+    return query;
+}
+
 QueryId *QueryFactory::createQueryId()
 {
     QueryId *query_id = new QueryId();
