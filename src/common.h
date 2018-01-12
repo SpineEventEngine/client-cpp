@@ -31,41 +31,17 @@
 #include "spine/client/entities.pb.h"
 
 
-google::protobuf::Timestamp *get_timestamp();
-
-spine::core::EventContext *get_event_conext(google::protobuf::Any *producer_id);
-google::protobuf::Any *get_producer_id(const google::protobuf::Message &message);
-
-spine::core::EventId *get_event_id(const char *value);
-
-
-spine::core::CommandId *get_command_id(const char *value);
-
-spine::core::ActorContext *
-get_actor_context(spine::core::UserId *actor, spine::time::ZoneOffset *offset, spine::core::TenantId *timestamp,
-                  google::protobuf::Timestamp *pTimestamp);
-
-spine::core::CommandContext *
-get_command_context(google::protobuf::Timestamp *timestamp, spine::core::UserId *actor, spine::time::ZoneOffset *offset,
-                    int version);
-
-
-
-spine::core::UserId *get_user_id(const std::string &value);
-std::unique_ptr<spine::core::UserId> make_user_id(const std::string &value);
-std::unique_ptr<spine::core::TenantId> make_tenant_id(const std::string &value);
-std::unique_ptr<spine::time::ZoneOffset> make_zone_offset(const std::string &zone_id, int amount);
-
-
-spine::time::ZoneId *get_zone_id();
-
-spine::time::ZoneOffset *get_zone_offset(spine::time::ZoneId *zone_id);
-
 spine::client::Target* create_target(const std::string& type_url);
 
-spine::core::ActorContext* copy_actor_context(const spine::core::ActorContext&);
+template<typename Msg
+//        ,std::enable_if_t<std::is_base_of<google::protobuf::Message, Msg>::value>
+>
+Msg* clone(const Msg& msg)
+{
+    auto new_msg = msg.New();
+    new_msg->CopyFrom(msg);
+    return new_msg;
+}
 
-google::protobuf::Any* to_any(const google::protobuf::Message& message);
-google::protobuf::Any* to_any(const google::protobuf::Message& message, const std::string& );
 
 #endif //POC_CLIENT_COMMON_H

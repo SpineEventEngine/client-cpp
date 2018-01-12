@@ -18,7 +18,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "actor_request_factory_params.h"
+#include "spine/actor_request_factory_params.h"
 
 #include <spine/core/user_id.pb.h>
 #include <spine/core/tenant_id.pb.h>

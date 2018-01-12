@@ -18,8 +18,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "command_factory.h"
-#include "actor_request_factory.h"
+#include "spine/command_factory.h"
+#include "spine/actor_request_factory.h"
 #include "common.h"
 
 using namespace spine::core;
@@ -65,6 +65,19 @@ std::unique_ptr<Command> CommandFactory::create(const ::google::protobuf::Messag
     return std::unique_ptr<Command>{command};
 
 }
+google::protobuf::Any* CommandFactory::to_any(const google::protobuf::Message& message)
+{
+    google::protobuf::Any* any = google::protobuf::Any::default_instance().New();
+    any->PackFrom(message);
+    return any;
+}
+
+google::protobuf::Any* CommandFactory::to_any(const google::protobuf::Message& message, const std::string& type_url)
+{
+    google::protobuf::Any* any = google::protobuf::Any::default_instance().New();
+    any->PackFrom(message, type_url);
+    return any;
+}
 
 Command* get_command(CommandContext* command_context, google::protobuf::Any* any, CommandId* command_id)
 {
@@ -86,7 +99,7 @@ CommandId* get_command_id(const std::string& uuid)
 spine::core::CommandContext* get_command_context(const std::unique_ptr<ActorContext>& actor_context)
 {
     spine::core::CommandContext *command_context = spine::core::CommandContext::default_instance().New();
-    command_context->set_allocated_actor_context(copy_actor_context(*actor_context));
+    command_context->set_allocated_actor_context(clone(*actor_context));
 
     return command_context;
 }
@@ -98,28 +111,6 @@ spine::core::CommandContext* get_command_context(const std::unique_ptr<ActorCont
     return context;
 }
 
-
-
-//UserId* copy_actor(const UserId& user_id)
-//{
-//    UserId* new_user_id = UserId::default_instance().New();
-//    new_user_id->CopyFrom(user_id);
-//    return  new_user_id;
-//}
-//
-//google::protobuf::Timestamp* copy_timestamp(const google::protobuf::Timestamp& timestamp)
-//{
-//    google::protobuf::Timestamp* new_timestamp = google::protobuf::Timestamp::default_instance().New();
-//    new_timestamp->CopyFrom(timestamp);
-//    return new_timestamp;
-//}
-//
-//ZoneOffset* copy_zone_offset(const ZoneOffset& zone_offset)
-//{
-//    ZoneOffset* new_offset = ZoneOffset::default_instance().New();
-//    new_offset->CopyFrom(zone_offset);
-//    return new_offset;
-//}
 
 
 

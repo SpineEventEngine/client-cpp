@@ -18,7 +18,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "type_url.h"
+#include "spine/type_url.h"
 
 #include <boost/algorithm/string.hpp>
 

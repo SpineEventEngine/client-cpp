@@ -18,15 +18,34 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "actor_request_factory.h"
+#include "spine/actor_request_factory.h"
 
 #include "common.h"
-#include "topic_factory.h"
-#include "command_factory.h"
-#include "query_factory.h"
+#include "spine/topic_factory.h"
+#include "spine/command_factory.h"
+#include "spine/query_factory.h"
 
 using namespace spine;
 using namespace spine::client;
+using namespace google::protobuf;
+
+spine::core::ActorContext *
+get_actor_context(spine::core::UserId *actor, spine::time::ZoneOffset *offset, spine::core::TenantId *tenant_id,
+                  google::protobuf::Timestamp *timestamp) {
+    spine::core::ActorContext *actor_context = spine::core::ActorContext::default_instance().New();
+    actor_context->set_allocated_timestamp(timestamp);
+    actor_context->set_allocated_actor(actor);
+    actor_context->set_allocated_zone_offset(offset);
+    actor_context->set_allocated_tenant_id(tenant_id);
+    return actor_context;
+}
+
+google::protobuf::Timestamp *get_timestamp()
+{
+    Timestamp* timestamp = google::protobuf::Timestamp::default_instance().New();
+    timestamp->set_seconds(::time(nullptr));
+    return timestamp;
+}
 
 ActorRequestFactory::ActorRequestFactory(const ActorRequestFactoryParams& params)
         : params_(params)

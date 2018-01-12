@@ -29,9 +29,12 @@ include_directories(../../_build/generated)
 link_directories(../../_build)
 set(CPP_SPINE_LIBRARY_NAME libspine-0.10.0.a)
 
+include_directories(${CMAKE_BINARY_DIR})
+
 #proto
 set(Protobuf_IMPORT_DIRS ${Protobuf_IMPORT_DIRS} dependencies/spine)
 protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS model/src/main/proto/hello.proto)
+
 
 
 set(hello-world_SRC

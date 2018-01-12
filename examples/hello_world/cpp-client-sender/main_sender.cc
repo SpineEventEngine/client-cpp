@@ -23,28 +23,47 @@
 
 #include "hello.pb.h"
 
-#include <command_factory.h>
-#include <actor_request_factory_params.h>
-#include <common.h>
-#include <actor_request_factory.h>
+#include <spine/types.h>
+#include <spine/command_factory.h>
+#include <spine/actor_request_factory_params.h>
+#include <spine/actor_request_factory.h>
 #include <spine/client/query.pb.h>
 
 using namespace spine::client;
+//using namespace spine::core;
+
+std::unique_ptr<spine::core::UserId> make_user_id(const std::string &value)
+{
+    auto actor = std::make_unique<spine::core::UserId>();
+    actor->set_value(value);
+    return actor;
+}
+
+std::unique_ptr<spine::time::ZoneOffset> make_zone_offset(const std::string &zone_id, int amount)
+{
+    spine::time::ZoneId* zone_id_ptr = spine::time::ZoneId::default_instance().New();
+    zone_id_ptr->set_value(zone_id);
+
+    std::unique_ptr<spine::time::ZoneOffset> zone_offset = std::make_unique<spine::time::ZoneOffset>();
+    zone_offset->set_allocated_id(zone_id_ptr);
+    zone_offset->set_amountseconds(amount);
+    return zone_offset;
+}
 
 int main(int argc, char *argv[])
 {
     std::shared_ptr<grpc::Channel> channel = ::grpc::CreateChannel("localhost:8484", grpc::InsecureChannelCredentials());
 
+    Poco::UUIDGenerator generator;
 
     helloworld::SayHello say_hello;
     helloworld::HelloId* id = ::helloworld::HelloId::default_instance().New();
-    Poco::UUIDGenerator generator;
     id->set_value(generator.createRandom().toString());
     say_hello.set_allocated_id(id);
     say_hello.set_user_id("asdads");
     say_hello.set_username("user1" + generator.createRandom().toString());
 
-    auto tenant = std::unique_ptr<spine::core::TenantId>(TenantId::default_instance().New());
+    auto tenant = std::unique_ptr<TenantId>(TenantId::default_instance().New());
 
     ActorRequestFactoryParams params;
     params
@@ -54,7 +73,7 @@ int main(int argc, char *argv[])
 
     CommandFactoryPtr command_factory = ActorRequestFactory::create(params).command_factory();
 
-    spine::core::CommandPtr command = command_factory->create(say_hello, "type.spine.io");
+    CommandPtr command = command_factory->create(say_hello, "type.spine.io");
 
     std::unique_ptr<CommandService::Stub> stub = CommandService::NewStub(channel);
 

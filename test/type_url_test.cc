@@ -20,7 +20,7 @@
 
 #include <gtest/gtest.h>
 
-#include "type_url.h"
+#include "spine/type_url.h"
 
 using namespace spine::type;
 

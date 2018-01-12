@@ -24,15 +24,34 @@
 
 #include "hello.pb.h"
 
-#include <types.h>
-#include <query_factory.h>
-#include <actor_request_factory_params.h>
-#include <common.h>
-#include <actor_request_factory.h>
+#include <spine/types.h>
+#include <spine/query_factory.h>
+#include <spine/actor_request_factory_params.h>
+#include <spine/actor_request_factory.h>
 
 using namespace spine::client;
+using namespace spine::core;
+using namespace google::protobuf;
 
-int main ()
+std::unique_ptr<spine::core::UserId> make_user_id(const std::string &value)
+{
+    auto actor = std::make_unique<spine::core::UserId>();
+    actor->set_value(value);
+    return actor;
+}
+
+std::unique_ptr<spine::time::ZoneOffset> make_zone_offset(const std::string &zone_id, int amount)
+{
+    spine::time::ZoneId* zone_id_ptr = spine::time::ZoneId::default_instance().New();
+    zone_id_ptr->set_value(zone_id);
+
+    std::unique_ptr<spine::time::ZoneOffset> zone_offset = std::make_unique<spine::time::ZoneOffset>();
+    zone_offset->set_allocated_id(zone_id_ptr);
+    zone_offset->set_amountseconds(amount);
+    return zone_offset;
+}
+
+int main(int argc, char *argv[])
 {
     std::shared_ptr<grpc::Channel> channel = ::grpc::CreateChannel("localhost:8484", grpc::InsecureChannelCredentials());
 
@@ -40,7 +59,7 @@ int main ()
     helloworld::LastHello lastHello;
 
 
-    auto tenant = std::unique_ptr<spine::core::TenantId>(spine::core::TenantId::default_instance().New());
+    auto tenant = std::unique_ptr<TenantId>(spine::core::TenantId::default_instance().New());
 
     ActorRequestFactoryParams params;
     params
@@ -60,7 +79,7 @@ int main ()
 
     if (response.messages_size() > 0)
     {
-        const google::protobuf::Any& any = response.messages(0);
+        const Any& any = response.messages(0);
         ::helloworld::LastHello last_hello;
         any.UnpackTo(&last_hello);
         std::string username = last_hello.username();

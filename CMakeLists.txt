@@ -34,4 +34,4 @@ include(cmake/spine_cpp_lib.cmake)
 include(cmake/unit_tests.cmake)
 include(cmake/docs.cmake)
 
-add_subdirectory(samples/hello_world)
+add_subdirectory(examples/hello_world)

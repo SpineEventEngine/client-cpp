@@ -53,6 +53,10 @@ public:
     CommandPtr create(const ::google::protobuf::Message& message, int target_version);
 
 private:
+    google::protobuf::Any* to_any(const google::protobuf::Message& message);
+    google::protobuf::Any* to_any(const google::protobuf::Message& message, const std::string& );
+
+private:
     std::unique_ptr<core::ActorContext> actor_context_;
     Poco::UUIDGenerator uuid_generator_;
 

@@ -20,8 +20,8 @@
 
 #include <gtest/gtest.h>
 
-#include "command_factory.h"
-#include "actor_request_factory.h"
+#include "spine/command_factory.h"
+#include "spine/actor_request_factory.h"
 
 #include <spine/people/person_name.pb.h>
 

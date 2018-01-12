@@ -18,13 +18,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "query_factory.h"
+#include "spine/query_factory.h"
 
 #include <sstream>
 
 
 
-#include "actor_request_factory.h"
+#include "spine/actor_request_factory.h"
 #include "common.h"
 
 namespace spine {
@@ -43,7 +43,7 @@ std::unique_ptr<Query> QueryFactory::all(const type::TypeUrl& type_url) {
     std::unique_ptr<Query> query { Query::default_instance().New() };
 
     query->set_allocated_id(createQueryId());
-    query->set_allocated_context(copy_actor_context(*actor_context_));
+    query->set_allocated_context(clone(*actor_context_));
     query->set_allocated_target(target);
 
     return query;
@@ -55,7 +55,7 @@ std::unique_ptr<Query> QueryFactory::all(const std::string& type_url) {
     std::unique_ptr<Query> query { Query::default_instance().New() };
 
     query->set_allocated_id(createQueryId());
-    query->set_allocated_context(copy_actor_context(*actor_context_));
+    query->set_allocated_context(clone(*actor_context_));
     query->set_allocated_target(target);
 
     return query;
