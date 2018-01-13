@@ -20,7 +20,6 @@
 
 #include "spine/actor_request_factory.h"
 
-#include "common.h"
 #include "spine/topic_factory.h"
 #include "spine/command_factory.h"
 #include "spine/query_factory.h"

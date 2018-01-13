@@ -20,7 +20,7 @@
 
 #include "spine/topic_factory.h"
 
-#include "common.h"
+#include "spine/message_utils.hpp"
 
 using namespace spine::client;
 
@@ -31,7 +31,7 @@ TopicFactory::TopicFactory(const ActorRequestFactory& actor_request_factory)
 
 std::unique_ptr<Topic> TopicFactory::all(const type::TypeUrl& type_url)
 {
-    std::unique_ptr<Target> target { create_target(type_url.value()) };
+    std::unique_ptr<Target> target { create_with_value<Target>(type_url.value()) };
     return for_target(std::move(target));
 }
 
@@ -43,7 +43,7 @@ std::unique_ptr<Topic> TopicFactory::for_target(std::unique_ptr<Target>&& target
     Topic* topic = Topic::default_instance().New();
     topic->set_allocated_id(topic_id);
     topic->set_allocated_target(target.release());
-    topic->set_allocated_context(clone(*actor_context_));
+    topic->set_allocated_context(clone(actor_context_));
 
-    return std::unique_ptr<Topic>(topic);
+    return std::unique_ptr<Topic>{topic};
 }

@@ -25,7 +25,7 @@
 
 
 #include "spine/actor_request_factory.h"
-#include "common.h"
+#include "spine/message_utils.hpp"
 
 namespace spine {
 namespace client {
@@ -38,24 +38,24 @@ QueryFactory::QueryFactory(const ActorRequestFactory &actor_request_factory)
 }
 
 std::unique_ptr<Query> QueryFactory::all(const type::TypeUrl& type_url) {
-    Target* target = create_target(type_url.value());
+    Target* target = create_with_value<Target>(type_url.value());
 
     std::unique_ptr<Query> query { Query::default_instance().New() };
 
     query->set_allocated_id(createQueryId());
-    query->set_allocated_context(clone(*actor_context_));
+    query->set_allocated_context(clone(actor_context_));
     query->set_allocated_target(target);
 
     return query;
 }
 
 std::unique_ptr<Query> QueryFactory::all(const std::string& type_url) {
-    Target* target = create_target(type_url);
+    Target* target = create_with_value<Target>(type_url);
 
     std::unique_ptr<Query> query { Query::default_instance().New() };
 
     query->set_allocated_id(createQueryId());
-    query->set_allocated_context(clone(*actor_context_));
+    query->set_allocated_context(clone(actor_context_));
     query->set_allocated_target(target);
 
     return query;

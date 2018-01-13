@@ -20,7 +20,7 @@
 
 #include "spine/command_factory.h"
 #include "spine/actor_request_factory.h"
-#include "common.h"
+#include "spine/message_utils.hpp"
 
 using namespace spine::core;
 using namespace spine::client;
@@ -99,7 +99,7 @@ CommandId* get_command_id(const std::string& uuid)
 spine::core::CommandContext* get_command_context(const std::unique_ptr<ActorContext>& actor_context)
 {
     spine::core::CommandContext *command_context = spine::core::CommandContext::default_instance().New();
-    command_context->set_allocated_actor_context(clone(*actor_context));
+    command_context->set_allocated_actor_context(clone(actor_context));
 
     return command_context;
 }

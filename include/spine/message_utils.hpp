@@ -18,30 +18,50 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef POC_CLIENT_COMMON_H
-#define POC_CLIENT_COMMON_H
+#ifndef MESSAGE_UTILS_HPP_
+#define MESSAGE_UTILS_HPP_
 
-#include <iostream>
-#include <fstream>
-#include <string>
-#include "grpc++/grpc++.h"
+#include <memory>
+#include <google/protobuf/message.h>
 
-#include "spine/core/event.pb.h"
-#include "spine/client/command_service.grpc.pb.h"
-#include "spine/client/entities.pb.h"
-
-
-spine::client::Target* create_target(const std::string& type_url);
-
-template<typename Msg
-//        ,std::enable_if_t<std::is_base_of<google::protobuf::Message, Msg>::value>
->
-Msg* clone(const Msg& msg)
+template<typename Msg>
+typename std::enable_if
+        <
+                std::is_base_of<google::protobuf::Message, Msg>::value,
+                Msg
+        >::type*
+clone(const Msg& msg)
 {
     auto new_msg = msg.New();
     new_msg->CopyFrom(msg);
     return new_msg;
 }
 
+template <typename T>
+typename std::enable_if
+        <
+                std::is_base_of< google::protobuf::Message, typename std::unique_ptr<T>::element_type >::value,
+                typename std::unique_ptr<T>::element_type
+        >::type*
+clone(const std::unique_ptr<T>& p)
+{
+    return clone<T>(*p);
+}
 
-#endif //POC_CLIENT_COMMON_H
+
+template<typename Msg>
+typename std::enable_if
+        <
+                std::is_base_of<google::protobuf::Message, Msg>::value,
+                Msg
+        >::type*
+create_with_value(const std::string& value)
+{
+    Msg *msg = Msg::default_instance().New();
+    msg->set_type(value);
+    return msg;
+}
+
+
+
+#endif //MESSAGE_UTILS_HPP_
