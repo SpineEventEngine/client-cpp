@@ -25,10 +25,10 @@
 #include <Poco/UUIDGenerator.h>
 
 #include "types.h"
+#include "spine/message_utils.hpp"
 
 #include <spine/client/entities.pb.h>
 #include <spine/client/subscription.pb.h>
-
 
 #include "actor_request_factory.h"
 #include "type_url.h"
@@ -42,10 +42,16 @@ public:
     TopicFactory(const ActorRequestFactory & actor_request_factory);
 
 public:
-    TopicPtr all(const type::TypeUrl& type_url);
+    template <typename T, typename = enable_param_if_protobuf_message<T>>
+    TopicPtr all()
+    {
+        return all(T::descriptor()->full_name());
+    };
 
 private:
+    TopicPtr all(const std::string& type);
     TopicPtr for_target(std::unique_ptr<Target> &&);
+
 private:
     std::unique_ptr<core::ActorContext> actor_context_;
     Poco::UUIDGenerator uuid_generator_;

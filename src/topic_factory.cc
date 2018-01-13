@@ -20,8 +20,6 @@
 
 #include "spine/topic_factory.h"
 
-#include "spine/message_utils.hpp"
-
 using namespace spine::client;
 using namespace spine::type;
 
@@ -30,10 +28,10 @@ TopicFactory::TopicFactory(const ActorRequestFactory& actor_request_factory)
     actor_context_ = actor_request_factory.actor_context();
 }
 
-std::unique_ptr<Topic> TopicFactory::all(const TypeUrl& type_url)
+std::unique_ptr<Topic> TopicFactory::all(const std::string& type)
 {
     std::unique_ptr<Target> target { Target::default_instance().New() };
-    target->set_type(type_url.value());
+    target->set_type(type);
     return for_target(std::move(target));
 }
 
