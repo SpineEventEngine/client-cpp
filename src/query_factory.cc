@@ -51,7 +51,7 @@ std::unique_ptr<Query> QueryFactory::all(const std::string& type_url)
 QueryId *QueryFactory::createQueryId()
 {
     QueryId *query_id = new QueryId();
-    std::__1::stringstream query_id_stream;
+    std::stringstream query_id_stream;
     query_id_stream << QUERY_ID_TEMPLATE << uuid_generator_.createRandom().toString();
     query_id->set_value(query_id_stream.str());
     return query_id;

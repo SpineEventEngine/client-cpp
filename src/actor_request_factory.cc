@@ -34,9 +34,9 @@ using namespace google::protobuf;
 using namespace google::protobuf::util;
 
 ActorContext* create_actor_context(UserId* actor,
-                                                ZoneOffset* offset,
-                                                TenantId* tenant_id,
-                                                Timestamp* timestamp)
+                                    ZoneOffset* offset,
+                                    TenantId* tenant_id,
+                                    Timestamp* timestamp)
 {
     ActorContext *actor_context = ActorContext::default_instance().New();
     actor_context->set_allocated_timestamp(timestamp);
