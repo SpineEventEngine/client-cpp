@@ -53,9 +53,6 @@ private:
 private:
     std::unique_ptr<core::ActorContext> actor_context_;
     Poco::UUIDGenerator uuid_generator_;
-
-
-    //Target* create_target(const std::string& type_url) const;
 };
 
 }} //namespace

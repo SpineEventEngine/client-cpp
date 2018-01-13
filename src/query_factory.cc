@@ -22,8 +22,6 @@
 
 #include <sstream>
 
-
-
 #include "spine/actor_request_factory.h"
 #include "spine/message_utils.hpp"
 

@@ -30,6 +30,9 @@
 
 #include "types.h"
 
+using namespace google::protobuf;
+using namespace spine::core;
+
 namespace spine
 {
 namespace core
@@ -41,23 +44,21 @@ namespace core
 namespace client
 {
 
-using namespace core;
-
 class CommandFactory
 {
 public:
     CommandFactory(const ActorRequestFactory & actor_request_factory);
 public:
-    CommandPtr create(const ::google::protobuf::Message& message);
-    CommandPtr create(const ::google::protobuf::Message& message, const std::string& type_url);
-    CommandPtr create(const ::google::protobuf::Message& message, int target_version);
+    CommandPtr create(const Message& message);
+    CommandPtr create(const Message& message, const std::string& type_url);
+    CommandPtr create(const Message& message, int target_version);
 
 private:
-    google::protobuf::Any* to_any(const google::protobuf::Message& message);
-    google::protobuf::Any* to_any(const google::protobuf::Message& message, const std::string& );
+    Any* to_any(const Message& message);
+    Any* to_any(const Message& message, const std::string& );
 
 private:
-    std::unique_ptr<core::ActorContext> actor_context_;
+    std::unique_ptr<ActorContext> actor_context_;
     Poco::UUIDGenerator uuid_generator_;
 
 };
