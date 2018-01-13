@@ -47,9 +47,7 @@ public:
 
 public:
 
-    template <typename T,
-            typename = typename std::enable_if
-            < spine::is_protobuf_message<T>>::type >
+    template <typename T, typename = enable_param_if_protobuf_message<T>>
     QueryPtr all()
     {
         return all(T::descriptor()->full_name());

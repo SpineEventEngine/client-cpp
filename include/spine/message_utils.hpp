@@ -30,12 +30,21 @@ namespace spine
 template<class Derived> constexpr bool is_protobuf_message
         = std::is_base_of<google::protobuf::Message, Derived>::value;
 
+template <typename T> using enable_return_type_if_protobuf_message =
+                                typename std::enable_if_t< is_protobuf_message< T >, T* >;
+template <typename T> using enable_param_if_protobuf_message =
+                                typename std::enable_if_t< spine::is_protobuf_message<T>>;
+
+
+
+template<class Derived> constexpr bool is_unique_ptr_protobuf_message =
+            std::is_base_of<google::protobuf::Message, typename std::unique_ptr<Derived>::element_type>::value;
+
+template <typename T> using enable_return_type_if_unique_ptr_protobuf_message =
+            typename std::enable_if_t< is_unique_ptr_protobuf_message< T >, T* >;
+
 template<typename Msg>
-typename std::enable_if
-        <
-                std::is_base_of<google::protobuf::Message, Msg>::value,
-                Msg
-        >::type*
+enable_return_type_if_protobuf_message<Msg>
 clone(const Msg& msg)
 {
     auto new_msg = msg.New();
@@ -44,11 +53,7 @@ clone(const Msg& msg)
 }
 
 template<typename T>
-typename std::enable_if
-        <
-                std::is_base_of<google::protobuf::Message, typename std::unique_ptr<T>::element_type>::value,
-                typename std::unique_ptr<T>::element_type
-        >::type*
+enable_return_type_if_unique_ptr_protobuf_message<T>
 clone(const std::unique_ptr<T>& p)
 {
     return clone<T>(*p);

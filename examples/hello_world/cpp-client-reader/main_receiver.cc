@@ -69,7 +69,7 @@ int main(int argc, char *argv[])
 
     ActorRequestFactory factory = ActorRequestFactory::create(params);
 
-    QueryPtr query = factory.query_factory()->all("helloworld.LastHello");
+    QueryPtr query = factory.query_factory()->all<helloworld::LastHello>();
 
     std::unique_ptr<QueryService::Stub> query_service = QueryService::NewStub(channel);
 
