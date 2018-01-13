@@ -31,7 +31,8 @@ TopicFactory::TopicFactory(const ActorRequestFactory& actor_request_factory)
 
 std::unique_ptr<Topic> TopicFactory::all(const type::TypeUrl& type_url)
 {
-    std::unique_ptr<Target> target { create_with_value<Target>(type_url.value()) };
+    std::unique_ptr<Target> target { Target::default_instance().New() };
+    target->set_type(type_url.value());
     return for_target(std::move(target));
 }
 

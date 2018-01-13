@@ -37,26 +37,21 @@ QueryFactory::QueryFactory(const ActorRequestFactory &actor_request_factory)
     actor_context_ = actor_request_factory.actor_context();
 }
 
-std::unique_ptr<Query> QueryFactory::all(const type::TypeUrl& type_url) {
-    Target* target = create_with_value<Target>(type_url.value());
-
-    std::unique_ptr<Query> query { Query::default_instance().New() };
-
-    query->set_allocated_id(createQueryId());
-    query->set_allocated_context(clone(actor_context_));
-    query->set_allocated_target(target);
-
-    return query;
+std::unique_ptr<Query> QueryFactory::all(const type::TypeUrl& type_url)
+{
+    return all(type_url.value());
 }
 
-std::unique_ptr<Query> QueryFactory::all(const std::string& type_url) {
-    Target* target = create_with_value<Target>(type_url);
+std::unique_ptr<Query> QueryFactory::all(const std::string& type_url)
+{
+    std::unique_ptr<Target> target { Target::default_instance().New() };
+    target->set_type(type_url);
 
     std::unique_ptr<Query> query { Query::default_instance().New() };
 
     query->set_allocated_id(createQueryId());
     query->set_allocated_context(clone(actor_context_));
-    query->set_allocated_target(target);
+    query->set_allocated_target(target.release());
 
     return query;
 }

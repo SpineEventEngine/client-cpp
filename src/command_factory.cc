@@ -26,11 +26,11 @@ using namespace spine::core;
 using namespace spine::client;
 using namespace spine::time;
 
-spine::core::CommandContext* get_command_context(const std::unique_ptr<ActorContext>& actor_context);
+spine::core::CommandContext* make_command_context(const std::unique_ptr<ActorContext>& actor_context);
 
-spine::core::CommandContext* get_command_context(const std::unique_ptr<ActorContext>& actor_context, const int version);
-Command* get_command(CommandContext* command_context,google::protobuf::Any* any, CommandId* command_id);
-CommandId* get_command_id(const std::string& uuid);
+spine::core::CommandContext* make_command_context(const std::unique_ptr<ActorContext>& actor_context, int version);
+Command* make_command(CommandContext* command_context, google::protobuf::Any* any, CommandId* command_id);
+CommandId* make_command_id(const std::string& uuid);
 
 
 CommandFactory::CommandFactory(const ActorRequestFactory& actor_request_factory)
@@ -40,28 +40,28 @@ CommandFactory::CommandFactory(const ActorRequestFactory& actor_request_factory)
 
 std::unique_ptr<Command> CommandFactory::create(const ::google::protobuf::Message& message)
 {
-    Command* command = get_command(
-            get_command_context(actor_context_),
+    Command* command = make_command(
+            make_command_context(actor_context_),
             to_any(message),
-            get_command_id(uuid_generator_.createRandom().toString()));
+            make_command_id(uuid_generator_.createRandom().toString()));
     return std::unique_ptr<Command>{command};
 }
 
 std::unique_ptr<Command> CommandFactory::create(const ::google::protobuf::Message& message, const std::string& type_url)
 {
-    Command* command = get_command(
-            get_command_context(actor_context_),
+    Command* command = make_command(
+            make_command_context(actor_context_),
             to_any(message, type_url),
-            get_command_id(uuid_generator_.createRandom().toString()));
+            make_command_id(uuid_generator_.createRandom().toString()));
     return std::unique_ptr<Command>{command};
 }
 
 std::unique_ptr<Command> CommandFactory::create(const ::google::protobuf::Message& message, const int target_version)
 {
-    Command* command = get_command(
-            get_command_context(actor_context_, target_version),
+    Command* command = make_command(
+            make_command_context(actor_context_, target_version),
             to_any(message),
-            get_command_id(uuid_generator_.createRandom().toString()));
+            make_command_id(uuid_generator_.createRandom().toString()));
     return std::unique_ptr<Command>{command};
 
 }
@@ -79,7 +79,7 @@ google::protobuf::Any* CommandFactory::to_any(const google::protobuf::Message& m
     return any;
 }
 
-Command* get_command(CommandContext* command_context, google::protobuf::Any* any, CommandId* command_id)
+Command* make_command(CommandContext* command_context, google::protobuf::Any* any, CommandId* command_id)
 {
     Command* command = Command::default_instance().New();
     command->set_allocated_id(command_id);
@@ -88,7 +88,7 @@ Command* get_command(CommandContext* command_context, google::protobuf::Any* any
     return command;
 }
 
-CommandId* get_command_id(const std::string& uuid)
+CommandId* make_command_id(const std::string& uuid)
 {
     CommandId* command_id = CommandId::default_instance().New();
     command_id->set_uuid(uuid);
@@ -96,7 +96,7 @@ CommandId* get_command_id(const std::string& uuid)
 }
 
 
-spine::core::CommandContext* get_command_context(const std::unique_ptr<ActorContext>& actor_context)
+spine::core::CommandContext* make_command_context(const std::unique_ptr<ActorContext>& actor_context)
 {
     spine::core::CommandContext *command_context = spine::core::CommandContext::default_instance().New();
     command_context->set_allocated_actor_context(clone(actor_context));
@@ -104,9 +104,9 @@ spine::core::CommandContext* get_command_context(const std::unique_ptr<ActorCont
     return command_context;
 }
 
-spine::core::CommandContext* get_command_context(const std::unique_ptr<ActorContext>& actor_context, const int version)
+spine::core::CommandContext* make_command_context(const std::unique_ptr<ActorContext>& actor_context, const int version)
 {
-    CommandContext* context = get_command_context(actor_context);
+    CommandContext* context = make_command_context(actor_context);
     context->set_target_version(version);
     return context;
 }

@@ -24,26 +24,23 @@
 #include "spine/command_factory.h"
 #include "spine/query_factory.h"
 
+#include <google/protobuf/util/time_util.h>
+
 using namespace spine;
 using namespace spine::client;
 using namespace google::protobuf;
+using namespace google::protobuf::util;
 
 spine::core::ActorContext *
-get_actor_context(spine::core::UserId *actor, spine::time::ZoneOffset *offset, spine::core::TenantId *tenant_id,
-                  google::protobuf::Timestamp *timestamp) {
+create_actor_context(spine::core::UserId* actor, spine::time::ZoneOffset* offset, spine::core::TenantId* tenant_id,
+                     google::protobuf::Timestamp* timestamp)
+{
     spine::core::ActorContext *actor_context = spine::core::ActorContext::default_instance().New();
     actor_context->set_allocated_timestamp(timestamp);
     actor_context->set_allocated_actor(actor);
     actor_context->set_allocated_zone_offset(offset);
     actor_context->set_allocated_tenant_id(tenant_id);
     return actor_context;
-}
-
-google::protobuf::Timestamp *get_timestamp()
-{
-    Timestamp* timestamp = google::protobuf::Timestamp::default_instance().New();
-    timestamp->set_seconds(::time(nullptr));
-    return timestamp;
 }
 
 ActorRequestFactory::ActorRequestFactory(const ActorRequestFactoryParams& params)
@@ -72,11 +69,13 @@ std::unique_ptr<QueryFactory> ActorRequestFactory::query_factory()
 
 std::unique_ptr<core::ActorContext> ActorRequestFactory::actor_context() const
 {
+    Timestamp* timestamp_ptr = Timestamp::default_instance().New();
+    timestamp_ptr->CopyFrom(TimeUtil::GetCurrentTime());
     std::unique_ptr<core::ActorContext> actor_context{
-            get_actor_context(new core::UserId(*params_.actor()),
-                              new time::ZoneOffset(*params_.zone_offset()),
-                              new core::TenantId(*params_.tenant_id()),
-                              get_timestamp())
+            create_actor_context(new core::UserId(*params_.actor()),
+                                 new time::ZoneOffset(*params_.zone_offset()),
+                                 new core::TenantId(*params_.tenant_id()),
+                                 timestamp_ptr)
     };
     return actor_context;
 }

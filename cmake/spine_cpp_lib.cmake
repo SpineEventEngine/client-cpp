@@ -1,7 +1,5 @@
 #spine-cpp lib
 set(SOURCE_LIB_FILES
-        src/common.cc
-        src/common.h
         src/actor_request_factory.cc
         src/command_factory.cc
         src/topic_factory.cc

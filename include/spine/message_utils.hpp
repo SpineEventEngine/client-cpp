@@ -48,20 +48,4 @@ clone(const std::unique_ptr<T>& p)
     return clone<T>(*p);
 }
 
-
-template<typename Msg>
-typename std::enable_if
-        <
-                std::is_base_of<google::protobuf::Message, Msg>::value,
-                Msg
-        >::type*
-create_with_value(const std::string& value)
-{
-    Msg *msg = Msg::default_instance().New();
-    msg->set_type(value);
-    return msg;
-}
-
-
-
 #endif //MESSAGE_UTILS_HPP_
