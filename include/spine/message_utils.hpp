@@ -24,6 +24,12 @@
 #include <memory>
 #include <google/protobuf/message.h>
 
+namespace spine
+{
+
+template<class Derived> constexpr bool is_protobuf_message
+        = std::is_base_of<google::protobuf::Message, Derived>::value;
+
 template<typename Msg>
 typename std::enable_if
         <
@@ -37,10 +43,10 @@ clone(const Msg& msg)
     return new_msg;
 }
 
-template <typename T>
+template<typename T>
 typename std::enable_if
         <
-                std::is_base_of< google::protobuf::Message, typename std::unique_ptr<T>::element_type >::value,
+                std::is_base_of<google::protobuf::Message, typename std::unique_ptr<T>::element_type>::value,
                 typename std::unique_ptr<T>::element_type
         >::type*
 clone(const std::unique_ptr<T>& p)
@@ -48,4 +54,5 @@ clone(const std::unique_ptr<T>& p)
     return clone<T>(*p);
 }
 
+}
 #endif //MESSAGE_UTILS_HPP_

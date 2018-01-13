@@ -25,8 +25,9 @@
 #include <Poco/UUIDGenerator.h>
 #include <spine/client/query.pb.h>
 
-#include "types.h"
-#include "type_url.h"
+#include "spine/types.h"
+#include "spine/type_url.h"
+#include "spine/message_utils.hpp"
 
 namespace spine
 {
@@ -45,11 +46,18 @@ public:
     QueryFactory(const ActorRequestFactory & actor_request_factory);
 
 public:
-    QueryPtr all(const type::TypeUrl& type_url);
-    QueryPtr all(const std::string& type_url);
+
+    template <typename T,
+            typename = typename std::enable_if
+            < spine::is_protobuf_message<T>>::type >
+    QueryPtr all()
+    {
+        return all(T::descriptor()->full_name());
+    };
 
 private:
-    spine::client::QueryId *createQueryId();
+    QueryId *createQueryId();
+    QueryPtr all(const std::string& type_url);
 private:
     std::unique_ptr<core::ActorContext> actor_context_;
     Poco::UUIDGenerator uuid_generator_;

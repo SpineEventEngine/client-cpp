@@ -22,6 +22,7 @@
 #include "spine/actor_request_factory.h"
 #include "spine/message_utils.hpp"
 
+using namespace spine;
 using namespace spine::core;
 using namespace spine::client;
 using namespace spine::time;

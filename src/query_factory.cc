@@ -23,7 +23,6 @@
 #include <sstream>
 
 #include "spine/actor_request_factory.h"
-#include "spine/message_utils.hpp"
 
 namespace spine {
 namespace client {
@@ -33,11 +32,6 @@ const std::string QUERY_ID_TEMPLATE = "query-";
 QueryFactory::QueryFactory(const ActorRequestFactory &actor_request_factory)
 {
     actor_context_ = actor_request_factory.actor_context();
-}
-
-std::unique_ptr<Query> QueryFactory::all(const type::TypeUrl& type_url)
-{
-    return all(type_url.value());
 }
 
 std::unique_ptr<Query> QueryFactory::all(const std::string& type_url)
