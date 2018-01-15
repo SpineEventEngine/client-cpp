@@ -1,4 +1,0 @@
-rootProject.name = 'hello_world'
-include 'model'
-include 'java-server'
-
