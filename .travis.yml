@@ -1,0 +1,10 @@
+language: cpp
+sudo: required
+dist: trusty
+compiler:
+- gcc
+os:
+- linux
+
+script:
+- echo "Dummy build step"
