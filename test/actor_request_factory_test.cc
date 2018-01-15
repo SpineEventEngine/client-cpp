@@ -97,7 +97,4 @@ TEST_F(ActorRequestFactoryShould, HaveValidParams)
     spine::people::PersonName message;
     message.set_family_name("asdasdasd");
     std::unique_ptr<Command> command = command_factory->create(message);
-    int x = 1;
 }
-
-

@@ -61,19 +61,3 @@ TEST(TypeUrlShould, ThrowAtParseWithInvalidParams)
     ASSERT_FALSE(TypeUrl::parse("/"));
     ASSERT_FALSE(TypeUrl::parse("/sadfsad"));
 }
-
-//TEST(TypeUrlShould, ThrowAtCreateWithInvalidParams)
-//{
-//    ASSERT_THROW(TypeUrl::create(PREFIX1, ""), std::invalid_argument);
-//    ASSERT_THROW(TypeUrl::create("", TYPE1), std::invalid_argument);
-//    ASSERT_THROW(TypeUrl::create("", ""), std::invalid_argument);
-//}
-//
-//TEST(TypeUrlShould, ThrowAtParseWithInvalidParams)
-//{
-//    ASSERT_THROW(TypeUrl::parse(""), std::invalid_argument);
-//    ASSERT_THROW(TypeUrl::parse("Type"), std::invalid_argument);
-//    ASSERT_THROW(TypeUrl::parse("Type/"), std::invalid_argument);
-//    ASSERT_THROW(TypeUrl::parse("/"), std::invalid_argument);
-//    ASSERT_THROW(TypeUrl::parse("/sadfsad"), std::invalid_argument);
-//}

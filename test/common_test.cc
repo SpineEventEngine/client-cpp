@@ -22,8 +22,6 @@
 
 #include <spine/core/command.pb.h>
 
-#include "common.h"
-
 std::string type_url_or_empty(const google::protobuf::Message& msg)
 {
     if ( nullptr == msg.GetDescriptor() ) return "";
@@ -53,5 +51,4 @@ TEST(CommonShould, ProvideAnyFromMessage)
     any->UnpackTo(&unpacked);
     ASSERT_EQ(unpacked.uuid(), command_id.uuid());
     ASSERT_TRUE(unpacked.descriptor() != nullptr);
-//ASSERT_EQ(unpacked.descriptor()->file()->package(), command_id.descriptor()->file()->options());
 }

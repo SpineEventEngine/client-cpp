@@ -111,9 +111,3 @@ CommandContext* make_command_context(const std::unique_ptr<ActorContext>& actor_
     context->set_target_version(version);
     return context;
 }
-
-
-
-
-
-

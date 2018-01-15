@@ -95,4 +95,3 @@ const std::unique_ptr<UserId>& ActorRequestFactory::actor() const { return param
 const std::unique_ptr<TenantId>& ActorRequestFactory::tenant_id() const { return params_.tenant_id(); }
 
 const std::unique_ptr<ZoneOffset>& ActorRequestFactory::zone_offset() const { return params_.zone_offset(); }
-
