@@ -58,4 +58,3 @@ message Hello {
 message LastHello {
     string username = 1;
 }
-
