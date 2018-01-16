@@ -19,15 +19,18 @@ add_definitions(-fPIC)
 find_package(Poco REQUIRED Foundation)
 find_package(Boost REQUIRED)
 
+find_package(Protobuf REQUIRED)
+set(Protobuf_USE_STATIC_LIBS ON)
+
 include_directories(include)
 include_directories(${Poco_INCLUDE_DIRS})
 include_directories(${Boost_INCLUDE_DIRS})
+include_directories(${Protobuf_INCLUDE_DIRS})
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
+
 
 include(cmake/code_coverage.cmake)
 include(cmake/spine_proto.cmake)
-
-include_directories(${GRPC_INSTALL_DIR}/include)
-link_directories(${GRPC_INSTALL_DIR}/lib)
 
 include(cmake/spine_cpp_lib.cmake)
 

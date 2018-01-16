@@ -40,18 +40,20 @@ file(MAKE_DIRECTORY ${GENERATED_DIR})
 
 set(PROTO_DIR ${CMAKE_HOME_DIRECTORY}/dependencies/spine)
 
-set(PROTOC_EXE ${GRPC_INSTALL_DIR}/bin/protoc)
+find_program(GRPC_CPP_PLUGIN_EXE grpc_cpp_plugin)
+find_program(PROTOC_EXE protoc)
+
 macro(compile_proto_file filename)
     get_filename_component(dirname ${filename} PATH)
     get_filename_component(basename ${filename} NAME_WE)
     add_custom_command(
-            OUTPUT ${GENERATED_DIR}/${dirname}/${basename}.pb.cc
+            OUTPUT ${GENERATED_DIR}/${dirname}/${basename}.pb.cc ${GENERATED_DIR}/${dirname}/${basename}.grpc.pb.cc
             DEPENDS ${PROTOC_EXE} ${PROTO_DIR}/${dirname}/${basename}.proto
             COMMAND ${PROTOC_EXE} ${PROTO_DIR}/${dirname}/${basename}.proto
             --proto_path=${GENERATED_DIR}
             --cpp_out=${GENERATED_DIR}
             --grpc_out=${GENERATED_DIR}
-            --plugin=protoc-gen-grpc=${GRPC_INSTALL_DIR}/bin/grpc_cpp_plugin
+            --plugin=protoc-gen-grpc=${GRPC_CPP_PLUGIN_EXE}
             -I ${PROTO_DIR}
             VERBATIM
     )
