@@ -25,13 +25,6 @@
 
 namespace spine
 {
-    namespace type
-    {
-        class TypeUrl;
-
-        using TypeUrlPtr = std::unique_ptr<TypeUrl>;
-    }
-
     namespace client
     {
         class CommandFactory;
