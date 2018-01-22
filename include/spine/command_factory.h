@@ -50,12 +50,12 @@ public:
     CommandFactory(const ActorRequestFactory & actor_request_factory);
 public:
     CommandPtr create(const Message& message);
-    CommandPtr create(const Message& message, const std::string& type_url);
+    CommandPtr create(const Message& message, const std::string& type_url_prefix);
     CommandPtr create(const Message& message, int target_version);
 
 private:
     Any* to_any(const Message& message);
-    Any* to_any(const Message& message, const std::string& );
+    Any* to_any(const Message& message, const std::string& type_url_prefix);
 
 private:
     std::unique_ptr<ActorContext> actor_context_;

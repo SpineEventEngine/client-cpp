@@ -48,11 +48,11 @@ std::unique_ptr<Command> CommandFactory::create(const Message& message)
     return std::unique_ptr<Command>{command};
 }
 
-std::unique_ptr<Command> CommandFactory::create(const Message& message, const std::string& type_url)
+std::unique_ptr<Command> CommandFactory::create(const Message& message, const std::string& type_url_prefix)
 {
     Command* command = make_command(
             make_command_context(actor_context_),
-            to_any(message, type_url),
+            to_any(message, type_url_prefix),
             make_command_id(uuid_generator_.createRandom().toString()));
     return std::unique_ptr<Command>{command};
 }
@@ -73,10 +73,10 @@ Any* CommandFactory::to_any(const Message& message)
     return any;
 }
 
-Any* CommandFactory::to_any(const Message& message, const std::string& type_url)
+Any* CommandFactory::to_any(const Message& message, const std::string& type_url_prefix)
 {
     Any* any = Any::default_instance().New();
-    any->PackFrom(message, type_url);
+    any->PackFrom(message, type_url_prefix);
     return any;
 }
 

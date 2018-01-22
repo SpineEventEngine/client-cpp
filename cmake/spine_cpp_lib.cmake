@@ -4,8 +4,7 @@ set(SOURCE_LIB_FILES
         src/command_factory.cc
         src/topic_factory.cc
         src/query_factory.cc
-        src/actor_request_factory_params.cc
-        src/type_url.cc)
+        src/actor_request_factory_params.cc)
 
 
 set(CPP_SPINE_LIBRARY_NAME ${CMAKE_PROJECT_NAME}-${VERSION})

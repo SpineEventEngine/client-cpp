@@ -26,7 +26,6 @@
 #include <spine/client/query.pb.h>
 
 #include "spine/types.h"
-#include "spine/type_url.h"
 #include "spine/message_utils.hpp"
 
 namespace spine

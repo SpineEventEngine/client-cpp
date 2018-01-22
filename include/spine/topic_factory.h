@@ -31,7 +31,6 @@
 #include <spine/client/subscription.pb.h>
 
 #include "actor_request_factory.h"
-#include "type_url.h"
 
 namespace spine {
 namespace client {
