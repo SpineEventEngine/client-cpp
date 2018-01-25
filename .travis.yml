@@ -40,7 +40,7 @@ install:
       travis_retry git clone --depth 1 --recursive --quiet -b $(curl -L https://grpc.io/release) https://github.com/grpc/grpc || exit 1
       cd grpc
       git submodule update --init
-      pushd
+      pushd `(pwd)`
       cd third_party/protobuf
       ./autogen.sh
       ./configure
@@ -51,7 +51,7 @@ install:
     fi
   - |
     if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
-      pushd
+      pushd `(pwd)`
       mkdir -p spine && spine
       travis_retry wget http://maven.teamdev.com/repository/spine-snapshots/io/spine/spine-client/0.10.15-SNAPSHOT/spine-client-0.10.15-20171225.084237-2-proto.jar
       unzip spine-client-0.10.15-20171225.084237-2-proto.jar
