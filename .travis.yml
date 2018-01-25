@@ -53,8 +53,8 @@ install:
     if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
       pushd
       mkdir -p spine && spine
-      travis_retry wget http://maven.teamdev.com/repository/spine-snapshots/io/spine/spine-client/0.10.15-SNAPSHOT/spine-client-0.10.15-20171225.084237-2-proto.jar spine.jar
-      unzip spine.jar
+      travis_retry wget http://maven.teamdev.com/repository/spine-snapshots/io/spine/spine-client/0.10.15-SNAPSHOT/spine-client-0.10.15-20171225.084237-2-proto.jar
+      unzip spine-client-0.10.15-20171225.084237-2-proto.jar
       popd
     fi
 
