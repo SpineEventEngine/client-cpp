@@ -20,8 +20,8 @@ addons:
 
 install:
   - sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-5 60 --slave /usr/bin/g++ g++ /usr/bin/g++-5
-  - DEPS_DIR = "${TRAVIS_BUILD_DIR}/dependencies"
-  - mkdir -p ${DEPS_DIR} && cd ${DEPS_DIR}
+  #- DEPS_DIR = "${TRAVIS_BUILD_DIR}/dependencies"
+  - mkdir -p ${TRAVIS_BUILD_DIR}/dependencies && cd ${TRAVIS_BUILD_DIR}/dependencies
  ############################################################################
   # Install a recent CMake
   ############################################################################
@@ -29,7 +29,7 @@ install:
     if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
       CMAKE_URL="https://cmake.org/files/v3.7/cmake-3.7.2-Linux-x86_64.tar.gz"
       mkdir cmake && travis_retry wget --no-check-certificate --quiet -O - ${CMAKE_URL} | tar --strip-components=1 -xz -C cmake
-      export PATH=${DEPS_DIR}/cmake/bin:${PATH}
+      export PATH=${TRAVIS_BUILD_DIR}/dependencies/cmake/bin:${PATH}
     else
       brew upgrade cmake || brew install cmake
     fi
