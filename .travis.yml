@@ -44,10 +44,10 @@ install:
       cd third_party/protobuf
       ./autogen.sh
       ./configure
-      make && make install
+      make && sudo make install
       popd
       make
-      make install
+      sudo make install
     fi
   - |
     if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
