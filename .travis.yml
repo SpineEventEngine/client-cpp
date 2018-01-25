@@ -52,7 +52,7 @@ install:
   - |
     if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
       pushd `(pwd)`
-      mkdir -p spine && spine
+      mkdir -p ${TRAVIS_BUILD_DIR}/dependencies/spine && cd ${TRAVIS_BUILD_DIR}/dependencies/spine
       travis_retry wget http://maven.teamdev.com/repository/spine-snapshots/io/spine/spine-client/0.10.15-SNAPSHOT/spine-client-0.10.15-20171225.084237-2-proto.jar
       unzip spine-client-0.10.15-20171225.084237-2-proto.jar
       popd
@@ -60,6 +60,6 @@ install:
 
 before_script:
   - cd ${TRAVIS_BUILD_DIR}
-  - (mkdir _build && cd _build && cmake ..)
+  - mkdir _build && cd _build && cmake ..
 script:
   - cmake --build .
