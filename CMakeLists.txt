@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.9)
+cmake_minimum_required(VERSION 3.5.1)
 project(spine)
 
 file (STRINGS "VERSION" VERSION)
@@ -31,12 +31,12 @@ include_directories(${Grpc_INCLUDE_DIRS})
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 
-include(cmake/code_coverage.cmake)
+#include(cmake/code_coverage.cmake)
 include(cmake/spine_proto.cmake)
 
 include(cmake/spine_cpp_lib.cmake)
 
-include(cmake/unit_tests.cmake)
-include(cmake/docs.cmake)
+#include(cmake/unit_tests.cmake)
+#include(cmake/docs.cmake)
 
-add_subdirectory(examples/hello_world)
+#add_subdirectory(examples/hello_world)
