@@ -1,5 +1,5 @@
 /*
- * Copyright 2017, TeamDev Ltd. All rights reserved.
+ * Copyright 2018, TeamDev Ltd. All rights reserved.
  *
  * Redistribution and use in source and/or binary forms, with or without
  * modification, must retain the above copyright notice and the following
@@ -22,9 +22,6 @@
 #include <gtest/gtest.h>
 
 #include <boost/algorithm/string.hpp>
-
-#include "spine/command_factory.h"
-#include "spine/actor_request_factory.h"
 
 #include "common_factory_test.h"
 
@@ -55,6 +52,9 @@ public:
         ASSERT_EQ(split_values[0], prefix);
         ASSERT_EQ(split_values[1], zone_id_message.GetTypeName());
     }
+
+protected:
+    const ZoneId zone_id_message;
 };
 
 
@@ -98,4 +98,3 @@ TEST_F(CommandFactoryShould, CreateWithTargetVersion)
     ASSERT_TRUE(command->has_context());
     ASSERT_TRUE(command->context().target_version());
 }
-

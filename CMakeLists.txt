@@ -30,13 +30,7 @@ include_directories(${Grpc_INCLUDE_DIRS})
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
-
-#include(cmake/code_coverage.cmake)
 include(cmake/spine_proto.cmake)
-
 include(cmake/spine_cpp_lib.cmake)
 
-#include(cmake/unit_tests.cmake)
-#include(cmake/docs.cmake)
-
-#add_subdirectory(examples/hello_world)
+include(cmake/unit_tests.cmake)

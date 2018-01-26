@@ -58,9 +58,9 @@ TEST_F(ActorRequestFactoryShould, BeEmptyWithFactoryMethod)
     ASSERT_FALSE(params.zone_offset());
 }
 
-static const char* const USER_ID = "user_id_123";
-static const char* const TENANT_ID = "tenant_id_123";
-static const char* const ZONE_ID = "zone_id_123";
+static const char* const USER_ID = "user@example.com";
+static const char* const TENANT_ID = "example.com";
+static const char* const ZONE_ID = "UTC";
 
 TEST_F(ActorRequestFactoryShould, HaveValidParams)
 {

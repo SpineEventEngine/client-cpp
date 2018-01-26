@@ -1,5 +1,5 @@
 /*
- * Copyright 2017, TeamDev Ltd. All rights reserved.
+ * Copyright 2018, TeamDev Ltd. All rights reserved.
  *
  * Redistribution and use in source and/or binary forms, with or without
  * modification, must retain the above copyright notice and the following
@@ -34,9 +34,9 @@ using namespace spine::time;
 
 class CommonFactoryTest : public ::testing::Test
 {
-    const std::string USER_ID {"user_id_123" };
-    const std::string TENANT_ID { "tenant_id_123" };
-    const std::string ZONE_ID { "zone_id_123" };
+    const std::string USER_ID   { "user@example.com" };
+    const std::string TENANT_ID { "example.com" };
+    const std::string ZONE_ID   { "UTC" };
 protected:
     virtual void SetUp() override
     {
@@ -65,8 +65,6 @@ protected:
     QueryFactoryPtr query_factory_;
     TopicFactoryPtr topic_factory_;
     CommandFactoryPtr command_factory_;
-
-    const ZoneId zone_id_message;
 };
 
 #endif //SPINE_COMMONFACTORYTEST_H

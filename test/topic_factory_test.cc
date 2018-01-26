@@ -1,5 +1,5 @@
 /*
- * Copyright 2017, TeamDev Ltd. All rights reserved.
+ * Copyright 2018, TeamDev Ltd. All rights reserved.
  *
  * Redistribution and use in source and/or binary forms, with or without
  * modification, must retain the above copyright notice and the following
@@ -19,9 +19,6 @@
  */
 
 #include <gtest/gtest.h>
-
-#include "spine/topic_factory.h"
-#include "spine/actor_request_factory.h"
 
 #include "common_factory_test.h"
 
@@ -43,6 +40,4 @@ TEST_F(TopicFactoryShould, Create)
     ASSERT_FALSE(topic->id().value().empty());
     ASSERT_TRUE(topic->has_target());
     ASSERT_EQ(topic->target().type(), ZoneId::descriptor()->full_name());
-
-
 }

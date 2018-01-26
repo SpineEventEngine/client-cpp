@@ -1,5 +1,5 @@
 /*
- * Copyright 2017, TeamDev Ltd. All rights reserved.
+ * Copyright 2018, TeamDev Ltd. All rights reserved.
  *
  * Redistribution and use in source and/or binary forms, with or without
  * modification, must retain the above copyright notice and the following
@@ -21,11 +21,6 @@
 
 #include <gtest/gtest.h>
 
-#include <boost/algorithm/string.hpp>
-
-#include "spine/query_factory.h"
-#include "spine/actor_request_factory.h"
-
 #include "common_factory_test.h"
 
 using namespace spine::client;
@@ -46,6 +41,4 @@ TEST_F(QueryFactoryShould, Create)
     ASSERT_FALSE(query->id().value().empty());
     ASSERT_TRUE(query->has_target());
     ASSERT_EQ(query->target().type(), ZoneId::descriptor()->full_name());
-
-
 }
