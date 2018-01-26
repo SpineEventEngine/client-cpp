@@ -22,7 +22,10 @@
 
 #include "spine/actor_request_factory.h"
 
-#include <spine/people/person_name.pb.h>
+#include <google/protobuf/timestamp.pb.h>
+#include <spine/core/user_id.pb.h>
+#include <spine/core/tenant_id.pb.h>
+#include <spine/time/zone.pb.h>
 
 using namespace spine::client;
 using namespace spine::core;

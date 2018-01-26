@@ -28,6 +28,9 @@ include_directories(${Boost_INCLUDE_DIRS})
 include_directories(${Protobuf_INCLUDE_DIRS})
 include_directories(${Grpc_INCLUDE_DIRS})
 
+find_library(PROTOBUF_LIB libprotobuf.a)
+find_library(Poco_FOUNDATION_LIB NAMES PocoFoundation PocoFoundationd)
+
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 include(cmake/spine_proto.cmake)
