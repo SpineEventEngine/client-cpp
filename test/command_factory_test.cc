@@ -26,42 +26,15 @@
 #include "spine/command_factory.h"
 #include "spine/actor_request_factory.h"
 
+#include "common_factory_test.h"
+
 using namespace spine::client;
 using namespace spine::core;
 using namespace spine::time;
 
-class CommandFactoryShould : public ::testing::Test
+class CommandFactoryShould : public CommonFactoryTest
 {
-    const std::string USER_ID {"user_id_123" };
-    const std::string TENANT_ID { "tenant_id_123" };
-    const std::string ZONE_ID { "zone_id_123" };
-protected:
-    virtual void SetUp() override
-    {
-        ActorRequestFactoryParams params;
-        auto actor = std::make_unique<UserId>();
-        actor->set_value(USER_ID);
-
-        auto tenant_id = std::make_unique<TenantId>();
-        tenant_id->set_value(TENANT_ID);
-
-        auto zone_offset = std::make_unique<ZoneOffset>();
-        ZoneId* zone_id = ZoneId::default_instance().New();
-        zone_id->set_value(ZONE_ID);
-        zone_offset->set_allocated_id(zone_id);
-        zone_offset->set_amountseconds(42);
-
-        params.set_actor(actor)
-                .set_tenant_id(tenant_id)
-                .set_zone_offset(zone_offset);
-
-        command_factory_ = ActorRequestFactory::create(params).command_factory();
-    }
-    virtual void TearDown() override
-    {
-
-    }
-
+public:
     void check_type_url(const std::string& type_url)
     {
         std::vector<std::string> split_values;
@@ -82,9 +55,6 @@ protected:
         ASSERT_EQ(split_values[0], prefix);
         ASSERT_EQ(split_values[1], zone_id_message.GetTypeName());
     }
-
-    const ZoneId zone_id_message;
-    CommandFactoryPtr command_factory_;
 };
 
 

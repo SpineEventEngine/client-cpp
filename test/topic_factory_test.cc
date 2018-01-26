@@ -18,12 +18,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-
 #include <gtest/gtest.h>
 
-#include <boost/algorithm/string.hpp>
-
-#include "spine/query_factory.h"
+#include "spine/topic_factory.h"
 #include "spine/actor_request_factory.h"
 
 #include "common_factory_test.h"
@@ -32,20 +29,20 @@ using namespace spine::client;
 using namespace spine::core;
 using namespace spine::time;
 
-class QueryFactoryShould : public CommonFactoryTest
+class TopicFactoryShould : public CommonFactoryTest
 {
 };
 
-TEST_F(QueryFactoryShould, Create)
+TEST_F(TopicFactoryShould, Create)
 {
-    QueryPtr query = query_factory_->all<ZoneId>();
+    TopicPtr topic = topic_factory_->all<ZoneId>();
 
-    std::string type = query->target().type();
-    ASSERT_TRUE(query);
-    ASSERT_TRUE(query->has_id());
-    ASSERT_FALSE(query->id().value().empty());
-    ASSERT_TRUE(query->has_target());
-    ASSERT_EQ(query->target().type(), ZoneId::descriptor()->full_name());
+    std::string type = topic->target().type();
+    ASSERT_TRUE(topic);
+    ASSERT_TRUE(topic->has_id());
+    ASSERT_FALSE(topic->id().value().empty());
+    ASSERT_TRUE(topic->has_target());
+    ASSERT_EQ(topic->target().type(), ZoneId::descriptor()->full_name());
 
 
 }
