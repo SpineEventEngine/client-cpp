@@ -19,6 +19,7 @@
  */
 
 #include "spine/type_url.h"
+#include <vector>
 
 #include <boost/algorithm/string.hpp>
 

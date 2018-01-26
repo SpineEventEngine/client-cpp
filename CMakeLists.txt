@@ -28,6 +28,11 @@ include_directories(${Boost_INCLUDE_DIRS})
 include_directories(${Protobuf_INCLUDE_DIRS})
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
+if(WIN32)
+    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MT")
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MTd")
+    add_definitions(-D_WIN32_WINNT=0x600)  
+endif()
 
 include(cmake/code_coverage.cmake)
 include(cmake/spine_proto.cmake)
@@ -38,3 +43,4 @@ include(cmake/unit_tests.cmake)
 include(cmake/docs.cmake)
 
 add_subdirectory(examples/hello_world)
+add_subdirectory(examples/todolist)
