@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.9)
+cmake_minimum_required(VERSION 3.5.1)
 project(spine)
 
 file (STRINGS "VERSION" VERSION)
@@ -16,22 +16,27 @@ add_definitions(-std=gnu++14)
 add_definitions(-fPIC)
 
 #common libraries
-find_package(Poco REQUIRED Foundation)
-find_package(Boost REQUIRED)
-
 include_directories(include)
+
+find_path(Poco_INCLUDE_DIRS Poco/Poco.h)
+find_path(Boost_INCLUDE_DIRS boost/shared_ptr.hpp)
+find_path(Protobuf_INCLUDE_DIRS google/protobuf/message.h)
+find_path(Grpc_INCLUDE_DIRS grpc++/grpc++.h)
+
 include_directories(${Poco_INCLUDE_DIRS})
 include_directories(${Boost_INCLUDE_DIRS})
+include_directories(${Protobuf_INCLUDE_DIRS})
+include_directories(${Grpc_INCLUDE_DIRS})
 
-include(cmake/code_coverage.cmake)
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
+
+
+#include(cmake/code_coverage.cmake)
 include(cmake/spine_proto.cmake)
-
-include_directories(${GRPC_INSTALL_DIR}/include)
-link_directories(${GRPC_INSTALL_DIR}/lib)
 
 include(cmake/spine_cpp_lib.cmake)
 
-include(cmake/unit_tests.cmake)
-include(cmake/docs.cmake)
+#include(cmake/unit_tests.cmake)
+#include(cmake/docs.cmake)
 
-add_subdirectory(examples/hello_world)
+#add_subdirectory(examples/hello_world)

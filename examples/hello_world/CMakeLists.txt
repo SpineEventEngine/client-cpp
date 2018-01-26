@@ -19,10 +19,6 @@ include_directories(${Protobuf_INCLUDE_DIRS})
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 set(Protobuf_USE_STATIC_LIBS ON)
 
-#grpc
-include_directories(${GRPC_INSTALL_DIR}/include)
-link_directories(${GRPC_INSTALL_DIR}/lib)
-
 #spine-cpp
 include_directories(../../include)
 include_directories(../../_build/generated)
@@ -32,10 +28,8 @@ set(CPP_SPINE_LIBRARY_NAME libspine-0.10.0.a)
 include_directories(${CMAKE_BINARY_DIR})
 
 #proto
-set(Protobuf_IMPORT_DIRS ${Protobuf_IMPORT_DIRS} dependencies/spine)
+set(Protobuf_IMPORT_DIRS ${Protobuf_IMPORT_DIRS} ../../dependencies/spine)
 protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS model/src/main/proto/hello.proto)
-
-
 
 set(hello-world_SRC
         ${PROTO_SRCS}

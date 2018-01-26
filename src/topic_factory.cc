@@ -21,7 +21,6 @@
 #include "spine/topic_factory.h"
 
 using namespace spine::client;
-using namespace spine::type;
 
 TopicFactory::TopicFactory(const ActorRequestFactory& actor_request_factory)
 {
