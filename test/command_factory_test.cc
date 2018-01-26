@@ -57,8 +57,6 @@ protected:
     const ZoneId zone_id_message;
 };
 
-
-
 TEST_F(CommandFactoryShould, Create)
 {
     CommandPtr command = command_factory_->create(zone_id_message);
