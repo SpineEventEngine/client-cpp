@@ -40,7 +40,7 @@ public:
         ASSERT_FALSE(split_values[0].empty());
         ASSERT_FALSE(split_values[1].empty());
 
-        ASSERT_EQ(split_values[1], zone_id_message.GetTypeName());
+        ASSERT_EQ(split_values[1], zone_id_.GetTypeName());
     }
 
     void check_type_url_with_prefix(const std::string& type_url, const std::string& prefix)
@@ -50,16 +50,16 @@ public:
         ASSERT_EQ(2, split_values.size());
 
         ASSERT_EQ(split_values[0], prefix);
-        ASSERT_EQ(split_values[1], zone_id_message.GetTypeName());
+        ASSERT_EQ(split_values[1], zone_id_.GetTypeName());
     }
 
 protected:
-    const ZoneId zone_id_message;
+    const ZoneId zone_id_;
 };
 
 TEST_F(CommandFactoryShould, Create)
 {
-    CommandPtr command = command_factory_->create(zone_id_message);
+    CommandPtr command = command_factory_->create(zone_id_);
     ASSERT_TRUE(command);
     ASSERT_TRUE(command->has_id());
     ASSERT_FALSE(command->id().uuid().empty());
@@ -71,7 +71,7 @@ TEST_F(CommandFactoryShould, Create)
 TEST_F(CommandFactoryShould, CreateWithTypePrefix)
 {
     const std::string prefix = "type.com.my.prefix";
-    CommandPtr command = command_factory_->create(zone_id_message, prefix);
+    CommandPtr command = command_factory_->create(zone_id_, prefix);
 
     ASSERT_TRUE(command);
     ASSERT_TRUE(command->has_id());
@@ -84,7 +84,7 @@ TEST_F(CommandFactoryShould, CreateWithTypePrefix)
 TEST_F(CommandFactoryShould, CreateWithTargetVersion)
 {
     const int target_version = 42;
-    CommandPtr command = command_factory_->create(zone_id_message, target_version);
+    CommandPtr command = command_factory_->create(zone_id_, target_version);
 
     ASSERT_TRUE(command);
     ASSERT_TRUE(command->has_id());
