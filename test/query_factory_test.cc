@@ -58,7 +58,6 @@ TEST_F(QueryFactoryShould, CreateMessageWithPrefix)
     ASSERT_EQ(query->target().type(), "type.test.spine.io/spine.test.TestMessage");
 }
 
-
 TEST_F(QueryFactoryShould, CreateMessageWithoutPrefix)
 {
     QueryPtr query = query_factory_->all<TestMessageNoPrefix>();

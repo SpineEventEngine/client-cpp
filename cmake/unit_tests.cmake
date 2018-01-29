@@ -58,8 +58,6 @@ foreach(proto_file ${test_proto_files})
     set(test_generated_files ${test_generated_files} ${pb_file})
 endforeach(proto_file)
 
-#
-
 add_executable(runTests ${TEST_SRCS} ${test_generated_files})
 
 target_link_libraries(runTests gtest_main ${CPP_SPINE_LIBRARY_NAME}

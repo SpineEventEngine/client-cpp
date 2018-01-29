@@ -21,9 +21,6 @@ syntax = "proto3";
 
 package spine.test;
 
-import "spine/options.proto";
-
-
 message TestMessageNoPrefix {
     string value = 1;
 }
