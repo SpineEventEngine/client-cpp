@@ -24,35 +24,16 @@
 #include <boost/algorithm/string.hpp>
 
 #include "common_factory_test.h"
+#include "unit_tests.pb.h"
+#include "unit_tests_no_prefix.pb.h"
 
 using namespace spine::client;
 using namespace spine::core;
 using namespace spine::time;
+using namespace spine::test;
 
 class CommandFactoryShould : public CommonFactoryTest
 {
-public:
-    void check_type_url(const std::string& type_url)
-    {
-        std::vector<std::string> split_values;
-        boost::split(split_values, type_url, [](char val) { return '/' == val;});
-        ASSERT_EQ(2, split_values.size());
-        ASSERT_FALSE(split_values[0].empty());
-        ASSERT_FALSE(split_values[1].empty());
-
-        ASSERT_EQ(split_values[1], zone_id_.GetTypeName());
-    }
-
-    void check_type_url_with_prefix(const std::string& type_url, const std::string& prefix)
-    {
-        std::vector<std::string> split_values;
-        boost::split(split_values, type_url, [](char val) { return '/' == val;});
-        ASSERT_EQ(2, split_values.size());
-
-        ASSERT_EQ(split_values[0], prefix);
-        ASSERT_EQ(split_values[1], zone_id_.GetTypeName());
-    }
-
 protected:
     const ZoneId zone_id_;
 };
@@ -65,20 +46,31 @@ TEST_F(CommandFactoryShould, Create)
     ASSERT_FALSE(command->id().uuid().empty());
     ASSERT_TRUE(command->has_message());
 
-    check_type_url(command->message().type_url());
+    ASSERT_EQ(command->message().type_url(), "type.spine.io/spine.time.ZoneId");
 }
 
-TEST_F(CommandFactoryShould, CreateWithTypePrefix)
+TEST_F(CommandFactoryShould, Create2)
 {
-    const std::string prefix = "type.com.my.prefix";
-    CommandPtr command = command_factory_->create(zone_id_, prefix);
-
+    TestMessage test_message;
+    CommandPtr command = command_factory_->create(test_message);
     ASSERT_TRUE(command);
     ASSERT_TRUE(command->has_id());
     ASSERT_FALSE(command->id().uuid().empty());
     ASSERT_TRUE(command->has_message());
 
-    check_type_url_with_prefix(command->message().type_url(), prefix);
+    ASSERT_EQ(command->message().type_url(), "type.test.spine.io/spine.test.TestMessage");
+}
+
+TEST_F(CommandFactoryShould, Create3)
+{
+    TestMessageNoPrefix test_message;
+    CommandPtr command = command_factory_->create(test_message);
+    ASSERT_TRUE(command);
+    ASSERT_TRUE(command->has_id());
+    ASSERT_FALSE(command->id().uuid().empty());
+    ASSERT_TRUE(command->has_message());
+
+    ASSERT_EQ(command->message().type_url(), "type.googleapis.com/spine.test.TestMessageNoPrefix");
 }
 
 TEST_F(CommandFactoryShould, CreateWithTargetVersion)
@@ -91,7 +83,7 @@ TEST_F(CommandFactoryShould, CreateWithTargetVersion)
     ASSERT_FALSE(command->id().uuid().empty());
     ASSERT_TRUE(command->has_message());
 
-    check_type_url(command->message().type_url());
+    ASSERT_EQ(command->message().type_url(), "type.spine.io/spine.time.ZoneId");
 
     ASSERT_TRUE(command->has_context());
     ASSERT_TRUE(command->context().target_version());
