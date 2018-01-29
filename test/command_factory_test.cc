@@ -38,7 +38,7 @@ protected:
     const ZoneId zone_id_;
 };
 
-TEST_F(CommandFactoryShould, Create)
+TEST_F(CommandFactoryShould, CreateKnownSpineType)
 {
     CommandPtr command = command_factory_->create(zone_id_);
     ASSERT_TRUE(command);
@@ -49,7 +49,7 @@ TEST_F(CommandFactoryShould, Create)
     ASSERT_EQ(command->message().type_url(), "type.spine.io/spine.time.ZoneId");
 }
 
-TEST_F(CommandFactoryShould, Create2)
+TEST_F(CommandFactoryShould, CreateMessageWithPrefix)
 {
     TestMessage test_message;
     CommandPtr command = command_factory_->create(test_message);
@@ -61,7 +61,7 @@ TEST_F(CommandFactoryShould, Create2)
     ASSERT_EQ(command->message().type_url(), "type.test.spine.io/spine.test.TestMessage");
 }
 
-TEST_F(CommandFactoryShould, Create3)
+TEST_F(CommandFactoryShould, CreateMessageWithoutPrefix)
 {
     TestMessageNoPrefix test_message;
     CommandPtr command = command_factory_->create(test_message);
