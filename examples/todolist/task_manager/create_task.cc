@@ -1,14 +1,17 @@
 #include "create_task.hpp"
-#include "Poco/UUIDGenerator.h"
 
 #include "command_handler/command_handler.hpp"
 
-void CreateTask::post(std::string const & _description)
+CreateTask::CreateTask(std::shared_ptr<CommandHandler> command_handler)
+	: command_handler_(command_handler)
 {
-	Poco::UUIDGenerator generator;
 
+}
+
+void CreateTask::post(std::string const & task_identifier, std::string const & _description)
+{
 	spine::examples::todolist::TaskId * taskId = spine::examples::todolist::TaskId::default_instance().New();
-	taskId->set_value(generator.createRandom().toString());
+	taskId->set_value(task_identifier);
 
 	spine::examples::todolist::TaskDescription * taskDescription = spine::examples::todolist::TaskDescription::default_instance().New();
 	taskDescription->set_value(_description);
@@ -18,11 +21,5 @@ void CreateTask::post(std::string const & _description)
 	task.set_allocated_id(taskId);
 	task.set_allocated_description(taskDescription);
 
-	CommandHandler::getCommandHandler().postCommand(task);
-}
-
-std::shared_ptr<CreateTask>
-CreateTask::createTask()
-{
-	return std::make_shared<CreateTask>(*new CreateTask());
+	command_handler_->post_command(task);
 }

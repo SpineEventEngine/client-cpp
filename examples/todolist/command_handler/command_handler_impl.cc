@@ -4,7 +4,7 @@
 
 #define CHANNEL "localhost:50051"
 
-CommandHandler::CommandHandler()
+CommandHandlerImpl::CommandHandlerImpl()
 {
 	m_channel = ::grpc::CreateChannel(CHANNEL, grpc::InsecureChannelCredentials());
 	auto tenant = std::unique_ptr<TenantId>(TenantId::default_instance().New());
@@ -18,9 +18,9 @@ CommandHandler::CommandHandler()
 	m_stub = CommandService::NewStub(m_channel);
 }
 
-void CommandHandler::postCommand(spine::examples::todolist::CreateBasicTask & _clientTask)
+void CommandHandlerImpl::post_command(spine::examples::todolist::CreateBasicTask & client_task)
 {
-	CommandPtr command = m_command_factory->create(_clientTask, "type.spine.examples.todolist");
+	CommandPtr command = m_command_factory->create(client_task, "type.spine.examples.todolist");
 	spine::core::Ack response;
 	grpc::ClientContext client_context;
 	if (!m_stub->Post(&client_context, *command, &response).ok()) {
@@ -29,7 +29,7 @@ void CommandHandler::postCommand(spine::examples::todolist::CreateBasicTask & _c
 }
 
 spine::examples::todolist::TaskListView const &
-CommandHandler::getTasks()
+CommandHandlerImpl::get_tasks()
 {
 	ActorRequestFactory factory = ActorRequestFactory::create(m_parameters);
 
@@ -57,7 +57,7 @@ CommandHandler::getTasks()
 }
 
 std::unique_ptr<spine::core::UserId>
-CommandHandler::make_user_id(const std::string &value)
+CommandHandlerImpl::make_user_id(const std::string & value)
 {
 	auto actor = std::make_unique<spine::core::UserId>();
 	actor->set_value(value);
@@ -65,7 +65,7 @@ CommandHandler::make_user_id(const std::string &value)
 }
 
 std::unique_ptr<spine::time::ZoneOffset>
-CommandHandler::make_zone_offset(const std::string &zone_id, int amount)
+CommandHandlerImpl::make_zone_offset(const std::string &zone_id, int amount)
 {
 	spine::time::ZoneId* zone_id_ptr = spine::time::ZoneId::default_instance().New();
 	zone_id_ptr->set_value(zone_id);
@@ -76,11 +76,4 @@ CommandHandler::make_zone_offset(const std::string &zone_id, int amount)
 	zone_offset->set_allocated_id(zone_id_ptr);
 	zone_offset->set_amountseconds(amount);
 	return zone_offset;
-}
-
-CommandHandler &
-CommandHandler::getCommandHandler()
-{
-	static CommandHandler commandHandler;
-	return commandHandler;
 }

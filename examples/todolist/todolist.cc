@@ -8,8 +8,6 @@ using namespace std;
 
 int main(int argc, char** argv)
 {
-	TaskManager taskManager;
-
-	taskManager.init();
-	taskManager.start(argv[0]);
+	TaskManager taskManager(argv[0]);
+	taskManager.start();
 }

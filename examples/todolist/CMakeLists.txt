@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.9)
+cmake_minimum_required(VERSION 3.5.1)
 project(todolist)
 
 set(CMAKE_CXX_STANDARD 14)
@@ -90,6 +90,7 @@ set(hello-world_SRC
         task_manager/task_manager.cpp
         task_manager/list_task.cpp
         task_manager/create_task.cpp
+        console_view/console_view_impl.cpp
         )
 
 add_executable(todolist ${hello-world_SRC})
