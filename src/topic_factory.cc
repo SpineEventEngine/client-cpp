@@ -27,10 +27,16 @@ TopicFactory::TopicFactory(const ActorRequestFactory& actor_request_factory)
     actor_context_ = actor_request_factory.actor_context();
 }
 
-std::unique_ptr<Topic> TopicFactory::all(const std::string& type)
+std::unique_ptr<Topic> TopicFactory::all(const std::string& prefix, const std::string& type)
 {
     std::unique_ptr<Target> target { Target::default_instance().New() };
-    target->set_type(type);
+
+    std::string type_url = type;
+    if( !prefix.empty() )
+    {
+        type_url.insert(0, prefix + "/");
+    }
+    target->set_type(type_url);
     return for_target(std::move(target));
 }
 

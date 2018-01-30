@@ -22,16 +22,19 @@
 #include <gtest/gtest.h>
 
 #include "common_factory_test.h"
+#include "unit_tests.pb.h"
+#include "unit_tests_no_prefix.pb.h"
 
 using namespace spine::client;
 using namespace spine::core;
 using namespace spine::time;
+using namespace spine::test;
 
 class QueryFactoryShould : public CommonFactoryTest
 {
 };
 
-TEST_F(QueryFactoryShould, Create)
+TEST_F(QueryFactoryShould, CreateKnownSpineType)
 {
     QueryPtr query = query_factory_->all<ZoneId>();
 
@@ -40,5 +43,29 @@ TEST_F(QueryFactoryShould, Create)
     ASSERT_TRUE(query->has_id());
     ASSERT_FALSE(query->id().value().empty());
     ASSERT_TRUE(query->has_target());
-    ASSERT_EQ(query->target().type(), ZoneId::descriptor()->full_name());
+    ASSERT_EQ(query->target().type(), "type.spine.io/spine.time.ZoneId");
+}
+
+TEST_F(QueryFactoryShould, CreateMessageWithPrefix)
+{
+    QueryPtr query = query_factory_->all<TestMessage>();
+
+    std::string type = query->target().type();
+    ASSERT_TRUE(query);
+    ASSERT_TRUE(query->has_id());
+    ASSERT_FALSE(query->id().value().empty());
+    ASSERT_TRUE(query->has_target());
+    ASSERT_EQ(query->target().type(), "type.test.spine.io/spine.test.TestMessage");
+}
+
+TEST_F(QueryFactoryShould, CreateMessageWithoutPrefix)
+{
+    QueryPtr query = query_factory_->all<TestMessageNoPrefix>();
+
+    std::string type = query->target().type();
+    ASSERT_TRUE(query);
+    ASSERT_TRUE(query->has_id());
+    ASSERT_FALSE(query->id().value().empty());
+    ASSERT_TRUE(query->has_target());
+    ASSERT_EQ(query->target().type(), "spine.test.TestMessageNoPrefix");
 }
