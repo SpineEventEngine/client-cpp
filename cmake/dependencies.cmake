@@ -43,7 +43,7 @@ set(CMAKE_PROGRAM_PATH ${CMAKE_PROGRAM_PATH} ${GRPC_DEPENDENCIES_DIR}/bins/opt)
 
 set(PROTOBUF_CONFIGURE_COMMAND "")
 if(NOT EXISTS "${PROTOBUF_DEPENDENCIES_DIR}/configure")
-    set(PROTOBUF_CONFIGURE_COMMAND "./autogen.sh" "./configure")
+    set(PROTOBUF_CONFIGURE_COMMAND "./autogen.sh" COMMAND "./configure")
 endif()
 
 #Protobuf
