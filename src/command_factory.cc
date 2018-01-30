@@ -48,15 +48,6 @@ std::unique_ptr<Command> CommandFactory::create(const Message& message)
     return std::unique_ptr<Command>{command};
 }
 
-std::unique_ptr<Command> CommandFactory::create(const Message& message, const std::string& type_url)
-{
-    Command* command = make_command(
-            make_command_context(actor_context_),
-            to_any(message, type_url),
-            make_command_id(uuid_generator_.createRandom().toString()));
-    return std::unique_ptr<Command>{command};
-}
-
 std::unique_ptr<Command> CommandFactory::create(const Message& message, const int target_version)
 {
     Command* command = make_command(
@@ -66,17 +57,20 @@ std::unique_ptr<Command> CommandFactory::create(const Message& message, const in
     return std::unique_ptr<Command>{command};
 
 }
+
 Any* CommandFactory::to_any(const Message& message)
 {
     Any* any = Any::default_instance().New();
-    any->PackFrom(message);
-    return any;
-}
+    std::string url_prefix = message.GetDescriptor()->file()->options().GetExtension(type_url_prefix);
+    if(!url_prefix.empty())
+    {
+        any->PackFrom(message, url_prefix);
+    }
+    else
+    {
+        any->PackFrom(message);
+    }
 
-Any* CommandFactory::to_any(const Message& message, const std::string& type_url)
-{
-    Any* any = Any::default_instance().New();
-    any->PackFrom(message, type_url);
     return any;
 }
 

@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.9)
+cmake_minimum_required(VERSION 3.5.1)
 project(spine)
 
 file (STRINGS "VERSION" VERSION)
@@ -16,31 +16,24 @@ add_definitions(-std=gnu++14)
 add_definitions(-fPIC)
 
 #common libraries
-find_package(Poco REQUIRED Foundation)
-find_package(Boost REQUIRED)
-
-find_package(Protobuf REQUIRED)
-set(Protobuf_USE_STATIC_LIBS ON)
-
 include_directories(include)
+
+find_path(Poco_INCLUDE_DIRS Poco/Poco.h)
+find_path(Boost_INCLUDE_DIRS boost/shared_ptr.hpp)
+find_path(Protobuf_INCLUDE_DIRS google/protobuf/message.h)
+find_path(Grpc_INCLUDE_DIRS grpc++/grpc++.h)
+
 include_directories(${Poco_INCLUDE_DIRS})
 include_directories(${Boost_INCLUDE_DIRS})
 include_directories(${Protobuf_INCLUDE_DIRS})
+include_directories(${Grpc_INCLUDE_DIRS})
+
+find_library(PROTOBUF_LIB libprotobuf.a)
+find_library(Poco_FOUNDATION_LIB NAMES PocoFoundation PocoFoundationd)
+
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
-if(WIN32)
-    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MT")
-    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MTd")
-    add_definitions(-D_WIN32_WINNT=0x600)  
-endif()
-
-include(cmake/code_coverage.cmake)
 include(cmake/spine_proto.cmake)
-
 include(cmake/spine_cpp_lib.cmake)
 
 include(cmake/unit_tests.cmake)
-include(cmake/docs.cmake)
-
-add_subdirectory(examples/hello_world)
-add_subdirectory(examples/todolist)

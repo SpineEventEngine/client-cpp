@@ -31,7 +31,6 @@
 #include <spine/client/subscription.pb.h>
 
 #include "actor_request_factory.h"
-#include "type_url.h"
 
 namespace spine {
 namespace client {
@@ -45,11 +44,14 @@ public:
     template <typename T, typename = enable_param_if_protobuf_message<T>>
     TopicPtr all()
     {
-        return all(T::descriptor()->full_name());
+        return all(
+                T::descriptor()->file()->options().GetExtension(type_url_prefix),
+                T::descriptor()->full_name()
+        );
     };
 
 private:
-    TopicPtr all(const std::string& type);
+    TopicPtr all(const std::string& prefix, const std::string& type);
     TopicPtr for_target(std::unique_ptr<Target> &&);
 
 private:
