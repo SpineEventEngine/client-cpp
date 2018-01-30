@@ -23,6 +23,7 @@ execute_process(COMMAND curl -L https://grpc.io/release OUTPUT_VARIABLE GRPC_TAG
 ExternalProject_Add(grpc_dependency
         PREFIX ${GRPC_PREFIX_DIR}
         SOURCE_DIR ${GRPC_DEPENDENCIES_DIR}
+        UPDATE_COMMAND ""
         GIT_REPOSITORY "https://github.com/grpc/grpc.git"
         GIT_TAG "${GRPC_TAG}"
         GIT_SUBMODULES
