@@ -18,7 +18,7 @@ ExternalProject_Add(spine_proto_dependency
         )
 
 #gRPC
-EXEC_PROGRAM(COMMAND curl -L https://grpc.io/release OUTPUT_VARIABLE GRPC_TAG)
+execute_process(COMMAND curl -L https://grpc.io/release OUTPUT_VARIABLE GRPC_TAG)
 
 ExternalProject_Add(grpc_dependency
         PREFIX ${GRPC_PREFIX_DIR}
