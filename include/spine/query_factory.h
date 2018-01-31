@@ -49,12 +49,15 @@ public:
     template <typename T, typename = enable_param_if_protobuf_message<T>>
     QueryPtr all()
     {
-        return all(T::descriptor()->full_name());
+        return all(
+                T::descriptor()->file()->options().GetExtension(type_url_prefix),
+                T::descriptor()->full_name()
+        );
     };
 
 private:
     QueryId *createQueryId();
-    QueryPtr all(const std::string& type_url);
+    QueryPtr all(const std::string& prefix, const std::string& type);
 private:
     std::unique_ptr<core::ActorContext> actor_context_;
     Poco::UUIDGenerator uuid_generator_;

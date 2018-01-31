@@ -34,9 +34,14 @@ QueryFactory::QueryFactory(const ActorRequestFactory &actor_request_factory)
     actor_context_ = actor_request_factory.actor_context();
 }
 
-std::unique_ptr<Query> QueryFactory::all(const std::string& type_url)
+std::unique_ptr<Query> QueryFactory::all(const std::string& prefix, const std::string& type)
 {
     std::unique_ptr<Target> target { Target::default_instance().New() };
+    std::string type_url = type;
+    if( !prefix.empty() )
+    {
+        type_url.insert(0, prefix + "/");
+    }
     target->set_type(type_url);
 
     std::unique_ptr<Query> query { Query::default_instance().New() };

@@ -40,9 +40,6 @@ file(MAKE_DIRECTORY ${GENERATED_DIR})
 
 set(PROTO_DIR ${CMAKE_HOME_DIRECTORY}/dependencies/spine)
 
-find_program(GRPC_CPP_PLUGIN_EXE grpc_cpp_plugin)
-find_program(PROTOC_EXE protoc)
-
 macro(compile_proto_file filename)
     get_filename_component(dirname ${filename} PATH)
     get_filename_component(basename ${filename} NAME_WE)

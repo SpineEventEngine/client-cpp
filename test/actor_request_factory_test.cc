@@ -1,5 +1,5 @@
 /*
- * Copyright 2017, TeamDev Ltd. All rights reserved.
+ * Copyright 2018, TeamDev Ltd. All rights reserved.
  *
  * Redistribution and use in source and/or binary forms, with or without
  * modification, must retain the above copyright notice and the following
@@ -20,10 +20,12 @@
 
 #include <gtest/gtest.h>
 
-#include "spine/command_factory.h"
 #include "spine/actor_request_factory.h"
 
-#include <spine/people/person_name.pb.h>
+#include <google/protobuf/timestamp.pb.h>
+#include <spine/core/user_id.pb.h>
+#include <spine/core/tenant_id.pb.h>
+#include <spine/time/zone.pb.h>
 
 using namespace spine::client;
 using namespace spine::core;
@@ -59,9 +61,9 @@ TEST_F(ActorRequestFactoryShould, BeEmptyWithFactoryMethod)
     ASSERT_FALSE(params.zone_offset());
 }
 
-static const char* const USER_ID = "user_id_123";
-static const char* const TENANT_ID = "tenant_id_123";
-static const char* const ZONE_ID = "zone_id_123";
+static const char* const USER_ID = "user@example.com";
+static const char* const TENANT_ID = "example.com";
+static const char* const ZONE_ID = "UTC";
 
 TEST_F(ActorRequestFactoryShould, HaveValidParams)
 {
@@ -92,9 +94,4 @@ TEST_F(ActorRequestFactoryShould, HaveValidParams)
     ASSERT_EQ(params.tenant_id()->value(),factory.tenant_id()->value());
     ASSERT_EQ(params.zone_offset()->id().value(),factory.zone_offset()->id().value());
     ASSERT_EQ(params.zone_offset()->amountseconds(),factory.zone_offset()->amountseconds());
-
-    std::unique_ptr<CommandFactory> command_factory = factory.command_factory();
-    spine::people::PersonName message;
-    message.set_family_name("asdasdasd");
-    std::unique_ptr<Command> command = command_factory->create(message);
 }
