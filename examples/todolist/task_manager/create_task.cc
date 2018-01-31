@@ -1,6 +1,6 @@
-#include "create_task.hpp"
+#include "create_task.h"
 
-#include "command_handler/command_handler.hpp"
+#include "command_handler/command_handler.h"
 
 CreateTask::CreateTask(std::shared_ptr<CommandHandler> command_handler)
 	: command_handler_(command_handler)

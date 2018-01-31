@@ -1,4 +1,5 @@
 #include "console_view_impl.h"
+#include "task_manager/task_logger.h"
 
 ConsoleViewImpl::ConsoleViewImpl(std::string const & _path_to_exec_file)
 	:	command_handler_(new TCLAP::CmdLine("Command description message", ' ', "0.9", false))
@@ -9,7 +10,7 @@ ConsoleViewImpl::ConsoleViewImpl(std::string const & _path_to_exec_file)
 
 void ConsoleViewImpl::add_simple_command(ConsoleCommandType command_type, std::shared_ptr<TCLAP::SwitchArg> command_args)
 {
-	commands_.insert[command_type] = command_args;
+	commands_[command_type] = command_args;
 	command_handler_->add(command_args.get());
 }
 
@@ -27,7 +28,7 @@ void ConsoleViewImpl::run_command_input()
 {
 	command_handler_->reset();
 
-	std::cout << "Select an action (?)" << std::endl;
+	TaskLogger::print_select_an_action_prompt();
 	std::string line;
 	std::getline(std::cin, line);
 	std::string command = "-" + line;
@@ -55,15 +56,15 @@ void ConsoleViewImpl::activate_console(std::function<bool()> _callback)
 		}
 		catch (TCLAP::ArgException &e)
 		{
-			std::cout << "There is no action with specified shortcut or argument is invalid\n";
+			TaskLogger::print_undefined_action_message();
 		}
 
 	} while (true);
 }
 
-bool ConsoleViewImpl::is_command_set(ConsoleCommandType command_type) const
+bool ConsoleViewImpl::is_command_set(ConsoleCommandType command_type)
 {
-	auto command = commands_[command_type];
+	std::shared_ptr<TCLAP::SwitchArg> command = commands_[command_type];
 	return command->isSet();
 }
 

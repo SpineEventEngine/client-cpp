@@ -1,4 +1,4 @@
-#include "command_handler.hpp"
+#include "command_handler_impl.h"
 
 #include "spine/client/query_service.grpc.pb.h"
 
@@ -20,7 +20,7 @@ CommandHandlerImpl::CommandHandlerImpl()
 
 void CommandHandlerImpl::post_command(spine::examples::todolist::CreateBasicTask & client_task)
 {
-	CommandPtr command = m_command_factory->create(client_task, "type.spine.examples.todolist");
+	CommandPtr command = m_command_factory->create(client_task);
 	spine::core::Ack response;
 	grpc::ClientContext client_context;
 	if (!m_stub->Post(&client_context, *command, &response).ok()) {

@@ -244,7 +244,7 @@ inline void StdOutput::spacePrint( std::ostream& os,
 					// int stringLen = std::min<int>( len - start, allowedLen );
 					// doing it this way to support a VisualC++ 2005 bug 
 					using namespace std; 
-					int stringLen = min<int>( len - start, allowedLen );
+					int stringLen = std::min<int>( len - start, allowedLen );
 
 					// trim the length so it doesn't end in middle of a word
 					if ( stringLen == allowedLen )

@@ -5,6 +5,9 @@
 
 class CommandHandler
 {
+
+public:
+
 	virtual ~CommandHandler() {}
 
 	virtual void post_command(spine::examples::todolist::CreateBasicTask & client_task) = 0;

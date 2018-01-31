@@ -1,5 +1,5 @@
-#include "task_logger.hpp"
-
+#include "task_logger.h"
+#include <iostream>
 
 void TaskLogger::print_main_menu_help()
 {
@@ -22,7 +22,7 @@ void TaskLogger::print_back_option()
 	std::cout << "----------------" << std::endl;
 }
 
-void TaskLogger::print_task_item_description(spine::examples::todolist::TaskItem & task_item)
+void TaskLogger::print_task_description(spine::examples::todolist::TaskItem & task_item)
 {
 	std::cout << "My task details:\n";
 	std::cout << "----------------" << std::endl;

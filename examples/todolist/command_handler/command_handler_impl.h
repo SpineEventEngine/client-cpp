@@ -10,6 +10,8 @@
 #include "spine/actor_request_factory.h"
 #include "spine/query_factory.h"
 
+#include "command_handler.h"
+
 #include <memory>
 
 using namespace spine::client;

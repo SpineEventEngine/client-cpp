@@ -1,10 +1,10 @@
-#include "list_task.hpp"
-#include "task_logger.hpp"
+#include "list_task.h"
+#include "task_logger.h"
 
 #include "todolist/model.pb.h"
 
 #include "console_view/console_view_impl.h"
-#include "command_handler/command_handler.hpp"
+#include "command_handler/command_handler.h"
 
 
 ListTask::ListTask(
@@ -15,14 +15,14 @@ ListTask::ListTask(
 	, command_handler_(command_handler)
 {
 	console_view_->add_simple_command(
-		ConsoleCommandType::BACK_TO_PREVIOUS_MENU
-		, std::make_shared<TCLAP::SwitchArg>(new TCLAP::SwitchArg("b", "Back", "Go to previous menu", false))
-	);
+			ConsoleCommandType::BACK_TO_PREVIOUS_MENU
+		,	std::make_shared<TCLAP::SwitchArg>("b", "Back", "Go to previous menu", false));
+
 }
 
 void ListTask::load_tasks()
 {
-	auto const & taskListView = CommandHandler::getCommandHandler().getTasks();
+	auto const & taskListView = command_handler_->get_tasks();
 
 	for (int i = 0; i < taskListView.items_size(); i++)
 		task_items_.push_back(taskListView.items(i));
@@ -45,7 +45,7 @@ void ListTask::load_task_menu()
 			std::cout << "(" << std::to_string(index + 1) << ") " << task_items_[index].description().value() << "\n";
 
 			console_view_->add_task_view_command(
-				std::make_shared<TCLAP::SwitchArg>(new TCLAP::SwitchArg(taskIndex, "task number " + taskIndex, "Choose task " + taskIndex, false))
+				std::make_shared<TCLAP::SwitchArg>(taskIndex, "task number " + taskIndex, "Choose task " + taskIndex, false)
 			);
 		}
 

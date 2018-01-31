@@ -83,17 +83,18 @@ endforeach(proto_file)
 include_directories(${GENERATED_DIR})
 include_directories(${CMAKE_BINARY_DIR}/../examples/todolist)
 
-set(hello-world_SRC
+set(todolist_source_files
         ${todolist_generated_files}
-        todolist.cpp
-        command_handler/command_handler.cpp
-        task_manager/task_manager.cpp
-        task_manager/list_task.cpp
-        task_manager/create_task.cpp
-        console_view/console_view_impl.cpp
+        todolist.cc
+        command_handler/command_handler_impl.cc
+        task_manager/task_manager.cc
+        task_manager/task_logger.cc
+        task_manager/list_task.cc
+        task_manager/create_task.cc
+        console_view/console_view_impl.cc
         )
 
-add_executable(todolist ${hello-world_SRC})
+add_executable(todolist ${todolist_source_files})
 
 target_link_libraries(todolist
         ${CPP_SPINE_LIBRARY_NAME}
