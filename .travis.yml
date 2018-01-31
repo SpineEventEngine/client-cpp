@@ -36,6 +36,6 @@ install:
 
 before_script:
   - cd ${TRAVIS_BUILD_DIR}
-  - mkdir _build && cd _build && cmake ..
+  - mkdir _build && cd _build && cmake -DBUILD_DEPENDENCIES=ON ..
 script:
   - cmake --build .
