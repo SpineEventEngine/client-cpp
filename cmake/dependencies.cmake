@@ -61,6 +61,8 @@ ExternalProject_Add(protobuf_dependency
 include_directories(${PROTOBUF_DEPENDENCIES_DIR}/src)
 link_directories(${PROTOBUF_DEPENDENCIES_DIR}/src/.libs)
 set(CMAKE_PROGRAM_PATH ${CMAKE_PROGRAM_PATH} ${PROTOBUF_DEPENDENCIES_DIR}/src/.libs)
+link_directories(${GRPC_DEPENDENCIES_DIR}/libs/opt/protobuf)
+set(CMAKE_PROGRAM_PATH ${CMAKE_PROGRAM_PATH} ${GRPC_DEPENDENCIES_DIR}/bins/opt/protobuf)
 
 #POCO & Boost
 find_path(Poco_INCLUDE_DIRS Poco/Poco.h)
