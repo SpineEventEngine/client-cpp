@@ -69,15 +69,27 @@ link_directories(${GRPC_DEPENDENCIES_DIR}/libs/opt)
 link_directories(${PROTOBUF_DEPENDENCIES_DIR}/src/.libs)
 link_directories(${GRPC_DEPENDENCIES_DIR}/libs/opt/protobuf)
 
-set(GRPC_CPP_PLUGIN_EXE ${GRPC_DEPENDENCIES_DIR}/bins/opt/grpc_cpp_plugin)
-set(PROTOC_EXE ${GRPC_DEPENDENCIES_DIR}/bins/opt/protobuf/protoc)
+find_program(GRPC_CPP_PLUGIN_EXE grpc_cpp_plugin)
+find_program(PROTOC_EXE protoc)
+
+if(GRPC_CPP_PLUGIN_EXE-NOTFOUND)
+    set(GRPC_CPP_PLUGIN_EXE ${GRPC_DEPENDENCIES_DIR}/bins/opt/grpc_cpp_plugin)
+endif()
+
+if(PROTOC_EXE-NOTFOUND)
+    set(PROTOC_EXE ${GRPC_DEPENDENCIES_DIR}/bins/opt/protobuf/protoc)
+endif()
 
 #POCO & Boost
 find_path(Poco_INCLUDE_DIRS Poco/Poco.h)
 find_path(Boost_INCLUDE_DIRS boost/shared_ptr.hpp)
+find_path(GRPC_INCLUDE_DIRS grpc++/grpc++.h)
+find_path(Protobuf_INCLUDE_DIRS google/protobuf/any.h)
 
 include_directories(${Poco_INCLUDE_DIRS})
 include_directories(${Boost_INCLUDE_DIRS})
+include_directories(${GRPC_INCLUDE_DIRS})
+include_directories(${Protobuf_INCLUDE_DIRS})
 
 find_library(PROTOBUF_LIB libprotobuf.a)
 find_library(Poco_FOUNDATION_LIB NAMES PocoFoundation PocoFoundationd)
