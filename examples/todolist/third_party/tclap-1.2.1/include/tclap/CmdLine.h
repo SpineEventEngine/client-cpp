@@ -313,6 +313,11 @@ private:
 		 */
 		void reset();
 
+		/**
+		 * Reset tasks only		
+		*/
+		void resetTasks();
+
 };
 
 
@@ -621,6 +626,11 @@ inline void CmdLine::reset()
 		(*it)->reset();
 	
 	_progName.clear();
+}
+
+inline void CmdLine::resetTasks()
+{
+	_argList.clear();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

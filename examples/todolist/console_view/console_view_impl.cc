@@ -17,17 +17,18 @@ void ConsoleViewImpl::add_simple_command(ConsoleCommandType command_type, std::s
 void ConsoleViewImpl::add_task_view_command(std::shared_ptr<TCLAP::SwitchArg> command_args)
 {
 	task_commands_.push_back(command_args);
+	command_handler_->add(command_args.get());
 }
 
-void ConsoleViewImpl::reset_task_view_commands()
+void ConsoleViewImpl::reset_tasks()
 {
 	task_commands_.clear();
+	commands_.clear();
+	command_handler_->resetTasks();
 }
 
 void ConsoleViewImpl::run_command_input()
 {
-	command_handler_->reset();
-
 	TaskLogger::print_select_an_action_prompt();
 	std::string line;
 	std::getline(std::cin, line);

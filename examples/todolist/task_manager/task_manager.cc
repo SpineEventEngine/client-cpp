@@ -13,10 +13,9 @@ TaskManager::TaskManager(std::string const & path_to_exec_file)
 	:	console_view_(new ConsoleViewImpl(path_to_exec_file))
 	,	command_handler_( new CommandHandlerImpl())
 {
-	initialize();
 }
 
-void TaskManager::initialize() noexcept
+void TaskManager::initialize_tasks() noexcept
 {
 	console_view_->add_simple_command(
 			ConsoleCommandType::CREATE_TASK
@@ -41,8 +40,11 @@ void TaskManager::start()
 
 	console_view_->activate_console([&]()
 	{
+		console_view_->reset_tasks();
+
 		TaskLogger::print_main_menu_help();
-		TaskLogger::print_select_an_action_prompt();
+
+		initialize_tasks();
 
 		console_view_->run_command_input();
 
@@ -73,7 +75,7 @@ void TaskManager::add_task() {
 
 	try {
 		createTaskCommand->post(task_identifier, description);
-		std::cout << "Task " << description << " created\n";
+		std::cout << "Task created\n";
 	}
 	catch (std::exception & _exception)
 	{

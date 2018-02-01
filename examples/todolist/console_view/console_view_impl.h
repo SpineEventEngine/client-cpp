@@ -18,7 +18,7 @@ public:
 	void add_simple_command(ConsoleCommandType command_type, std::shared_ptr<TCLAP::SwitchArg> command_args) override final;
 	void add_task_view_command(std::shared_ptr<TCLAP::SwitchArg> command_args) override final;
 	void run_command_input() override final;
-	void reset_task_view_commands();
+	void reset_tasks() override final;
 
 	void activate_console(std::function<bool()> _callback) override final;
 

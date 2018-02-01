@@ -17,7 +17,7 @@ public:
 
 private:
 
-	void initialize() noexcept;
+	void initialize_tasks() noexcept;
 
 	void add_task();
 	void list_tasks() const;

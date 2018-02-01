@@ -25,7 +25,7 @@ public:
 	virtual void run_command_input() = 0;
 
 	virtual void activate_console(std::function<bool()> _callback) = 0;
-	virtual void reset_task_view_commands() = 0;
+	virtual void reset_tasks() = 0;
 
 	virtual bool is_command_set(ConsoleCommandType command_type) = 0;
 	virtual bool is_task_set(int & active_task_number) const = 0;

@@ -26,6 +26,7 @@ private:
 
 	void show_task_info(int taskId);
 	void load_tasks();
+	void add_back_task();
 
 private:
 
