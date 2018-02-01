@@ -36,7 +36,6 @@ void TaskManager::initialize_tasks() noexcept
 void TaskManager::start()
 {
 	std::cout << "Main menu" << std::endl;
-	std::cout << std::endl;
 
 	console_view_->activate_console([&]()
 	{

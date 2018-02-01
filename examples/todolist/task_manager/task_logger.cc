@@ -4,16 +4,12 @@
 void TaskLogger::print_main_menu_help()
 {
 	std::cout << "----------------" << std::endl;
-	std::cout << std::endl;
 	std::cout
 		<< "(c) Create task\n"
 		<< "(l) List tasks\n"
 		<< "(q) Quit the programm\n";
 
-	std::cout << std::endl;
 	std::cout << "----------------" << std::endl;
-
-	std::cout << std::endl;
 }
 
 void TaskLogger::print_back_option()

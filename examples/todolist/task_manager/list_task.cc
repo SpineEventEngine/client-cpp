@@ -33,7 +33,7 @@ void ListTask::load_task_menu()
 
 		console_view_->reset_tasks();
 
-		std::cout << "My tasks list:\n" << std::endl;
+		std::cout << "My tasks list:" << std::endl;
 		std::cout << "----------------" << std::endl;
 
 		for (int index = 0; index < task_items_.size(); ++index)
