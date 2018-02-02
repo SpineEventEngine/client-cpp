@@ -72,11 +72,11 @@ link_directories(${GRPC_DEPENDENCIES_DIR}/libs/opt/protobuf)
 find_program(GRPC_CPP_PLUGIN_EXE grpc_cpp_plugin)
 find_program(PROTOC_EXE protoc)
 
-if(DEFINED GRPC_CPP_PLUGIN_EXE-NOTFOUND)
+if(NOT GRPC_CPP_PLUGIN_EXE)
     set(GRPC_CPP_PLUGIN_EXE ${GRPC_DEPENDENCIES_DIR}/bins/opt/grpc_cpp_plugin)
 endif()
 
-if(DEFINED PROTOC_EXE-NOTFOUND)
+if(NOT PROTOC_EXE)
     set(PROTOC_EXE ${GRPC_DEPENDENCIES_DIR}/bins/opt/protobuf/protoc)
 endif()
 
@@ -88,10 +88,10 @@ find_path(Protobuf_INCLUDE_DIRS google/protobuf/any.h)
 
 include_directories(${Poco_INCLUDE_DIRS})
 include_directories(${Boost_INCLUDE_DIRS})
-if(NOT DEFINED GRPC_INCLUDE_DIRS-NOTFOUND)
+if(GRPC_INCLUDE_DIRS)
     include_directories(${GRPC_INCLUDE_DIRS})
 endif()
-if(NOT DEFINED Protobuf_INCLUDE_DIRS-NOTFOUND)
+if(Protobuf_INCLUDE_DIRS)
     include_directories(${Protobuf_INCLUDE_DIRS})
 endif()
 
