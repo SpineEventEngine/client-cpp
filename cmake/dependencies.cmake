@@ -88,10 +88,10 @@ find_path(Protobuf_INCLUDE_DIRS google/protobuf/any.h)
 
 include_directories(${Poco_INCLUDE_DIRS})
 include_directories(${Boost_INCLUDE_DIRS})
-if(NOT GRPC_INCLUDE_DIRS-NOTFOUND)
+if(DEFINED GRPC_INCLUDE_DIRS-NOTFOUND)
     include_directories(${GRPC_INCLUDE_DIRS})
 endif()
-if(NOT Protobuf_INCLUDE_DIRS-NOTFOUND)
+if(DEFINED Protobuf_INCLUDE_DIRS-NOTFOUND)
     include_directories(${Protobuf_INCLUDE_DIRS})
 endif()
 
