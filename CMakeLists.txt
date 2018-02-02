@@ -17,23 +17,9 @@ add_definitions(-fPIC)
 
 #common libraries
 include_directories(include)
-
-find_path(Poco_INCLUDE_DIRS Poco/Poco.h)
-find_path(Boost_INCLUDE_DIRS boost/shared_ptr.hpp)
-find_path(Protobuf_INCLUDE_DIRS google/protobuf/message.h)
-find_path(Grpc_INCLUDE_DIRS grpc++/grpc++.h)
-
-include_directories(${Poco_INCLUDE_DIRS})
-include_directories(${Boost_INCLUDE_DIRS})
-include_directories(${Protobuf_INCLUDE_DIRS})
-include_directories(${Grpc_INCLUDE_DIRS})
-
-find_library(PROTOBUF_LIB libprotobuf.a)
-find_library(Poco_FOUNDATION_LIB NAMES PocoFoundation PocoFoundationd)
-
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
+
+include(cmake/dependencies.cmake)
 
 include(cmake/spine_proto.cmake)
 include(cmake/spine_cpp_lib.cmake)
-
-include(cmake/unit_tests.cmake)
