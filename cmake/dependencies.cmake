@@ -72,11 +72,11 @@ link_directories(${GRPC_DEPENDENCIES_DIR}/libs/opt/protobuf)
 find_program(GRPC_CPP_PLUGIN_EXE grpc_cpp_plugin)
 find_program(PROTOC_EXE protoc)
 
-if(GRPC_CPP_PLUGIN_EXE-NOTFOUND)
+if(DEFINED GRPC_CPP_PLUGIN_EXE-NOTFOUND)
     set(GRPC_CPP_PLUGIN_EXE ${GRPC_DEPENDENCIES_DIR}/bins/opt/grpc_cpp_plugin)
 endif()
 
-if(PROTOC_EXE-NOTFOUND)
+if(DEFINED PROTOC_EXE-NOTFOUND)
     set(PROTOC_EXE ${GRPC_DEPENDENCIES_DIR}/bins/opt/protobuf/protoc)
 endif()
 
