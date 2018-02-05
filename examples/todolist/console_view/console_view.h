@@ -54,7 +54,7 @@ public:
 	virtual bool is_command_set(ConsoleCommandType command_type) = 0;
 	virtual bool is_task_set() const = 0;
 	
-	virtual int get_set_task_index() const = 0;
+	virtual int get_active_task_index() const = 0;
 };
 
 } // namespace todolist

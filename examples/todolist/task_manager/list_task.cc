@@ -63,7 +63,7 @@ void ListTask::load_task_menu()
 
 		if (console_view_->is_task_set())
 		{
-			show_task_info(console_view_->get_set_task_index());
+			show_task_info(console_view_->get_active_task_index());
 			return true;
 		}
 		else if (console_view_->is_command_set(ConsoleCommandType::BACK_TO_PREVIOUS_MENU))

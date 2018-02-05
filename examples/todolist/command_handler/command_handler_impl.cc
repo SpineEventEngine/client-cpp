@@ -62,14 +62,14 @@ TaskListView const & CommandHandlerImpl::get_tasks()
 		throw exception::exception("Invalid response....");
 	}
 
-	MyListView * taskListsView = MyListView::default_instance().New();
+	MyListView * task_list_view = MyListView::default_instance().New();
 	if (response.messages_size() > 0)
 	{
 		const Any& any = response.messages(0);
-		any.UnpackTo(taskListsView);
+		any.UnpackTo(task_list_view);
 	}
 
-	return taskListsView->my_list();
+	return task_list_view->my_list();
 }
 
 std::unique_ptr<core::UserId>

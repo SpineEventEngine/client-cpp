@@ -40,8 +40,7 @@ namespace spine {
 namespace examples {
 namespace todolist {
 
-class CommandHandlerImpl
-	:	public CommandHandler
+class CommandHandlerImpl: public CommandHandler
 {
 public:
 	CommandHandlerImpl(const std::string & channel);

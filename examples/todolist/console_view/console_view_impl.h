@@ -32,8 +32,7 @@ namespace spine {
 namespace examples {
 namespace todolist {
 
-class ConsoleViewImpl
-	:	public ConsoleView
+class ConsoleViewImpl: public ConsoleView
 {
 public:
 	ConsoleViewImpl(std::string const & path_to_exec_file);
@@ -48,7 +47,7 @@ public:
 	bool is_command_set(ConsoleCommandType command_type) override final;
 	bool is_task_set() const override final;
 
-	int get_set_task_index() const override final;
+	int get_active_task_index() const override final;
 
 private:
 	std::unique_ptr<TCLAP::CmdLine> command_handler_;

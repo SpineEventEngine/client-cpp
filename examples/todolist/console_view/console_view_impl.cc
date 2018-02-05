@@ -104,7 +104,7 @@ bool ConsoleViewImpl::is_task_set() const
 	return false;
 }
 
-int ConsoleViewImpl::get_set_task_index() const
+int ConsoleViewImpl::get_active_task_index() const
 {
 	for (int task_index = 0; task_index < task_commands_.size(); ++task_index)
 	{
