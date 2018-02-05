@@ -27,19 +27,26 @@
 #include "todolist/model.pb.h"
 #include "todolist/c/commands.pb.h"
 
+namespace spine {
+namespace examples {
+namespace todolist {
+
 class CommandHandler;
 
 class CreateTask
 {
 public:
-
 	CreateTask(std::shared_ptr<CommandHandler> command_handler);
 
-	void post(std::string const & task_identifier, std::string const & _description);
+public:
+	void post(const std::string & task_identifier, const std::string & description);
 
 private:
-
 	std::shared_ptr<CommandHandler> command_handler_;
 };
+
+} // namespace todolist
+} // namespace examples
+} // namespace spine
 
 #endif // TODOLIST_CREATE_TASK_H

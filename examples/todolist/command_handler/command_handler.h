@@ -25,16 +25,20 @@
 #include "todolist/c/commands.pb.h"
 #include "todolist/q/projections.pb.h"
 
+namespace spine {
+namespace examples {
+namespace todolist {
+
 class CommandHandler
 {
-
 public:
-
 	virtual ~CommandHandler() {}
-
-	virtual void post_command(spine::examples::todolist::CreateBasicTask & client_task) = 0;
-
-	virtual spine::examples::todolist::TaskListView const & get_tasks() = 0;
+	virtual void post_command(CreateBasicTask & client_task) = 0;
+	virtual TaskListView const & get_tasks() = 0;
 };
+
+} // namespace todolist
+} // namespace examples
+} // namespace spine
 
 #endif TODOLIST_COMMAND_HANDLER_H

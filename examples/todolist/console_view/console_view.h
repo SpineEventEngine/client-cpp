@@ -21,9 +21,14 @@
 #ifndef TODOLIST_CONSOLE_VIEW
 #define TODOLIST_CONSOLE_VIEW
 
+#include "tclap/SwitchArg.h"
+
 #include <functional>
 #include <memory>
-#include "tclap/SwitchArg.h"
+
+namespace spine {
+namespace examples {
+namespace todolist {
 
 enum class ConsoleCommandType
 {
@@ -36,7 +41,6 @@ enum class ConsoleCommandType
 
 class ConsoleView
 {
-
 public:
 
 	virtual ~ConsoleView() {}
@@ -44,12 +48,17 @@ public:
 	virtual void add_simple_command(ConsoleCommandType command_type, std::shared_ptr<TCLAP::SwitchArg> command_args) = 0;
 	virtual void add_task_view_command(std::shared_ptr<TCLAP::SwitchArg> command_args) = 0;
 	virtual void run_command_input() = 0;
-
-	virtual void activate_console(std::function<bool()> _callback) = 0;
+	virtual void activate_console(std::function<bool()> callback) = 0;
 	virtual void reset_tasks() = 0;
 
 	virtual bool is_command_set(ConsoleCommandType command_type) = 0;
-	virtual bool is_task_set(int & active_task_number) const = 0;
+	virtual bool is_task_set() const = 0;
+	
+	virtual int get_set_task_index() const = 0;
 };
+
+} // namespace todolist
+} // namespace examples
+} // namespace spine
 
 #endif // TODOLIST_CONSOLE_VIEW_IMPL_H

@@ -22,9 +22,9 @@
 #define TODOLIST_COMMAND_HANDLER_IMPL_H
 
 #include "grpc++/grpc++.h"
-#include "spine/client/command_service.grpc.pb.h"
-#include <spine/client/query.pb.h>
 
+#include "spine/client/command_service.grpc.pb.h"
+#include "spine/client/query.pb.h"
 #include "spine/types.h"
 #include "spine/command_factory.h"
 #include "spine/actor_request_factory_params.h"
@@ -35,23 +35,24 @@
 
 #include <memory>
 
-using namespace spine::client;
+namespace spine {
+	using namespace client;
+namespace examples {
+namespace todolist {
 
 class CommandHandlerImpl
 	:	public CommandHandler
 {
-	
 public:
+	CommandHandlerImpl(const std::string & channel);
 
-	CommandHandlerImpl();
-
-	void post_command(spine::examples::todolist::CreateBasicTask & client_task);
-	spine::examples::todolist::TaskListView const & get_tasks();
+public:
+	void post_command(CreateBasicTask & client_task);
+	TaskListView const & get_tasks();
 
 private:
-
-	std::unique_ptr<spine::core::UserId> make_user_id(const std::string & value);
-	std::unique_ptr<spine::time::ZoneOffset> make_zone_offset(const std::string &zone_id, int amount);
+	std::unique_ptr<core::UserId> make_user_id(const std::string & value);
+	std::unique_ptr<time::ZoneOffset> make_zone_offset(const std::string & zone_id, int amount);
 
 	std::shared_ptr<grpc::Channel> channel_;
 	std::unique_ptr<CommandService::Stub> stub_;
@@ -59,5 +60,9 @@ private:
 	ActorRequestFactoryParams parameters_;
 	CommandFactoryPtr command_factory_;
 };
+
+} // namespace todolist
+} // namespace examples
+} // namespace spine
 
 #endif // TODOLIST_COMMAND_HANDLER_IMPL_H

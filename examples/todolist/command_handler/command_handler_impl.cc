@@ -18,16 +18,16 @@
 * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-
 #include "command_handler_impl.h"
-
 #include "spine/client/query_service.grpc.pb.h"
 
-#define CHANNEL "localhost:50051"
+namespace spine {
+namespace examples {
+namespace todolist {
 
-CommandHandlerImpl::CommandHandlerImpl()
+CommandHandlerImpl::CommandHandlerImpl(const std::string & channel)
 {
-	channel_ = ::grpc::CreateChannel(CHANNEL, grpc::InsecureChannelCredentials());
+	channel_ = ::grpc::CreateChannel(channel, grpc::InsecureChannelCredentials());
 	auto tenant = std::unique_ptr<TenantId>(TenantId::default_instance().New());
 
 	parameters_
@@ -39,23 +39,20 @@ CommandHandlerImpl::CommandHandlerImpl()
 	stub_ = CommandService::NewStub(channel_);
 }
 
-void CommandHandlerImpl::post_command(spine::examples::todolist::CreateBasicTask & client_task)
+void CommandHandlerImpl::post_command(CreateBasicTask & client_task)
 {
 	CommandPtr command = command_factory_->create(client_task);
-	spine::core::Ack response;
+	core::Ack response;
 	grpc::ClientContext client_context;
 	if (!stub_->Post(&client_context, *command, &response).ok()) {
 		throw exception::exception("Invalid server status...");
 	}
 }
 
-spine::examples::todolist::TaskListView const &
-CommandHandlerImpl::get_tasks()
+TaskListView const & CommandHandlerImpl::get_tasks()
 {
 	ActorRequestFactory factory = ActorRequestFactory::create(parameters_);
-
-	QueryPtr query = factory.query_factory()->all<::spine::examples::todolist::MyListView>();
-
+	QueryPtr query = factory.query_factory()->all<MyListView>();
 	std::unique_ptr<QueryService::Stub> query_service = QueryService::NewStub(channel_);
 
 	QueryResponse response;
@@ -65,9 +62,7 @@ CommandHandlerImpl::get_tasks()
 		throw exception::exception("Invalid response....");
 	}
 
-	spine::examples::todolist::MyListView * taskListsView
-		= spine::examples::todolist::MyListView::default_instance().New();
-
+	MyListView * taskListsView = MyListView::default_instance().New();
 	if (response.messages_size() > 0)
 	{
 		const Any& any = response.messages(0);
@@ -77,24 +72,28 @@ CommandHandlerImpl::get_tasks()
 	return taskListsView->my_list();
 }
 
-std::unique_ptr<spine::core::UserId>
+std::unique_ptr<core::UserId>
 CommandHandlerImpl::make_user_id(const std::string & value)
 {
-	auto actor = std::make_unique<spine::core::UserId>();
+	auto actor = std::make_unique<core::UserId>();
 	actor->set_value(value);
 	return actor;
 }
 
-std::unique_ptr<spine::time::ZoneOffset>
+std::unique_ptr<time::ZoneOffset>
 CommandHandlerImpl::make_zone_offset(const std::string &zone_id, int amount)
 {
-	spine::time::ZoneId* zone_id_ptr = spine::time::ZoneId::default_instance().New();
+	time::ZoneId* zone_id_ptr = time::ZoneId::default_instance().New();
 	zone_id_ptr->set_value(zone_id);
 
 	std::unique_ptr<spine::time::ZoneOffset> zone_offset
-		= std::make_unique<spine::time::ZoneOffset>();
+		= std::make_unique<time::ZoneOffset>();
 
 	zone_offset->set_allocated_id(zone_id_ptr);
 	zone_offset->set_amountseconds(amount);
 	return zone_offset;
 }
+
+} // namespace todolist
+} // namespace examples
+} // namespace spine

@@ -28,33 +28,38 @@
 #include <memory>
 #include <functional>
 
+namespace spine {
+namespace examples {
+namespace todolist {
+
 class ConsoleView;
 class CommandHandler;
 
 class ListTask
 {
+public:
+	ListTask(
+		std::shared_ptr<ConsoleView> console_view,
+		std::shared_ptr<CommandHandler> command_handler);
 
 public:
-
 	void load_task_menu();
 
-	ListTask(
-			std::shared_ptr<ConsoleView> console_view
-		,	std::shared_ptr<CommandHandler> command_handler
-	);
-
 private:
-
 	void show_task_info(int taskId);
 	void load_tasks();
 	void add_back_task();
+	void generate_tasks_list();
 
 private:
-
 	std::vector<spine::examples::todolist::TaskItem> task_items_;
 
 	std::shared_ptr<ConsoleView> console_view_;
 	std::shared_ptr<CommandHandler> command_handler_;
 };
+
+} // namespace todolist
+} // namespace examples
+} // namespace spine
 
 #endif // TODOLIST_LIST_TASK_H

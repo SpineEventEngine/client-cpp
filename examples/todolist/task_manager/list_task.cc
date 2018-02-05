@@ -20,17 +20,18 @@
 
 
 #include "list_task.h"
-#include "task_logger.h"
-
+#include "console_view/console_writer.h"
 #include "todolist/model.pb.h"
-
 #include "console_view/console_view_impl.h"
 #include "command_handler/command_handler.h"
 
+namespace spine {
+namespace examples {
+namespace todolist {
 
 ListTask::ListTask(
-		std::shared_ptr<ConsoleView> console_view
-	,	std::shared_ptr<CommandHandler> command_handler
+	std::shared_ptr<ConsoleView> console_view,
+	std::shared_ptr<CommandHandler> command_handler
 )
 	: console_view_(console_view)
 	, command_handler_(command_handler)
@@ -39,11 +40,11 @@ ListTask::ListTask(
 
 void ListTask::load_tasks()
 {
-	auto const & taskListView = command_handler_->get_tasks();
+	auto const & task_list_view = command_handler_->get_tasks();
 	task_items_.clear();
 
-	for (int i = 0; i < taskListView.items_size(); i++)
-		task_items_.push_back(taskListView.items(i));
+	for (int i = 0; i < task_list_view.items_size(); i++)
+		task_items_.push_back(task_list_view.items(i));
 }
 
 void ListTask::load_task_menu()
@@ -53,30 +54,16 @@ void ListTask::load_task_menu()
 		load_tasks();
 
 		console_view_->reset_tasks();
-
-		std::cout << "My tasks list:" << std::endl;
-		std::cout << "----------------" << std::endl;
-
-		for (int index = 0; index < task_items_.size(); ++index)
-		{
-			std::string taskIndex = std::to_string(index + 1);
-			std::cout << "(" << std::to_string(index + 1) << ") " << task_items_[index].description().value() << "\n";
-
-			console_view_->add_task_view_command(
-				std::make_shared<TCLAP::SwitchArg>(taskIndex, "task_number" + taskIndex, "Choose task" + taskIndex, false)
-			);
-		}
-
+		generate_tasks_list();
 		add_back_task();
 
-		TaskLogger::print_back_option();
+		ConsoleWriter::print_back_option();
 
 		console_view_->run_command_input();
 
-		int active_task_number = -1;
-		if (console_view_->is_task_set(active_task_number))
+		if (console_view_->is_task_set())
 		{
-			show_task_info(active_task_number);
+			show_task_info(console_view_->get_set_task_index());
 			return true;
 		}
 		else if (console_view_->is_command_set(ConsoleCommandType::BACK_TO_PREVIOUS_MENU))
@@ -84,16 +71,32 @@ void ListTask::load_task_menu()
 			return false;
 		}
 
-		TaskLogger::print_undefined_action_message();
+		ConsoleWriter::print_undefined_action_message();
 		return true;
-	});	
+	});
+}
+
+void ListTask::generate_tasks_list()
+{
+	std::cout << "My tasks list:" << std::endl;
+	std::cout << "----------------" << std::endl;
+
+	for (int index = 0; index < task_items_.size(); ++index)
+	{
+		std::string taskIndex = std::to_string(index + 1);
+		std::cout << "(" << std::to_string(index + 1) << ") " << task_items_[index].description().value() << "\n";
+
+		console_view_->add_task_view_command(
+			std::make_shared<TCLAP::SwitchArg>(taskIndex, "task_number" + taskIndex, "Choose task" + taskIndex, false)
+		);
+	}
 }
 
 void ListTask::show_task_info(int active_task_number)
 {
 	auto & taskItem = task_items_[active_task_number];
 
-	TaskLogger::print_task_description(taskItem);
+	ConsoleWriter::print_task_description(taskItem);
 
 	console_view_->activate_console([&] ()
 	{
@@ -101,7 +104,7 @@ void ListTask::show_task_info(int active_task_number)
 
 		add_back_task();
 
-		TaskLogger::print_back_option();
+		ConsoleWriter::print_back_option();
 
 		console_view_->run_command_input();
 		if (console_view_->is_command_set(ConsoleCommandType::BACK_TO_PREVIOUS_MENU))
@@ -109,7 +112,7 @@ void ListTask::show_task_info(int active_task_number)
 			return false;
 		}
 
-		TaskLogger::print_undefined_action_message();
+		ConsoleWriter::print_undefined_action_message();
 		return true;
 	});
 }
@@ -117,7 +120,11 @@ void ListTask::show_task_info(int active_task_number)
 void ListTask::add_back_task()
 {
 	console_view_->add_simple_command(
-			ConsoleCommandType::BACK_TO_PREVIOUS_MENU
-		,	std::make_shared<TCLAP::SwitchArg>("b", "Back", "Go to previous menu", false));
+		ConsoleCommandType::BACK_TO_PREVIOUS_MENU,
+		std::make_shared<TCLAP::SwitchArg>("b", "Back", "Go to previous menu", false)
+	);
 }
 
+} // namespace todolist
+} // namespace examples
+} // namespace spine

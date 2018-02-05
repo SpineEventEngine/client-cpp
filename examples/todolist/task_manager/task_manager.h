@@ -24,31 +24,35 @@
 #include <string>
 #include <memory>
 
+namespace spine {
+namespace examples {
+namespace todolist {
+
 class ConsoleView;
 class CommandHandler;
 
 class TaskManager
 {
+public:
+	TaskManager(const std::string & path_to_exec_file);
 
 public:
-
-	TaskManager(std::string const & path_to_exec_file);
-
 	void start();
 
 private:
-
-	void initialize_tasks() noexcept;
-
+	void initialize_tasks();
 	void add_task();
 	void list_tasks() const;
 
 	static std::string generate_task_id();
 
 private:
-
 	std::shared_ptr<ConsoleView> console_view_;
 	std::shared_ptr<CommandHandler> command_handler_;
 };
+
+} // namespace todolist
+} // namespace examples
+} // namespace spine
 
 #endif // TODOLIST_TASK_MANAGER_H

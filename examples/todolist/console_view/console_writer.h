@@ -18,24 +18,29 @@
 * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef TODOLIST_TASK_LOGGER_H
-#define TODOLIST_TASK_LOGGER_H
+#ifndef TODOLIST_CONSOLE_WRITER_H
+#define TODOLIST_CONSOLE_WRITER_H
 
 #include "todolist/model.pb.h"
 #include "todolist/q/projections.pb.h"
 #include "todolist/attributes.pb.h"
 
-class TaskLogger
+namespace spine {
+namespace examples {
+namespace todolist {
+
+class ConsoleWriter
 {
-
 public:
-
 	static void print_main_menu_help();
 	static void print_back_option();
-	static void print_task_description(::spine::examples::todolist::TaskItem & task_item);
+	static void print_task_description(TaskItem & task_item);
 	static void print_undefined_action_message();
 	static void print_select_an_action_prompt();
-
 };
 
-#endif //TODOLIST_TASK_LOGGER_H
+} // namespace todolist
+} // namespace examples
+} // namespace spine
+
+#endif // TODOLIST_CONSOLE_WRITER_H

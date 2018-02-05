@@ -20,11 +20,15 @@
 
 
 #include "console_view_impl.h"
-#include "task_manager/task_logger.h"
+#include "console_view/console_writer.h"
 
-ConsoleViewImpl::ConsoleViewImpl(std::string const & _path_to_exec_file)
+namespace spine {
+namespace examples {
+namespace todolist {
+
+ConsoleViewImpl::ConsoleViewImpl(std::string const & path_to_exec_file)
 	:	command_handler_(new TCLAP::CmdLine("Command description message", ' ', "0.9", false))
-	,	path_to_exec_file_(_path_to_exec_file)
+	,	path_to_exec_file_(path_to_exec_file)
 {
 	command_handler_->setExceptionHandling(false);
 }
@@ -50,7 +54,7 @@ void ConsoleViewImpl::reset_tasks()
 
 void ConsoleViewImpl::run_command_input()
 {
-	TaskLogger::print_select_an_action_prompt();
+	ConsoleWriter::print_select_an_action_prompt();
 	std::string line;
 	std::getline(std::cin, line);
 	std::string command = "-" + line;
@@ -65,23 +69,22 @@ void ConsoleViewImpl::run_command_input()
 	command_handler_->parse(inputStrings);
 }
 
-void ConsoleViewImpl::activate_console(std::function<bool()> _callback)
+void ConsoleViewImpl::activate_console(std::function<bool()> callback)
 {
-	do
+	while(true)
 	{
-		try
+		try 
 		{
-			if (!_callback())
+			if (!callback())
 			{
 				break;
 			}
 		}
-		catch (TCLAP::ArgException &e)
+		catch (const TCLAP::ArgException &e)
 		{
-			TaskLogger::print_undefined_action_message();
+			ConsoleWriter::print_undefined_action_message();
 		}
-
-	} while (true);
+	}
 }
 
 bool ConsoleViewImpl::is_command_set(ConsoleCommandType command_type)
@@ -90,18 +93,28 @@ bool ConsoleViewImpl::is_command_set(ConsoleCommandType command_type)
 	return command->isSet();
 }
 
-bool ConsoleViewImpl::is_task_set(int & active_task_number) const
+bool ConsoleViewImpl::is_task_set() const
 {
 	for (int task_index = 0; task_index < task_commands_.size(); ++task_index)
 	{
 		auto task_command = task_commands_[task_index];
 		if (task_command->isSet())
-		{
-			active_task_number = task_index;
 			return true;
-		}
-
 	}
-
 	return false;
 }
+
+int ConsoleViewImpl::get_set_task_index() const
+{
+	for (int task_index = 0; task_index < task_commands_.size(); ++task_index)
+	{
+		auto task_command = task_commands_[task_index];
+		if (task_command->isSet())
+			return task_index;
+	}
+	return -1;
+}
+
+} // namespace todolist
+} // namespace examples
+} // namespace spine
