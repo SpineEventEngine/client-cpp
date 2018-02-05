@@ -36,9 +36,10 @@
 #include <memory>
 
 namespace spine {
-	using namespace client;
 namespace examples {
 namespace todolist {
+
+	using namespace client;
 
 class CommandHandlerImpl: public CommandHandler
 {

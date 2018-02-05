@@ -81,6 +81,11 @@ void ListTask::generate_tasks_list()
 	std::cout << "My tasks list:" << std::endl;
 	std::cout << "----------------" << std::endl;
 
+	if (task_items_.empty())
+	{
+		std::cout << "<no tasks>\n";
+	}
+
 	for (int index = 0; index < task_items_.size(); ++index)
 	{
 		std::string taskIndex = std::to_string(index + 1);
