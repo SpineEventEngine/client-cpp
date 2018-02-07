@@ -41,7 +41,7 @@ else()
         set(CPP_SPINE_LIBRARY_NAME libspine-0.10.0.a)
         find_library(GRPC_LIBRARY_NAME libgrpc++.so)
         find_library(PROTOBUF_LIB libprotobuf.a)
-		find_library(Poco_FOUNDATION_LIB NAMES PocoFoundation PocoFoundationd)
+        find_library(Poco_FOUNDATION_LIB NAMES PocoFoundation PocoFoundationd)
 endif()
 
 include_directories(${CMAKE_BINARY_DIR})
