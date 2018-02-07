@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.5.1)
 project(spine)
 
 option(BUILD_DEPENDENCIES "Try to download and build third party libraries" OFF)
+option(ENABLE_CODE_COVERAGE "Enable code coverage" OFF)
 
 file (STRINGS "VERSION" VERSION)
 
@@ -48,3 +49,4 @@ if(BUILD_DEPENDENCIES)
 endif()
 
 include(cmake/unit_tests.cmake)
+include(cmake/dependencies.cmake)
