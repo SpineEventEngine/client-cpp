@@ -32,11 +32,19 @@ set(GTEST_DEPENDENCIES_DIR      ${GRPC_DEPENDENCIES_DIR}/third_party/googletest/
 set(GRPC_PREFIX_DIR             ${CMAKE_BINARY_DIR}/grpc_dependency)
 
 if(BUILD_DEPENDENCIES)
+    set(DEPENDENCIES_BUILD_DIR ${DEPENDENCIES_DIR}/_build)
     configure_file(cmake/dependencies.cmake.in ${DEPENDENCIES_DIR}/CMakeLists.txt)
-    add_subdirectory(${DEPENDENCIES_DIR} EXCLUDE_FROM_ALL)
+    if(NOT EXISTS ${DEPENDENCIES_BUILD_DIR})
+        file(MAKE_DIRECTORY ${DEPENDENCIES_BUILD_DIR})
+    endif()
+
+    execute_process(COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" ..
+            RESULT_VARIABLE result
+            WORKING_DIRECTORY ${DEPENDENCIES_BUILD_DIR})
+
     execute_process(COMMAND ${CMAKE_COMMAND} --build .
             RESULT_VARIABLE result
-            WORKING_DIRECTORY ${DEPENDENCIES_DIR}/_build)
+            WORKING_DIRECTORY ${DEPENDENCIES_BUILD_DIR})
 endif()
 
 include(cmake/unit_tests.cmake)
