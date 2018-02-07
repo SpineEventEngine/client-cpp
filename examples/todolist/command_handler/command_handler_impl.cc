@@ -45,7 +45,7 @@ void CommandHandlerImpl::post_command(CreateBasicTask & client_task)
 	core::Ack response;
 	grpc::ClientContext client_context;
 	if (!stub_->Post(&client_context, *command, &response).ok()) {
-		throw exception::exception("Invalid server status...");
+		throw std::runtime_error("Invalid server status...");
 	}
 }
 
@@ -59,7 +59,7 @@ TaskListView const & CommandHandlerImpl::get_tasks()
 	grpc::ClientContext client_context;
 
 	if (!query_service->Read(&client_context, *query, &response).ok()) {
-		throw exception::exception("Invalid response....");
+		throw std::runtime_error("Invalid response....");
 	}
 
 	MyListView * task_list_view = MyListView::default_instance().New();

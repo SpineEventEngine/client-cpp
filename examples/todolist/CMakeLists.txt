@@ -11,11 +11,18 @@ set(BUILD_SHARED_LIBS OFF)
 add_definitions(-std=gnu++14)
 add_definitions(-fPIC)
 
-find_package(Poco REQUIRED Foundation)
-find_package(Boost REQUIRED)
+find_path(Poco_INCLUDE_DIRS Poco/Poco.h)
+find_path(Boost_INCLUDE_DIRS boost/shared_ptr.hpp)
+find_path(Protobuf_INCLUDE_DIRS google/protobuf/message.h)
+find_path(Grpc_INCLUDE_DIRS grpc++/grpc++.h)
 
-find_package(Protobuf REQUIRED)
+include_directories(${Poco_INCLUDE_DIRS})
+include_directories(${Boost_INCLUDE_DIRS})
 include_directories(${Protobuf_INCLUDE_DIRS})
+include_directories(${Grpc_INCLUDE_DIRS})
+
+find_program(PROTOC_EXE protoc)  
+
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 set(Protobuf_USE_STATIC_LIBS ON)
 
@@ -26,12 +33,15 @@ link_directories(../../_build)
 if(WIN32)
 	set(CPP_SPINE_LIBRARY_NAME spine-0.10.0.lib)
         set(GRPC_LIBRARY_NAME grpc++.lib)
+        set(PROTOBUF_LIB protobuf.lib)
         set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MT")
         set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MTd")    
         add_definitions(-D_WIN32_WINNT=0x600)
 else()
         set(CPP_SPINE_LIBRARY_NAME libspine-0.10.0.a)
-        set(GRPC_LIBRARY_NAME libgrpc++.a)
+        find_library(GRPC_LIBRARY_NAME libgrpc++.so)
+        find_library(PROTOBUF_LIB libprotobuf.a)
+		find_library(Poco_FOUNDATION_LIB NAMES PocoFoundation PocoFoundationd)
 endif()
 
 include_directories(${CMAKE_BINARY_DIR})
@@ -52,12 +62,12 @@ set(todolist_proto_files
         todolist/q/projections.proto
         )
 
-set(Protobuf_IMPORT_DIRS ${Protobuf_IMPORT_DIRS} ${CMAKE_BINARY_DIR}/../dependencies/spine)
+set(Protobuf_IMPORT_DIRS ${Protobuf_IMPORT_DIRS} ${CMAKE_BINARY_DIR}/../../../dependencies/spine)
 
 set(GENERATED_DIR ${CMAKE_CURRENT_BINARY_DIR}/generated)
 file(MAKE_DIRECTORY ${GENERATED_DIR})
 
-set(PROTO_DIR ${CMAKE_HOME_DIRECTORY}/examples/todolist/model)
+set(PROTO_DIR ${CMAKE_HOME_DIRECTORY}/model)
 
 macro(compile_proto_file filename)
     get_filename_component(dirname ${filename} PATH)
@@ -81,7 +91,7 @@ foreach(proto_file ${todolist_proto_files})
 endforeach(proto_file)
 
 include_directories(${GENERATED_DIR})
-include_directories(${CMAKE_BINARY_DIR}/../examples/todolist)
+include_directories(${CMAKE_BINARY_DIR}/../)
 
 set(todolist_source_files
         ${todolist_generated_files}
@@ -98,7 +108,7 @@ add_executable(todolist ${todolist_source_files})
 
 target_link_libraries(todolist
         ${CPP_SPINE_LIBRARY_NAME}
-        ${Protobuf_LIBRARIES}
-        ${Poco_LIBRARIES}
+        ${PROTOBUF_LIB}
+        ${Poco_FOUNDATION_LIB}
         ${GRPC_LIBRARY_NAME}
         )
