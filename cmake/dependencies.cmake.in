@@ -36,5 +36,6 @@ ExternalProject_Add(gtest_dependency
         DEPENDS grpc_dependency
         DOWNLOAD_COMMAND ""
         SOURCE_DIR ${GTEST_DEPENDENCIES_DIR}
+        INSTALL_COMMAND ""
         BUILD_IN_SOURCE 1
         )
