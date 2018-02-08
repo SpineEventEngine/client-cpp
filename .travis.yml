@@ -36,6 +36,10 @@ install:
 
 before_script:
   - cd ${TRAVIS_BUILD_DIR}
-  - mkdir _build && cd _build && cmake -DBUILD_DEPENDENCIES=ON ..
+  - mkdir _build && cd _build && cmake -DBUILD_DEPENDENCIES=ON -DENABLE_CODE_COVERAGE=ON ..
 script:
   - cmake --build .
+  - ./runTests
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash) -t 63ed3de3-689d-4d0f-8b73-8685bee10b88

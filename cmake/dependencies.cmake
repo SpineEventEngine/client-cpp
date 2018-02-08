@@ -35,5 +35,5 @@ if(Protobuf_INCLUDE_DIRS)
     include_directories(${Protobuf_INCLUDE_DIRS})
 endif()
 
-find_library(PROTOBUF_LIB libprotobuf.a)
+find_library(PROTOBUF_LIB protobuf)
 find_library(Poco_FOUNDATION_LIB NAMES PocoFoundation PocoFoundationd)
