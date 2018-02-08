@@ -31,6 +31,14 @@ foreach(proto_file ${test_proto_files})
     set(test_generated_files ${test_generated_files} ${pb_file})
 endforeach(proto_file)
 
+if(ENABLE_CODE_COVERAGE)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g ")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O0")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fprofile-arcs")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ftest-coverage")
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} --coverage")
+endif()
+
 add_executable(runTests ${TEST_SRCS} ${test_generated_files})
 
 add_subdirectory(${GTEST_DEPENDENCIES_DIR} EXCLUDE_FROM_ALL)
