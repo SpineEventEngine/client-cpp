@@ -7,6 +7,7 @@ set(CMAKE_PROGRAM_PATH ${CMAKE_PROGRAM_PATH} ${PROTOBUF_DEPENDENCIES_DIR}/src/.l
 set(CMAKE_PROGRAM_PATH ${CMAKE_PROGRAM_PATH} ${GRPC_DEPENDENCIES_DIR}/bins/opt/protobuf)
 set(CMAKE_PROGRAM_PATH ${CMAKE_PROGRAM_PATH} ${GTEST_DEPENDENCIES_DIR})
 
+link_directories(${CMAKE_BINARY_DIR})
 link_directories(${GRPC_DEPENDENCIES_DIR}/libs/opt)
 link_directories(${PROTOBUF_DEPENDENCIES_DIR}/src/.libs)
 link_directories(${GRPC_DEPENDENCIES_DIR}/libs/opt/protobuf)
@@ -41,3 +42,5 @@ endif()
 if(GTest_INCLUDE_DIRS)
     include_directories(${GTest_INCLUDE_DIRS})
 endif()
+
+find_library(Poco_FOUNDATION_LIB NAMES PocoFoundation PocoFoundationd)
