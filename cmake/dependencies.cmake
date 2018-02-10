@@ -1,5 +1,5 @@
 include_directories(${GRPC_DEPENDENCIES_DIR}/include)
-include_directories(${GRPC_DEPENDENCIES_DIR}/include)
+include_directories(${PROTOBUF_DEPENDENCIES_DIR}/src)
 include_directories(${GTest_INCLUDE_DIRS}/include)
 
 set(CMAKE_PROGRAM_PATH ${CMAKE_PROGRAM_PATH} ${GRPC_DEPENDENCIES_DIR}/bins/opt)
