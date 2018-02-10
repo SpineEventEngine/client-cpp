@@ -41,6 +41,3 @@ endif()
 if(GTest_INCLUDE_DIRS)
     include_directories(${GTest_INCLUDE_DIRS})
 endif()
-
-find_library(PROTOBUF_LIB protobuf)
-find_library(Poco_FOUNDATION_LIB NAMES PocoFoundation PocoFoundationd)
