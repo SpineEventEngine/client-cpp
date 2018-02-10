@@ -43,9 +43,6 @@ add_executable(runTests ${TEST_SRCS} ${test_generated_files})
 
 add_subdirectory(${GTEST_DEPENDENCIES_DIR} EXCLUDE_FROM_ALL)
 
-find_library(PROTOBUF_LIB protobuf)
-find_library(Poco_FOUNDATION_LIB NAMES PocoFoundation PocoFoundationd)
-
 target_link_libraries(runTests gtest_main ${CPP_SPINE_LIBRARY_NAME}
         ${PROTOBUF_LIB}
         ${Poco_FOUNDATION_LIB}
