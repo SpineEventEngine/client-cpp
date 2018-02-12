@@ -26,27 +26,24 @@ find_program(PROTOC_EXE protoc)
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 set(Protobuf_USE_STATIC_LIBS ON)
 
-include_directories(../../include)
-include_directories(../../_build/generated)
-link_directories(../../_build)
+include_directories(${CPP_SPINE_LIB_INCLUDE_DIR})
+include_directories(${CPP_SPINE_GENERATED_INCLUDE_DIR})
 
 if(WIN32)
-	set(CPP_SPINE_LIBRARY_NAME spine-0.10.0.lib)
+        set(CPP_SPINE_LIBRARY_NAME ${CPP_SPINE_LIBRARY_NAME})
         set(GRPC_LIBRARY_NAME grpc++.lib)
         set(PROTOBUF_LIB protobuf.lib)
         set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MT")
         set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MTd")    
         add_definitions(-D_WIN32_WINNT=0x600)
 else()
-        set(CPP_SPINE_LIBRARY_NAME libspine-0.10.0.a)
+        set(CPP_SPINE_LIBRARY_NAME ${CPP_SPINE_LIBRARY_NAME})
         find_library(GRPC_LIBRARY_NAME libgrpc++.so)
         find_library(PROTOBUF_LIB libprotobuf.a)
         find_library(Poco_FOUNDATION_LIB NAMES PocoFoundation PocoFoundationd)
 endif()
 
-include_directories(${CMAKE_BINARY_DIR})
 include_directories(third_party/tclap-1.2.1/include)
-
 
 set(todolist_proto_files
         todolist/values.proto
