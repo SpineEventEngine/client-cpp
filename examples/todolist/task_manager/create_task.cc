@@ -30,18 +30,18 @@ CreateTask::CreateTask(std::shared_ptr<CommandHandler> command_handler)
 {
 }
 
-void CreateTask::post(const std::string & task_identifier, const std::string & _description)
+void CreateTask::post(const std::string & task_identifier, const std::string & description)
 {
-	TaskId * taskId = TaskId::default_instance().New();
-	taskId->set_value(task_identifier);
+	TaskId * task_id = TaskId::default_instance().New();
+	task_id->set_value(task_identifier);
 
-	TaskDescription * taskDescription = TaskDescription::default_instance().New();
-	taskDescription->set_value(_description);
+	TaskDescription * task_description = TaskDescription::default_instance().New();
+	task_description->set_value(description);
 
 	CreateBasicTask task;
 
-	task.set_allocated_id(taskId);
-	task.set_allocated_description(taskDescription);
+	task.set_allocated_id(task_id);
+	task.set_allocated_description(task_description);
 
 	command_handler_->post_command(task);
 }

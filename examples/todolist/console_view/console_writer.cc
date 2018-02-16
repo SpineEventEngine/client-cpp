@@ -29,16 +29,16 @@ void ConsoleWriter::print_main_menu_help()
 {
 	std::cout << "----------------" << std::endl;
 	std::cout
-		<< "(c) Create task\n"
-		<< "(l) List tasks\n"
-		<< "(q) Quit the programm\n";
+		<< "(c) Create a task.\n"
+		<< "(l) List tasks.\n"
+		<< "(q) Quit.\n";
 
 	std::cout << "----------------" << std::endl;
 }
 
 void ConsoleWriter::print_back_option()
 {
-	std::cout << "(b) " << "Back" << std::endl;
+	std::cout << "(b) " << "Back." << std::endl;
 	std::cout << "----------------" << std::endl;
 }
 
@@ -54,7 +54,7 @@ void ConsoleWriter::print_task_description(TaskItem & task_item)
 
 void ConsoleWriter::print_undefined_action_message()
 {
-	std::cout << "There is no action with specified shortcut or argument is invalid\n";
+	std::cout << "There is no action with specified shortcut or argument is invalid.\n";
 }
 
 void ConsoleWriter::print_select_an_action_prompt()
