@@ -19,14 +19,17 @@
  */
 
 #include "spine/command_factory.h"
-#include "spine/message_utils.hpp"
+#include "spine/util/message_utils.hpp"
+#include "spine/util/any_utils.h"
 
 #include <spine/core/actor_context.pb.h>
 
 using namespace spine;
 using namespace spine::core;
-using namespace spine::client;
 using namespace spine::time;
+
+namespace spine {
+namespace client {
 
 CommandContext* make_command_context(const std::unique_ptr<ActorContext>& actor_context);
 
@@ -42,38 +45,25 @@ CommandFactory::CommandFactory(std::unique_ptr<ActorContext>&& actor_context)
 
 std::unique_ptr<Command> CommandFactory::create(const Message& message)
 {
+    std::unique_ptr<Any> any = to_any(message);
     Command* command = make_command(
             make_command_context(actor_context_),
-            to_any(message),
+            any.release(),
             make_command_id(uuid_generator_.createRandom().toString()));
     return std::unique_ptr<Command>{command};
 }
 
 std::unique_ptr<Command> CommandFactory::create(const Message& message, const int target_version)
 {
+    std::unique_ptr<Any> any = to_any(message);
     Command* command = make_command(
             make_command_context(actor_context_, target_version),
-            to_any(message),
+            any.release(),
             make_command_id(uuid_generator_.createRandom().toString()));
     return std::unique_ptr<Command>{command};
 
 }
 
-Any* CommandFactory::to_any(const Message& message)
-{
-    Any* any = Any::default_instance().New();
-    std::string url_prefix = message.GetDescriptor()->file()->options().GetExtension(type_url_prefix);
-    if(!url_prefix.empty())
-    {
-        any->PackFrom(message, url_prefix);
-    }
-    else
-    {
-        any->PackFrom(message);
-    }
-
-    return any;
-}
 
 Command* make_command(CommandContext* command_context, Any* any, CommandId* command_id)
 {
@@ -106,3 +96,5 @@ CommandContext* make_command_context(const std::unique_ptr<ActorContext>& actor_
     context->set_target_version(version);
     return context;
 }
+
+}}

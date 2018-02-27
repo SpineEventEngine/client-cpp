@@ -23,6 +23,7 @@
 
 #include <boost/algorithm/string.hpp>
 
+#include "spine/util/any_utils.h"
 #include "common_factory_test.h"
 #include "unit_tests.pb.h"
 #include "unit_tests_no_prefix.pb.h"
@@ -87,4 +88,62 @@ TEST_F(CommandFactoryShould, CreateWithTargetVersion)
 
     ASSERT_TRUE(command->has_context());
     ASSERT_TRUE(command->context().target_version());
+}
+
+TEST_F(CommandFactoryShould, CreateWithAny)
+{
+    const int target_version = 42;
+
+    StuffId *stuff_id = StuffId::default_instance().New();
+    stuff_id->set_value(12);
+    
+    CreateStuff create_stuff;
+    create_stuff.set_allocated_id(stuff_id);
+    create_stuff.set_name("cool name");
+    create_stuff.set_allocated_cool_field(to_any(zone_id_).release());
+    
+    CommandPtr command = command_factory_->create(create_stuff, target_version);
+
+    ASSERT_TRUE(command->has_context());
+    ASSERT_TRUE(command->context().target_version());
+
+    ASSERT_TRUE(command);
+    ASSERT_TRUE(command->has_id());
+    ASSERT_FALSE(command->id().uuid().empty());
+    ASSERT_TRUE(command->has_message());
+
+    const Any &any = command->message();
+    ASSERT_EQ(any.type_url(), "type.test.spine.io/spine.test.CreateStuff");
+    std::unique_ptr<CreateStuff> message = from_any<CreateStuff>(any);
+    ASSERT_TRUE(message);
+
+    ASSERT_TRUE(message->has_cool_field());
+    ASSERT_EQ(message->cool_field().type_url(), "type.spine.io/spine.time.ZoneId");
+    std::unique_ptr<ZoneId> zone_id = from_any<ZoneId>(message->cool_field());
+    ASSERT_TRUE(zone_id);
+}
+
+TEST_F(CommandFactoryShould, FailWithWrongAny)
+{
+    const int target_version = 42;
+
+    StuffId *stuff_id = StuffId::default_instance().New();
+    stuff_id->set_value(12);
+
+    CreateStuff create_stuff;
+    create_stuff.set_allocated_id(stuff_id);
+    create_stuff.set_name("cool name");
+    create_stuff.set_allocated_cool_field(to_any(zone_id_).release());
+
+    CommandPtr command = command_factory_->create(create_stuff, target_version);
+
+    const Any &any = command->message();
+    ASSERT_EQ(any.type_url(), "type.test.spine.io/spine.test.CreateStuff");
+    std::unique_ptr<CreateStuff> message = from_any<CreateStuff>(any);
+    ASSERT_TRUE(message);
+
+    ASSERT_TRUE(message->has_cool_field());
+    ASSERT_EQ(message->cool_field().type_url(), "type.spine.io/spine.time.ZoneId");
+    std::unique_ptr<UserId> zone_id = from_any<UserId>(message->cool_field());
+    ASSERT_FALSE(zone_id);
 }
