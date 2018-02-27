@@ -56,6 +56,7 @@ public:
     };
 
 private:
+    //TODO: naming
     QueryId *createQueryId();
     QueryPtr all(const std::string& prefix, const std::string& type);
 private:

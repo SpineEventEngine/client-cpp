@@ -58,6 +58,9 @@ public:
     CommandFactoryPtr command_factory();
     TopicFactoryPtr topic_factory();
     QueryFactoryPtr query_factory();
+
+public:
+    //TODO: mark internal
     std::unique_ptr<core::ActorContext> actor_context() const;
 
 public:

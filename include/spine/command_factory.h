@@ -53,6 +53,7 @@ public:
     CommandPtr create(const Message& message, int target_version);
 
 private:
+    //TODO: make common
     Any* to_any(const Message& message);
     Any* to_any(const Message& message, const std::string& type_url_prefix);
 
