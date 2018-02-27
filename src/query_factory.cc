@@ -18,20 +18,20 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "spine/query_factory.h"
-
 #include <sstream>
 
-#include "spine/actor_request_factory.h"
+#include "spine/query_factory.h"
 
-namespace spine {
-namespace client {
+#include <spine/core/actor_context.pb.h>
+
+using namespace spine::client;
+using namespace spine::core;
 
 const std::string QUERY_ID_TEMPLATE = "query-";
 
-QueryFactory::QueryFactory(const ActorRequestFactory &actor_request_factory)
+QueryFactory::QueryFactory(std::unique_ptr<core::ActorContext>&& actor_context)
 {
-    actor_context_ = actor_request_factory.actor_context();
+    actor_context_ = std::move(actor_context);
 }
 
 std::unique_ptr<Query> QueryFactory::all(const std::string& prefix, const std::string& type)
@@ -61,6 +61,3 @@ QueryId *QueryFactory::createQueryId()
     query_id->set_value(query_id_stream.str());
     return query_id;
 }
-
-
-}} // namespace

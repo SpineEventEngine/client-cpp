@@ -30,15 +30,19 @@
 #include <spine/client/entities.pb.h>
 #include <spine/client/subscription.pb.h>
 
-#include "actor_request_factory.h"
-
 namespace spine {
+
+namespace core
+{
+    class ActorContext;
+}
+
 namespace client {
 
 class TopicFactory
 {
 public:
-    TopicFactory(const ActorRequestFactory & actor_request_factory);
+    TopicFactory(std::unique_ptr<core::ActorContext>&& actor_context);
 
 public:
     template <typename T, typename = enable_param_if_protobuf_message<T>>

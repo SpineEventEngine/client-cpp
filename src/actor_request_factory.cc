@@ -57,17 +57,17 @@ ActorRequestFactory::ActorRequestFactory(const ActorRequestFactoryParams& params
 
 CommandFactoryPtr ActorRequestFactory::command_factory()
 {
-    return std::make_unique<CommandFactory>(*this);
+    return std::make_unique<CommandFactory>(actor_context());
 }
 
 TopicFactoryPtr ActorRequestFactory::topic_factory()
 {
-    return std::make_unique<TopicFactory>(*this);
+    return std::make_unique<TopicFactory>(actor_context());
 }
 
 QueryFactoryPtr ActorRequestFactory::query_factory()
 {
-    return std::make_unique<QueryFactory>(*this);
+    return std::make_unique<QueryFactory>(actor_context());
 }
 
 std::unique_ptr<ActorContext> ActorRequestFactory::actor_context() const

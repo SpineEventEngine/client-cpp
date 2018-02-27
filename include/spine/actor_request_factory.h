@@ -60,16 +60,15 @@ public:
     QueryFactoryPtr query_factory();
 
 public:
-    //TODO: mark internal
-    std::unique_ptr<core::ActorContext> actor_context() const;
-
-public:
     const std::unique_ptr<core::UserId> &actor() const;
     const std::unique_ptr<core::TenantId> &tenant_id() const;
     const std::unique_ptr<time::ZoneOffset> &zone_offset() const;
 
 private:
     ActorRequestFactory(const ActorRequestFactoryParams& params);
+
+private:
+    std::unique_ptr<core::ActorContext> actor_context() const;
 
 private:
     ActorRequestFactoryParams params_;

@@ -19,8 +19,9 @@
  */
 
 #include "spine/command_factory.h"
-#include "spine/actor_request_factory.h"
 #include "spine/message_utils.hpp"
+
+#include <spine/core/actor_context.pb.h>
 
 using namespace spine;
 using namespace spine::core;
@@ -34,9 +35,9 @@ Command* make_command(CommandContext* command_context, Any* any, CommandId* comm
 CommandId* make_command_id(const std::string& uuid);
 
 
-CommandFactory::CommandFactory(const ActorRequestFactory& actor_request_factory)
+CommandFactory::CommandFactory(std::unique_ptr<ActorContext>&& actor_context)
 {
-    actor_context_ = actor_request_factory.actor_context();
+    actor_context_ = std::move(actor_context);
 }
 
 std::unique_ptr<Command> CommandFactory::create(const Message& message)

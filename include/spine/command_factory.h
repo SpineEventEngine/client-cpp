@@ -47,7 +47,7 @@ namespace client
 class CommandFactory
 {
 public:
-    CommandFactory(const ActorRequestFactory & actor_request_factory);
+    CommandFactory(std::unique_ptr<ActorContext>&& actor_context);
 public:
     CommandPtr create(const Message& message);
     CommandPtr create(const Message& message, int target_version);

@@ -20,11 +20,14 @@
 
 #include "spine/topic_factory.h"
 
-using namespace spine::client;
+#include <spine/core/actor_context.pb.h>
 
-TopicFactory::TopicFactory(const ActorRequestFactory& actor_request_factory)
+using namespace spine::client;
+using namespace spine::core;
+
+TopicFactory::TopicFactory(std::unique_ptr<core::ActorContext>&& actor_context)
 {
-    actor_context_ = actor_request_factory.actor_context();
+    actor_context_ = std::move(actor_context);
 }
 
 std::unique_ptr<Topic> TopicFactory::all(const std::string& prefix, const std::string& type)

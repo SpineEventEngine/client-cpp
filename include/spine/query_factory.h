@@ -42,7 +42,7 @@ namespace client
 class QueryFactory
 {
 public:
-    QueryFactory(const ActorRequestFactory & actor_request_factory);
+    QueryFactory(std::unique_ptr<core::ActorContext>&& actor_context);
 
 public:
 
