@@ -56,9 +56,9 @@ public:
     };
 
 private:
-    //TODO: naming
-    QueryId *createQueryId();
+    QueryId *create_query_id();
     QueryPtr all(const std::string& prefix, const std::string& type);
+
 private:
     std::unique_ptr<core::ActorContext> actor_context_;
     Poco::UUIDGenerator uuid_generator_;

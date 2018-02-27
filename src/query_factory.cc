@@ -46,14 +46,14 @@ std::unique_ptr<Query> QueryFactory::all(const std::string& prefix, const std::s
 
     std::unique_ptr<Query> query { Query::default_instance().New() };
 
-    query->set_allocated_id(createQueryId());
+    query->set_allocated_id(create_query_id());
     query->set_allocated_context(clone(actor_context_));
     query->set_allocated_target(target.release());
 
     return query;
 }
 
-QueryId *QueryFactory::createQueryId()
+QueryId *QueryFactory::create_query_id()
 {
     QueryId *query_id = new QueryId();
     std::stringstream query_id_stream;
