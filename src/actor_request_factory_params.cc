@@ -24,7 +24,8 @@
 #include <spine/core/tenant_id.pb.h>
 #include <spine/time/zone.pb.h>
 
-using namespace spine::client;
+namespace spine {
+namespace client {
 
 ActorRequestFactoryParams::ActorRequestFactoryParams(const ActorRequestFactoryParams& that)
         : actor_(std::make_unique<spine::core::UserId>(*that.actor())),
@@ -70,3 +71,5 @@ ActorRequestFactoryParams& ActorRequestFactoryParams::set_zone_offset(const std:
     zone_offset_ = std::make_unique<spine::time::ZoneOffset>(*zone_offset);
     return *this;
 }
+
+}}

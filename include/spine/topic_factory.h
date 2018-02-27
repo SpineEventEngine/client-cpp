@@ -25,7 +25,7 @@
 #include <Poco/UUIDGenerator.h>
 
 #include "types.h"
-#include "spine/message_utils.hpp"
+#include "spine/util/message_utils.hpp"
 
 #include <spine/client/entities.pb.h>
 #include <spine/client/subscription.pb.h>

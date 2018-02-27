@@ -26,7 +26,7 @@
 #include <spine/client/query.pb.h>
 
 #include "spine/types.h"
-#include "spine/message_utils.hpp"
+#include "spine/util/message_utils.hpp"
 
 namespace spine
 {

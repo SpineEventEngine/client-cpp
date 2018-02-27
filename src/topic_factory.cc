@@ -22,10 +22,12 @@
 
 #include <spine/core/actor_context.pb.h>
 
-using namespace spine::client;
 using namespace spine::core;
 
-TopicFactory::TopicFactory(std::unique_ptr<core::ActorContext>&& actor_context)
+namespace spine {
+namespace client {
+
+TopicFactory::TopicFactory(std::unique_ptr<core::ActorContext> &&actor_context)
 {
     actor_context_ = std::move(actor_context);
 }
@@ -55,3 +57,5 @@ std::unique_ptr<Topic> TopicFactory::for_target(std::unique_ptr<Target>&& target
 
     return std::unique_ptr<Topic>{topic};
 }
+
+}}

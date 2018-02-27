@@ -24,8 +24,10 @@
 
 #include <spine/core/actor_context.pb.h>
 
-using namespace spine::client;
 using namespace spine::core;
+
+namespace spine {
+namespace client {
 
 const std::string QUERY_ID_TEMPLATE = "query-";
 
@@ -61,3 +63,5 @@ QueryId *QueryFactory::create_query_id()
     query_id->set_value(query_id_stream.str());
     return query_id;
 }
+
+}}
