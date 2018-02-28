@@ -19,6 +19,7 @@
  */
 
 #include "spine/actor_request_factory_params.h"
+#include "spine/util/message_utils.hpp"
 
 #include <spine/core/user_id.pb.h>
 #include <spine/core/tenant_id.pb.h>
@@ -28,15 +29,30 @@ namespace spine {
 namespace client {
 
 ActorRequestFactoryParams::ActorRequestFactoryParams(const ActorRequestFactoryParams& that)
-        : actor_(std::make_unique<spine::core::UserId>(*that.actor())),
-          tenant_id_(std::make_unique<spine::core::TenantId>(*that.tenant_id())),
-          zone_offset_(std::make_unique<spine::time::ZoneOffset>(*that.zone_offset()))
 {
+    set_params(that);
 }
 
 ActorRequestFactoryParams& ActorRequestFactoryParams::operator=(const ActorRequestFactoryParams& that)
 {
+    set_params(that);
     return *this;
+}
+
+void ActorRequestFactoryParams::set_params(const ActorRequestFactoryParams &that)
+{
+    if( that.actor() )
+    {
+        actor_.reset(clone(that.actor()));
+    }
+    if( that.tenant_id() )
+    {
+        tenant_id_.reset(clone(that.tenant_id()));
+    }
+    if( that.zone_offset() )
+    {
+        zone_offset_.reset(clone(that.zone_offset()));
+    }
 }
 
 const std::unique_ptr<spine::core::UserId>& ActorRequestFactoryParams::actor() const

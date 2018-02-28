@@ -3,7 +3,8 @@ set(TEST_SRCS
         test/command_factory_test.cc
         test/query_factory_test.cc
         test/topic_factory_test.cc
-        test/common_factory_test.h)
+        test/common_factory_test.h
+        test/actor_request_factory_params_test.cc)
 
 # proto
 macro(compile_proto_file filename)

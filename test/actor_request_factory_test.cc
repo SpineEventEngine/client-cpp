@@ -95,3 +95,28 @@ TEST_F(ActorRequestFactoryShould, HaveValidParams)
     ASSERT_EQ(params.zone_offset()->id().value(),factory.zone_offset()->id().value());
     ASSERT_EQ(params.zone_offset()->amountseconds(),factory.zone_offset()->amountseconds());
 }
+
+TEST_F(ActorRequestFactoryShould, SetDefaultZoneOffset)
+{
+    ActorRequestFactoryParams params;
+    auto actor = std::make_unique<UserId>();
+    actor->set_value(USER_ID);
+
+    auto tenant_id = std::make_unique<TenantId>();
+    tenant_id->set_value(TENANT_ID);
+
+    params.set_actor(actor)
+            .set_tenant_id(tenant_id);
+
+    ASSERT_TRUE(params.actor());
+    ASSERT_TRUE(params.tenant_id());
+    ASSERT_FALSE(params.zone_offset());
+
+    ActorRequestFactory factory = ActorRequestFactory::create(params);
+
+    ASSERT_EQ(params.actor()->value(),factory.actor()->value());
+    ASSERT_EQ(params.tenant_id()->value(),factory.tenant_id()->value());
+    ASSERT_TRUE(factory.zone_offset());
+    ASSERT_EQ(ZoneOffset::default_instance().id().value(),factory.zone_offset()->id().value());
+    ASSERT_EQ(ZoneOffset::default_instance().amountseconds(),factory.zone_offset()->amountseconds());
+}
