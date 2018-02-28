@@ -32,7 +32,6 @@ namespace spine {
 namespace client {
 
 CommandContext* make_command_context(const std::unique_ptr<ActorContext>& actor_context);
-
 CommandContext* make_command_context(const std::unique_ptr<ActorContext>& actor_context, int version);
 Command* make_command(CommandContext* command_context, Any* any, CommandId* command_id);
 CommandId* make_command_id(const std::string& uuid);
@@ -86,7 +85,6 @@ CommandContext* make_command_context(const std::unique_ptr<ActorContext>& actor_
 {
     CommandContext *command_context = CommandContext::default_instance().New();
     command_context->set_allocated_actor_context(clone(actor_context));
-
     return command_context;
 }
 

@@ -42,6 +42,7 @@ std::unique_ptr<Topic> TopicFactory::all(const std::string& prefix, const std::s
         type_url.insert(0, prefix + "/");
     }
     target->set_type(type_url);
+
     return for_target(std::move(target));
 }
 

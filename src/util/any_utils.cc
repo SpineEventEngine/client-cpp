@@ -27,16 +27,17 @@ namespace client {
 
 std::unique_ptr<::google::protobuf::Any> to_any(const ::google::protobuf::Message &message)
 {
-
-    std::unique_ptr<::google::protobuf::Any> any {::google::protobuf::Any::default_instance().New() };
+    std::unique_ptr<::google::protobuf::Any> any { ::google::protobuf::Any::default_instance().New() };
     std::string url_prefix = message.GetDescriptor()->file()->options().GetExtension(type_url_prefix);
 
-    if (!url_prefix.empty()) {
+    if (!url_prefix.empty())
+    {
         any->PackFrom(message, url_prefix);
-    } else {
+    }
+    else
+    {
         any->PackFrom(message);
     }
-
     return any;
 }
 
