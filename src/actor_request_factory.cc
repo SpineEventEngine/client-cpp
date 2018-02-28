@@ -23,15 +23,17 @@
 #include "spine/topic_factory.h"
 #include "spine/command_factory.h"
 #include "spine/query_factory.h"
-#include "spine/message_utils.hpp"
+#include "spine/util/message_utils.hpp"
 
 #include <google/protobuf/util/time_util.h>
 
 using namespace spine;
-using namespace spine::client;
 using namespace spine::time;
 using namespace google::protobuf;
 using namespace google::protobuf::util;
+
+namespace spine {
+namespace client {
 
 ActorContext* create_actor_context(UserId* actor,
                                     ZoneOffset* offset,
@@ -57,17 +59,17 @@ ActorRequestFactory::ActorRequestFactory(const ActorRequestFactoryParams& params
 
 CommandFactoryPtr ActorRequestFactory::command_factory()
 {
-    return std::make_unique<CommandFactory>(*this);
+    return std::make_unique<CommandFactory>(actor_context());
 }
 
 TopicFactoryPtr ActorRequestFactory::topic_factory()
 {
-    return std::make_unique<TopicFactory>(*this);
+    return std::make_unique<TopicFactory>(actor_context());
 }
 
 QueryFactoryPtr ActorRequestFactory::query_factory()
 {
-    return std::make_unique<QueryFactory>(*this);
+    return std::make_unique<QueryFactory>(actor_context());
 }
 
 std::unique_ptr<ActorContext> ActorRequestFactory::actor_context() const
@@ -95,3 +97,5 @@ const std::unique_ptr<UserId>& ActorRequestFactory::actor() const { return param
 const std::unique_ptr<TenantId>& ActorRequestFactory::tenant_id() const { return params_.tenant_id(); }
 
 const std::unique_ptr<ZoneOffset>& ActorRequestFactory::zone_offset() const { return params_.zone_offset(); }
+
+}}

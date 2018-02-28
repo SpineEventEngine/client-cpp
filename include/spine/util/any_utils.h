@@ -1,5 +1,5 @@
 /*
- * Copyright 2017, TeamDev Ltd. All rights reserved.
+ * Copyright 2018, TeamDev Ltd. All rights reserved.
  *
  * Redistribution and use in source and/or binary forms, with or without
  * modification, must retain the above copyright notice and the following
@@ -18,47 +18,31 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef SPINE_COMMANDFACTORY_H
-#define SPINE_COMMANDFACTORY_H
+#ifndef SPINE_ANY_UTILS_H
+#define SPINE_ANY_UTILS_H
 
 #include <memory>
+
+#include "spine/util/message_utils.hpp"
+
+#include <google/protobuf/any.pb.h>
 #include <google/protobuf/message.h>
-#include <google/protobuf/timestamp.pb.h>
-#include <spine/time/zone.pb.h>
-#include <Poco/UUIDGenerator.h>
-#include <spine/core/command.pb.h>
 
-#include "types.h"
+namespace spine {
+namespace client {
 
-using namespace google::protobuf;
-using namespace spine::core;
+std::unique_ptr<::google::protobuf::Any> to_any(const ::google::protobuf::Message &message);
 
-namespace spine
+template <typename T, typename = enable_param_if_protobuf_message<T>>
+std::unique_ptr<T> from_any(const ::google::protobuf::Any& any)
 {
-namespace core
-{
-    class CommandContext;
-    class UserId;
-    class ActorContext;
-}
-namespace client
-{
-
-class CommandFactory
-{
-public:
-    CommandFactory(std::unique_ptr<ActorContext>&& actor_context);
-public:
-    CommandPtr create(const Message& message);
-    CommandPtr create(const Message& message, int target_version);
-
-private:
-    std::unique_ptr<ActorContext> actor_context_;
-    Poco::UUIDGenerator uuid_generator_;
-
+    std::unique_ptr<T> result { T::default_instance().New() };
+    if ( any.UnpackTo(result.get()) )
+    {
+        return result;
+    }
+    return std::unique_ptr<T>{};
 };
 
-}} //namespace
-
-
-#endif //SPINE_COMMANDFACTORY_H
+}} // namespace
+#endif //SPINE_ANY_UTILS_H

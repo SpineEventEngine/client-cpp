@@ -26,7 +26,7 @@
 #include <spine/client/query.pb.h>
 
 #include "spine/types.h"
-#include "spine/message_utils.hpp"
+#include "spine/util/message_utils.hpp"
 
 namespace spine
 {
@@ -42,7 +42,7 @@ namespace client
 class QueryFactory
 {
 public:
-    QueryFactory(const ActorRequestFactory & actor_request_factory);
+    QueryFactory(std::unique_ptr<core::ActorContext>&& actor_context);
 
 public:
 
@@ -56,8 +56,9 @@ public:
     };
 
 private:
-    QueryId *createQueryId();
+    QueryId *create_query_id();
     QueryPtr all(const std::string& prefix, const std::string& type);
+
 private:
     std::unique_ptr<core::ActorContext> actor_context_;
     Poco::UUIDGenerator uuid_generator_;

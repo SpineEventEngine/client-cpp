@@ -62,6 +62,9 @@ public:
     ActorRequestFactoryParams& operator=(ActorRequestFactoryParams&&) = default;
 
 private:
+    void set_params(const ActorRequestFactoryParams &that);
+
+private:
     std::unique_ptr<spine::core::UserId> actor_;
     std::unique_ptr<spine::core::TenantId> tenant_id_;
     std::unique_ptr<spine::time::ZoneOffset> zone_offset_;

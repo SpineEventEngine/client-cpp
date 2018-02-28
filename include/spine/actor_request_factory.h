@@ -58,7 +58,6 @@ public:
     CommandFactoryPtr command_factory();
     TopicFactoryPtr topic_factory();
     QueryFactoryPtr query_factory();
-    std::unique_ptr<core::ActorContext> actor_context() const;
 
 public:
     const std::unique_ptr<core::UserId> &actor() const;
@@ -67,6 +66,9 @@ public:
 
 private:
     ActorRequestFactory(const ActorRequestFactoryParams& params);
+
+private:
+    std::unique_ptr<core::ActorContext> actor_context() const;
 
 private:
     ActorRequestFactoryParams params_;
