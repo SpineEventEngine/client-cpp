@@ -30,12 +30,12 @@ message TestMessage {
     string value = 1;
 }
 
-message StuffId {
+message ProjectId {
     int32 value = 1;
 }
 
-message CreateStuff {
-    StuffId id = 1;
+message CreateProject {
+    ProjectId id = 1;
     string name = 2;
-    google.protobuf.Any cool_field = 3;
+    google.protobuf.Any details = 3 [ (required) = true ];
 }
