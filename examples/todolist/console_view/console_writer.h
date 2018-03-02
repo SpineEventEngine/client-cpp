@@ -37,6 +37,8 @@ public:
 	static void print_task_description(TaskItem & task_item);
 	static void print_undefined_action_message();
 	static void print_select_an_action_prompt();
+	static void print_assign_label_option();
+	static void print_confirm_task_option();
 };
 
 } // namespace todolist

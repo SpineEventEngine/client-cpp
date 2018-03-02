@@ -33,8 +33,17 @@ ConsoleViewImpl::ConsoleViewImpl(std::string const & path_to_exec_file)
 	command_handler_->setExceptionHandling(false);
 }
 
-void ConsoleViewImpl::add_simple_command(ConsoleCommandType command_type, std::shared_ptr<TCLAP::SwitchArg> command_args)
+void ConsoleViewImpl::add_simple_command(
+	ConsoleCommandType command_type,
+	std::string const & command_shortcut,
+	std::string const & command_name,
+	std::string const & command_description)
 {
+	std::cout << "(" + command_shortcut + ") " << command_description << std::endl;;
+
+	auto command_args
+		= std::make_shared<TCLAP::SwitchArg>(command_shortcut, command_name, command_description, false);
+
 	commands_[command_type] = command_args;
 	command_handler_->add(command_args.get());
 }
@@ -75,6 +84,7 @@ void ConsoleViewImpl::activate_console(std::function<bool()> callback)
 	{
 		try 
 		{
+			reset_tasks();
 			if (!callback())
 			{
 				break;
@@ -87,10 +97,14 @@ void ConsoleViewImpl::activate_console(std::function<bool()> callback)
 	}
 }
 
-bool ConsoleViewImpl::is_command_set(ConsoleCommandType command_type)
+ConsoleCommandType ConsoleViewImpl::get_active_task()
 {
-	std::shared_ptr<TCLAP::SwitchArg> command = commands_[command_type];
-	return command->isSet();
+	for (auto it = commands_.begin(); it != commands_.end(); ++it)
+	{
+		if (it->second->isSet())
+			return it->first;
+	}
+	return ConsoleCommandType::UNKNOWN;
 }
 
 bool ConsoleViewImpl::is_task_set() const
@@ -102,6 +116,12 @@ bool ConsoleViewImpl::is_task_set() const
 			return true;
 	}
 	return false;
+}
+
+bool ConsoleViewImpl::is_command_set(ConsoleCommandType command_type)
+{
+	std::shared_ptr<TCLAP::SwitchArg> command = commands_[command_type];
+	return command->isSet();
 }
 
 int ConsoleViewImpl::get_active_task_index() const

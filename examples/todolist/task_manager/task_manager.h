@@ -40,11 +40,8 @@ public:
 	void start();
 
 private:
-	void initialize_tasks();
 	void add_task();
 	void list_tasks() const;
-
-	static std::string generate_task_id();
 
 private:
 	std::shared_ptr<ConsoleView> console_view_;

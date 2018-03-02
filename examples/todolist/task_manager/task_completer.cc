@@ -1,0 +1,94 @@
+/*
+* Copyright 2018, TeamDev Ltd. All rights reserved.
+*
+* Redistribution and use in source and/or binary forms, with or without
+* modification, must retain the above copyright notice and the following
+* disclaimer.
+*
+* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+* "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+* LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+* A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+* OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+* SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+* LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+* DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+* THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+* (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+* OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
+
+#include "task_manager.h"
+#include "task_completer.h"
+#include "console_view/console_writer.h"
+#include "console_view/console_view_impl.h"
+#include "command_handler/command_handler_impl.h"
+
+namespace spine {
+namespace examples {
+namespace todolist {
+
+TaskCompleter::TaskCompleter(
+	std::shared_ptr<ConsoleView> console_view,
+	std::shared_ptr<CommandHandler> command_handler,
+	TaskCreationId * wizard_id
+)
+	: BaseTask(console_view, command_handler)
+	, wizard_id_(wizard_id)
+{
+}
+
+bool TaskCompleter::run_complete_menu()
+{
+	bool assignment_result = false;
+	console_view_->activate_console([&]()
+	{
+		std::cout << "Task completion menu" << std::endl;
+		std::cout << "----------------" << std::endl;
+
+		console_view_->add_simple_command(ConsoleCommandType::FINISH_TASK, "f", "Finish", "Finish task");
+		console_view_->add_simple_command(ConsoleCommandType::CANCEL_TASK, "c", "Cancel", "Cancel Task");
+		console_view_->add_simple_command(ConsoleCommandType::BACK_TO_PREVIOUS_MENU, "b", "Back", "Go to previous menu");
+		console_view_->run_command_input();
+		switch (console_view_->get_active_task())
+		{
+		case ConsoleCommandType::FINISH_TASK:
+			finish_task();
+			assignment_result = false;
+			return false;
+			break;
+		case ConsoleCommandType::CANCEL_TASK:
+			cancel_task();
+			assignment_result = false;
+			return assignment_result;
+			break;
+		case ConsoleCommandType::BACK_TO_PREVIOUS_MENU:
+			assignment_result =  true;
+			return false;
+		default:
+			return true;
+		}
+
+		return true;
+	});
+
+	return assignment_result;
+}
+
+void TaskCompleter::finish_task()
+{
+	CompleteTaskCreation complete_task_creation;
+	complete_task_creation.set_allocated_id(wizard_id_);
+	command_handler_->post_command(complete_task_creation);
+}
+
+void TaskCompleter::cancel_task()
+{
+	CancelTaskCreation cancel_task_creation;
+	cancel_task_creation.set_allocated_id(wizard_id_);
+	command_handler_->post_command(cancel_task_creation);
+}
+
+} // namespace todolist
+} // namespace examples
+} // namespace spine

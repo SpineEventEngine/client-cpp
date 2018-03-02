@@ -35,8 +35,22 @@ enum class ConsoleCommandType
 	CREATE_TASK,
 	LIST_TASK,
 	VIEW_TASK,
+	ADD_DESCRIPTION,
+	ADD_PRIORITY,
+	ASSIGN_TASK_LABEL,
+	ASSIGN_EXISTING_LABEL,
+	ASSIGN_NEW_LABEL,
+	REMOVE_LABEL,
+	FINISH_LABEL_ASSIGNMENT,
+	FINISH_TASK,
+	CANCEL_TASK,
+	NEXT_STAGE,
 	BACK_TO_PREVIOUS_MENU,
-	QUIT_PROGRAM
+	DRAFT_TASKS,
+	COMPLETED_TASKS,
+	ALL_TASKS = (DRAFT_TASKS | COMPLETED_TASKS) << 1,
+	QUIT_PROGRAM,
+	UNKNOWN
 };
 
 class ConsoleView
@@ -45,12 +59,19 @@ public:
 
 	virtual ~ConsoleView() {}
 
-	virtual void add_simple_command(ConsoleCommandType command_type, std::shared_ptr<TCLAP::SwitchArg> command_args) = 0;
+	virtual void add_simple_command(
+		ConsoleCommandType command_type,
+		std::string const & command_shortcut,
+		std::string const & command_name,
+		std::string const & command_description
+	) = 0;
+
 	virtual void add_task_view_command(std::shared_ptr<TCLAP::SwitchArg> command_args) = 0;
 	virtual void run_command_input() = 0;
 	virtual void activate_console(std::function<bool()> callback) = 0;
 	virtual void reset_tasks() = 0;
 
+	virtual ConsoleCommandType get_active_task() = 0;
 	virtual bool is_command_set(ConsoleCommandType command_type) = 0;
 	virtual bool is_task_set() const = 0;
 	

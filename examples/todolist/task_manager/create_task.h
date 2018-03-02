@@ -27,22 +27,47 @@
 #include "todolist/model.pb.h"
 #include "todolist/c/commands.pb.h"
 
+#include "base_task.h"
+
 namespace spine {
 namespace examples {
 namespace todolist {
 
+class ConsoleView;
 class CommandHandler;
 
-class CreateTask
+class CreateTask : public BaseTask
 {
 public:
-	CreateTask(std::shared_ptr<CommandHandler> command_handler);
+	CreateTask(
+		std::shared_ptr<ConsoleView> console_view, 
+		std::shared_ptr<CommandHandler> command_handler);
 
 public:
-	void post(const std::string & task_identifier, const std::string & description);
+	void run_task_creation();
 
 private:
-	std::shared_ptr<CommandHandler> command_handler_;
+	void start_task_creation();
+	void add_task_description();
+	void add_task_priority();
+	void cancel_task();
+
+	void update_description(const std::string & previous_description);
+	void update_priority(TaskPriority task_priority);
+
+	bool move_to_next_stage();
+	bool assign_task_labels();
+
+	static TaskPriority generate_task_priority();
+	static std::string generate_unique_id();
+
+private:
+	TaskCreationId * wizard_id_;
+	TaskId * task_id_;
+	TaskPriority task_priority_;
+
+	std::string task_description_;
+	bool task_details_is_already_set;
 };
 
 } // namespace todolist

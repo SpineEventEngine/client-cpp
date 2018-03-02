@@ -38,14 +38,20 @@ public:
 	ConsoleViewImpl(std::string const & path_to_exec_file);
 
 public:
-	void add_simple_command(ConsoleCommandType command_type, std::shared_ptr<TCLAP::SwitchArg> command_args) override final;
+	void add_simple_command(
+		ConsoleCommandType command_type,
+		std::string const & command_shortcut,
+		std::string const & command_name,
+		std::string const & command_description) override final;
 	void add_task_view_command(std::shared_ptr<TCLAP::SwitchArg> command_args) override final;
 	void run_command_input() override final;
 	void reset_tasks() override final;
 	void activate_console(std::function<bool()> callback) override final;
 
-	bool is_command_set(ConsoleCommandType command_type) override final;
+	ConsoleCommandType get_active_task() override final;
+
 	bool is_task_set() const override final;
+	bool is_command_set(ConsoleCommandType command_type) override final;
 
 	int get_active_task_index() const override final;
 

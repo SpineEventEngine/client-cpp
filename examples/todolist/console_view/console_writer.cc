@@ -62,6 +62,16 @@ void ConsoleWriter::print_select_an_action_prompt()
 	std::cout << "Select an action (?)" << std::endl;
 }
 
+void ConsoleWriter::print_assign_label_option()
+{
+	std::cout << "(a) " << "Assign label." << std::endl;
+}
+
+void ConsoleWriter::print_confirm_task_option()
+{
+	std::cout << "(f) " << "Complete task creation." << std::endl;
+}
+
 } // namespace todolist
 } // namespace examples
 } // namespace spine

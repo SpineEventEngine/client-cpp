@@ -25,8 +25,6 @@
 #include "console_view/console_view_impl.h"
 #include "command_handler/command_handler_impl.h"
 
-#include "Poco/UUIDGenerator.h"
-
 namespace spine {
 namespace examples {
 namespace todolist {
@@ -39,66 +37,38 @@ TaskManager::TaskManager(const std::string & path_to_exec_file)
 {
 }
 
-void TaskManager::initialize_tasks()
-{
-	console_view_->add_simple_command(
-		ConsoleCommandType::CREATE_TASK,
-		std::make_shared<TCLAP::SwitchArg>("c", "create_task", "Create task", false)
-	);
-
-	console_view_->add_simple_command(
-		ConsoleCommandType::LIST_TASK,
-		std::make_shared<TCLAP::SwitchArg>("l", "task_list", "Print tasks list", false)
-	);
-
-	console_view_->add_simple_command(
-		ConsoleCommandType::QUIT_PROGRAM,
-		std::make_shared<TCLAP::SwitchArg>("q", "quit_task", "Quit tasks list", false)
-	);
-}
-
 void TaskManager::start()
 {
-	std::cout << "Main menu" << std::endl;
-
 	console_view_->activate_console([&]()
 	{
-		console_view_->reset_tasks();
-
-		ConsoleWriter::print_main_menu_help();
-
-		initialize_tasks();
-
+		std::cout << "Main menu" << std::endl;
+		std::cout << "----------------" << std::endl;
+		console_view_->add_simple_command(ConsoleCommandType::CREATE_TASK, "c", "Create_task", "Create a task");
+		console_view_->add_simple_command(ConsoleCommandType::LIST_TASK, "l", "List_task", "List tasks");
+		console_view_->add_simple_command(ConsoleCommandType::QUIT_PROGRAM, "q", "Quit", "Quit");
 		console_view_->run_command_input();
 
-		if (console_view_->is_command_set(ConsoleCommandType::CREATE_TASK)) {
-			add_task();
+		switch (console_view_->get_active_task())
+		{
+			case ConsoleCommandType::CREATE_TASK:
+				add_task();
+				break;
+			case ConsoleCommandType::LIST_TASK:
+				list_tasks();
+				break;
+			case ConsoleCommandType::QUIT_PROGRAM:
+				return false;
+			default:
+				ConsoleWriter::print_undefined_action_message();
 		}
-		else if (console_view_->is_command_set(ConsoleCommandType::LIST_TASK)) {
-			list_tasks();
-		}
-		else if (console_view_->is_command_set(ConsoleCommandType::QUIT_PROGRAM)) {
-			return false;
-		}
-		else {
-			ConsoleWriter::print_undefined_action_message();
-		}
-
 		return true;
 	});
 }
 
 void TaskManager::add_task() {
-	std::cout << "Please enter the task description\n";
-	std::string description;
-	std::getline(std::cin, description);
-
-	auto create_task_command = std::make_unique<CreateTask>(command_handler_);
-	std::string task_identifier = generate_task_id();
-
+	auto create_task_command = std::make_unique<CreateTask>(console_view_, command_handler_);
 	try {
-		create_task_command->post(task_identifier, description);
-		std::cout << "Task created\n";
+		create_task_command->run_task_creation();
 	}
 	catch (std::exception & _exception)
 	{
@@ -117,12 +87,6 @@ void TaskManager::list_tasks() const {
 	{
 		std::cout << _exception.what() << std::endl;
 	}
-}
-
-std::string TaskManager::generate_task_id()
-{
-	Poco::UUIDGenerator generator;
-	return generator.createRandom().toString();
 }
 
 } // namespace todolist

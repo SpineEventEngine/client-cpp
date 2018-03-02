@@ -18,32 +18,58 @@
 * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+#ifndef TODOLIST_CREATE_TASK_LABEL_H
+#define TODOLIST_CREATE_TASK_LABEL_H
 
-#ifndef TODOLIST_COMMAND_HANDLER_H
-#define TODOLIST_COMMAND_HANDLER_H
+#include <memory>
+#include <string>
 
-#include "google/protobuf/message.h"
+#include "base_task.h"
 
-#include "todolist/c/commands.pb.h"
-#include "todolist/q/projections.pb.h"
 #include "todolist/model.pb.h"
+#include "todolist/c/commands.pb.h"
 
 namespace spine {
 namespace examples {
 namespace todolist {
 
-class CommandHandler
+class ConsoleView;
+class CommandHandler;
+
+class CreateTaskLabel : BaseTask
 {
 public:
-	virtual ~CommandHandler() {}
-	virtual void post_command(google::protobuf::Message & client_task) = 0;
-	virtual TaskListView const & get_completed_tasks() = 0;
-	virtual TaskListView const & get_draft_tasks() = 0;
-	virtual std::vector<TaskLabel *> get_labels() = 0;
+	CreateTaskLabel(
+		std::shared_ptr<ConsoleView> console_view,
+		std::shared_ptr<CommandHandler> command_handler,
+		TaskCreationId * wizard_id);
+
+	bool add_labels();
+
+private:
+	void assign_new_label(AddLabels * add_labels_command);
+	void assign_existing_labels(AddLabels * add_labels_command);
+	void remove_task_label(AddLabels * add_labels_command);
+	void print_assigned_labels();
+	void cancel_task();
+
+	void update_new_labels(AddLabels * add_labels_command);
+	void update_existing_labels(AddLabels * add_labels_command);
+
+	bool finish_label_assignment(AddLabels * add_labels_command);
+	bool no_assigned_labels();
+
+	LabelColor assign_label_color();
+
+private:
+	std::vector<LabelDetails * > new_labels_;
+	std::vector<TaskLabel * > existing_labels_;
+
+	TaskCreationId * wizard_id_;
 };
 
 } // namespace todolist
 } // namespace examples
 } // namespace spine
 
-#endif TODOLIST_COMMAND_HANDLER_H
+#endif // TODOLIST_CREATE_TASK_LABEL_H

@@ -47,8 +47,15 @@ public:
 	CommandHandlerImpl(const std::string & channel);
 
 public:
-	void post_command(CreateBasicTask & client_task);
-	TaskListView const & get_tasks();
+	void post_command(Message & client_task);
+
+	TaskListView const & get_completed_tasks();
+	TaskListView const & get_draft_tasks();
+	std::vector<TaskLabel *> get_labels();
+
+private:
+	template <typename T, typename = enable_param_if_protobuf_message<T>>
+	T * get_tasks();
 
 private:
 	std::unique_ptr<core::UserId> make_user_id(const std::string & value);

@@ -18,32 +18,46 @@
 * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+#ifndef TODOLIST_BASE_TASK_H
+#define TODOLIST_BASE_TASK_H
 
-#ifndef TODOLIST_COMMAND_HANDLER_H
-#define TODOLIST_COMMAND_HANDLER_H
+#include <memory>
+#include <string>
 
-#include "google/protobuf/message.h"
-
-#include "todolist/c/commands.pb.h"
-#include "todolist/q/projections.pb.h"
 #include "todolist/model.pb.h"
+#include "todolist/c/commands.pb.h"
+
+#include "console_view/console_view_impl.h"
 
 namespace spine {
 namespace examples {
 namespace todolist {
 
-class CommandHandler
+class ConsoleView;
+class CommandHandler;
+
+enum class PropogationResult {
+	IN_PROGRESS,
+	FINISH,
+	UNKNOWN
+};
+
+class BaseTask
 {
 public:
-	virtual ~CommandHandler() {}
-	virtual void post_command(google::protobuf::Message & client_task) = 0;
-	virtual TaskListView const & get_completed_tasks() = 0;
-	virtual TaskListView const & get_draft_tasks() = 0;
-	virtual std::vector<TaskLabel *> get_labels() = 0;
+	BaseTask(
+		std::shared_ptr<ConsoleView> console_view,
+		std::shared_ptr<CommandHandler> command_handler);
+
+protected:
+	bool should_continue_iteration(PropogationResult result) const;
+protected:
+	std::shared_ptr<ConsoleView> console_view_;
+	std::shared_ptr<CommandHandler> command_handler_;
 };
 
 } // namespace todolist
 } // namespace examples
 } // namespace spine
 
-#endif TODOLIST_COMMAND_HANDLER_H
+#endif // TODOLIST_BASE_TASK_H

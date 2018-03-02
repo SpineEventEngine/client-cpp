@@ -39,7 +39,7 @@ CommandHandlerImpl::CommandHandlerImpl(const std::string & channel)
 	stub_ = CommandService::NewStub(channel_);
 }
 
-void CommandHandlerImpl::post_command(CreateBasicTask & client_task)
+void CommandHandlerImpl::post_command(Message & client_task)
 {
 	CommandPtr command = command_factory_->create(client_task);
 	core::Ack response;
@@ -49,10 +49,21 @@ void CommandHandlerImpl::post_command(CreateBasicTask & client_task)
 	}
 }
 
-TaskListView const & CommandHandlerImpl::get_tasks()
+TaskListView const &CommandHandlerImpl::get_completed_tasks()
+{
+	return get_tasks<MyListView>()->my_list();
+}
+
+TaskListView const & CommandHandlerImpl::get_draft_tasks()
+{
+	return get_tasks<DraftTasksView>()->draft_tasks();
+}
+
+template <typename T, typename = enable_param_if_protobuf_message<T>>
+T * CommandHandlerImpl::get_tasks()
 {
 	ActorRequestFactory factory = ActorRequestFactory::create(parameters_);
-	QueryPtr query = factory.query_factory()->all<MyListView>();
+	QueryPtr query = factory.query_factory()->all<T>();
 	std::unique_ptr<QueryService::Stub> query_service = QueryService::NewStub(channel_);
 
 	QueryResponse response;
@@ -62,14 +73,40 @@ TaskListView const & CommandHandlerImpl::get_tasks()
 		throw std::runtime_error("Invalid response....");
 	}
 
-	MyListView * task_list_view = MyListView::default_instance().New();
+	T * task_list_view = T::default_instance().New();
 	if (response.messages_size() > 0)
 	{
 		const Any& any = response.messages(0);
 		any.UnpackTo(task_list_view);
 	}
 
-	return task_list_view->my_list();
+	return task_list_view;
+}
+
+std::vector<TaskLabel *> CommandHandlerImpl::get_labels()
+{
+	ActorRequestFactory factory = ActorRequestFactory::create(parameters_);
+	QueryPtr query = factory.query_factory()->all<TaskLabel>();
+	std::unique_ptr<QueryService::Stub> query_service = QueryService::NewStub(channel_);
+
+	QueryResponse response;
+	grpc::ClientContext client_context;
+
+	if (!query_service->Read(&client_context, *query, &response).ok()) {
+		throw std::runtime_error("Invalid response....");
+	}
+
+	std::vector<TaskLabel *> label_tasks;
+	TaskLabel * task_label = TaskLabel::default_instance().New();
+	int messages_count = response.messages_size();
+	for (int i = 0; i < messages_count; ++i)
+	{
+		const Any& any = response.messages(i);
+		any.UnpackTo(task_label);
+		label_tasks.push_back(task_label);
+	}
+
+	return std::move(label_tasks);
 }
 
 std::unique_ptr<core::UserId>

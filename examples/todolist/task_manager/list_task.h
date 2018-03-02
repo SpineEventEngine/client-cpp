@@ -25,6 +25,8 @@
 #include "todolist/attributes.pb.h"
 #include "tclap/CmdLine.h"
 
+#include "base_task.h"
+
 #include <memory>
 #include <functional>
 
@@ -35,7 +37,7 @@ namespace todolist {
 class ConsoleView;
 class CommandHandler;
 
-class ListTask
+class ListTask : public BaseTask
 {
 public:
 	ListTask(
@@ -46,16 +48,14 @@ public:
 	void load_task_menu();
 
 private:
+	void load_task_list(ConsoleCommandType command_type);
+	void load_tasks(ConsoleCommandType command_type);
+
 	void show_task_info(int taskId);
-	void load_tasks();
-	void add_back_task();
-	void generate_tasks_list();
+	void print_task_list();
 
 private:
-	std::vector<spine::examples::todolist::TaskItem> task_items_;
-
-	std::shared_ptr<ConsoleView> console_view_;
-	std::shared_ptr<CommandHandler> command_handler_;
+	std::vector<TaskItem> task_items_;
 };
 
 } // namespace todolist
