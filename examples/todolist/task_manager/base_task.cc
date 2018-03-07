@@ -20,6 +20,7 @@
 
 #include "base_task.h"
 #include "command_handler/command_handler_impl.h"
+#include "resources/resources.h"
 
 namespace spine {
 namespace examples {
@@ -34,18 +35,75 @@ BaseTask::BaseTask(
 {
 }
 
-bool BaseTask::should_continue_iteration(PropogationResult result) const
+bool BaseTask::task_creation_result_to_bool(TaskCreationResult result) const
 {
 	switch (result)
 	{
-		case PropogationResult::IN_PROGRESS:
+		case TaskCreationResult::REPEAT_MENU:
 			return true;
-		case PropogationResult::FINISH:
+		case TaskCreationResult::FINISH_MENU:
+		case TaskCreationResult::BACK_TO_PREVIOUS_MENU:
 			return false;
 
 		default:
 			assert(false);
 	}
+}
+
+TaskPriority BaseTask::generate_task_priority()
+{
+	std::cout << resources::messages::PLEASE_ENTER_THE_TASK_PRIORITY;
+	while (true)
+	{
+		std::cout << resources::messages::TASK_PRIORITY_VALUES;
+		int task_priority;
+		std::cin >> task_priority;
+		std::cin.ignore();
+		if (TaskPriority::HIGH <= task_priority <= TaskPriority::LOW)
+			return static_cast<TaskPriority>(task_priority);
+		else
+			std::cout << resources::messages::TASK_PRIORITY_VALUE_IS_INCORRECT;
+	}
+}
+
+LabelColor BaseTask::generate_label_color()
+{
+	std::cout << resources::messages::PLEASE_ENTER_THE_LABEL_COLOR;
+	while (true)
+	{
+		std::cout << resources::messages::LABEL_VALUES;
+
+		int label_color = 0;
+		std::cin >> label_color;
+		std::cin.ignore();
+		if (LabelColor::RED <= label_color <= LabelColor::GRAY)
+			return static_cast<LabelColor>(label_color);
+		else
+			std::cout << resources::messages::LABEL_COLOR_IS_INCORRECT;
+	}
+}
+
+std::string BaseTask::label_color_to_string(LabelColor label_color)
+{
+	switch (label_color)
+	{
+		case LabelColor::BLUE:
+			return std::string("blue");
+		case LabelColor::RED:
+			return std::string("red");
+		case LabelColor::GRAY:
+			return std::string("gray");
+		case LabelColor::GREEN:
+			return std::string("green");
+		default:
+			assert(false);
+	}
+}
+
+std::string BaseTask::generate_unique_id()
+{
+	Poco::UUIDGenerator generator;
+	return generator.createRandom().toString();
 }
 
 } // namespace todolist

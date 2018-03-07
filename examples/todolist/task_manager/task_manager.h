@@ -43,6 +43,9 @@ private:
 	void add_task();
 	void list_tasks() const;
 
+	void initialize_commands();
+	bool process_command();
+
 private:
 	std::shared_ptr<ConsoleView> console_view_;
 	std::shared_ptr<CommandHandler> command_handler_;

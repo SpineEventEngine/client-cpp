@@ -23,6 +23,7 @@
 #include "console_view/console_writer.h"
 #include "console_view/console_view_impl.h"
 #include "command_handler/command_handler_impl.h"
+#include "resources/resources.h"
 
 namespace spine {
 namespace examples {
@@ -43,15 +44,44 @@ bool TaskCompleter::run_complete_menu()
 	bool assignment_result = false;
 	console_view_->activate_console([&]()
 	{
-		std::cout << "Task completion menu" << std::endl;
-		std::cout << "----------------" << std::endl;
+		std::cout << resources::messages::TASK_COMPLETION_MENU << std::endl;
+		std::cout << resources::command_line::LINE_SEPARATOR << std::endl;
 
-		console_view_->add_simple_command(ConsoleCommandType::FINISH_TASK, "f", "Finish", "Finish task");
-		console_view_->add_simple_command(ConsoleCommandType::CANCEL_TASK, "c", "Cancel", "Cancel Task");
-		console_view_->add_simple_command(ConsoleCommandType::BACK_TO_PREVIOUS_MENU, "b", "Back", "Go to previous menu");
-		console_view_->run_command_input();
-		switch (console_view_->get_active_task())
-		{
+		initialize_commands();
+		return process_command(assignment_result);	
+	});
+
+	return assignment_result;
+}
+
+void TaskCompleter::initialize_commands()
+{
+	console_view_->add_simple_command(
+		ConsoleCommandType::FINISH_TASK,
+		resources::tasks_menu::FINISH_TASK_SHORTCUT,
+		resources::tasks_menu::FINISH_TASK_COMMAND,
+		resources::tasks_menu::FINSH_TASK_INFO
+	);
+	console_view_->add_simple_command(
+		ConsoleCommandType::CANCEL_TASK,
+		resources::tasks_menu::CANCEL_SHORTCUT,
+		resources::tasks_menu::CANCEL_COMMAND,
+		resources::tasks_menu::CANCEL_INFO
+	);
+
+	console_view_->add_simple_command(
+		ConsoleCommandType::BACK_TO_PREVIOUS_MENU,
+		resources::tasks_menu::BACK_SHORTCUT,
+		resources::tasks_menu::BACK_COMMAND,
+		resources::tasks_menu::BACK_INFO
+	);
+}
+
+bool TaskCompleter::process_command(bool & assignment_result)
+{
+	console_view_->run_command_input();
+	switch (console_view_->get_active_task())
+	{
 		case ConsoleCommandType::FINISH_TASK:
 			finish_task();
 			assignment_result = false;
@@ -63,16 +93,13 @@ bool TaskCompleter::run_complete_menu()
 			return assignment_result;
 			break;
 		case ConsoleCommandType::BACK_TO_PREVIOUS_MENU:
-			assignment_result =  true;
+			assignment_result = true;
 			return false;
 		default:
 			return true;
-		}
+	}
 
-		return true;
-	});
-
-	return assignment_result;
+	return true;
 }
 
 void TaskCompleter::finish_task()

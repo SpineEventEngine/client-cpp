@@ -95,8 +95,11 @@ set(todolist_source_files
         todolist.cc
         command_handler/command_handler_impl.cc
         task_manager/task_manager.cc
+        task_manager/task_completer.cc
+        task_manager/base_task.cc
         task_manager/list_task.cc
         task_manager/create_task.cc
+        task_manager/create_task_label.cc
         console_view/console_view_impl.cc
         console_view/console_writer.cc
         )

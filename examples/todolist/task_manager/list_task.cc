@@ -23,6 +23,7 @@
 #include "todolist/model.pb.h"
 #include "console_view/console_view_impl.h"
 #include "command_handler/command_handler.h"
+#include "resources/resources.h"
 
 namespace spine {
 namespace examples {
@@ -73,32 +74,62 @@ void ListTask::load_task_menu()
 {
 	console_view_->activate_console([&]()
 	{
-		console_view_->add_simple_command(ConsoleCommandType::DRAFT_TASKS, "d", "Draft_Tasks", "Draft Tasks");
-		console_view_->add_simple_command(ConsoleCommandType::COMPLETED_TASKS, "c", "Completed_Tasks", "Completed Tasks");
-		console_view_->add_simple_command(ConsoleCommandType::ALL_TASKS, "a", "All_Tasks", "All Tasks");
-		console_view_->add_simple_command(ConsoleCommandType::BACK_TO_PREVIOUS_MENU, "b", "Back", "Go to previous menu");
-
-		console_view_->run_command_input();
-		switch (console_view_->get_active_task())
-		{
-			case ConsoleCommandType::DRAFT_TASKS:
-				load_task_list(ConsoleCommandType::DRAFT_TASKS);
-				break;
-			case ConsoleCommandType::COMPLETED_TASKS:
-				load_task_list(ConsoleCommandType::COMPLETED_TASKS);
-				break;
-			case ConsoleCommandType::ALL_TASKS:
-				load_task_list(ConsoleCommandType::ALL_TASKS);
-				break;
-			case ConsoleCommandType::BACK_TO_PREVIOUS_MENU:
-				return false;
-				break;
-			default:
-				return true;
-		}
-		return true;
+		initialize_commands();
+		return process_command();
 	});
 }
+
+void ListTask::initialize_commands()
+{
+	console_view_->add_simple_command(
+		ConsoleCommandType::DRAFT_TASKS,
+		resources::tasks_menu::DRAFT_TASK_SHORTCUT,
+		resources::tasks_menu::DRAFT_TASK_COMMAND,
+		resources::tasks_menu::DRAFT_TASK_INFO
+	);
+	console_view_->add_simple_command(
+		ConsoleCommandType::COMPLETED_TASKS,
+		resources::tasks_menu::COMPLETED_TASK_SHORTCUT,
+		resources::tasks_menu::COMPLETED_TASK_COMMAND,
+		resources::tasks_menu::COMPLETED_TASK_INFO
+	);
+	console_view_->add_simple_command(
+		ConsoleCommandType::ALL_TASKS,
+		resources::tasks_menu::ALL_TASKS_SHORTCUT,
+		resources::tasks_menu::ALL_TASKS_COMMAND,
+		resources::tasks_menu::ALL_TASKS_INFO
+	);
+	console_view_->add_simple_command(
+		ConsoleCommandType::BACK_TO_PREVIOUS_MENU,
+		resources::tasks_menu::BACK_SHORTCUT,
+		resources::tasks_menu::BACK_COMMAND,
+		resources::tasks_menu::BACK_INFO
+	);
+}
+
+bool ListTask::process_command()
+{
+	console_view_->run_command_input();
+	switch (console_view_->get_active_task())
+	{
+		case ConsoleCommandType::DRAFT_TASKS:
+			load_task_list(ConsoleCommandType::DRAFT_TASKS);
+			break;
+		case ConsoleCommandType::COMPLETED_TASKS:
+			load_task_list(ConsoleCommandType::COMPLETED_TASKS);
+			break;
+		case ConsoleCommandType::ALL_TASKS:
+			load_task_list(ConsoleCommandType::ALL_TASKS);
+			break;
+		case ConsoleCommandType::BACK_TO_PREVIOUS_MENU:
+			return false;
+			break;
+		default:
+			return true;
+	}
+	return true;
+}
+
 void ListTask::load_task_list(ConsoleCommandType command_type)
 {
 	console_view_->activate_console([&]()
@@ -106,7 +137,13 @@ void ListTask::load_task_list(ConsoleCommandType command_type)
 		load_tasks(command_type);
 		print_task_list();
 
-		console_view_->add_simple_command(ConsoleCommandType::BACK_TO_PREVIOUS_MENU, "b", "Back", "Go to previous menu");
+		console_view_->add_simple_command(
+			ConsoleCommandType::BACK_TO_PREVIOUS_MENU,
+			resources::tasks_menu::BACK_SHORTCUT,
+			resources::tasks_menu::BACK_COMMAND,
+			resources::tasks_menu::BACK_INFO
+		);
+
 		console_view_->run_command_input();
 		if (console_view_->is_task_set())
 		{
@@ -125,34 +162,51 @@ void ListTask::load_task_list(ConsoleCommandType command_type)
 
 void ListTask::print_task_list()
 {
-	std::cout << "My tasks list:" << std::endl;
-	std::cout << "----------------" << std::endl;
+	std::cout << resources::messages::MY_TASKS_LIST << std::endl;
+	std::cout << resources::command_line::LINE_SEPARATOR << std::endl;
 
 	if (task_items_.empty())
 	{
-		std::cout << "<no tasks>\n";
+		std::cout << resources::messages::NO_TASKS;
+		return;
 	}
 
 	for (int index = 0; index < task_items_.size(); ++index)
 	{
 		std::string taskIndex = std::to_string(index + 1);
-		std::cout << "(" << std::to_string(index + 1) << ") " << task_items_[index].description().value() << "\n";
+		std::cout
+				<< resources::command_line::LEFT_BRACE
+				<< std::to_string(index + 1)
+				<< resources::command_line::RIGHT_BRACE
+				<< task_items_[index].description().value()
+				<< std::endl;
 
-		console_view_->add_task_view_command(
-			std::make_shared<TCLAP::SwitchArg>(taskIndex, "task_number" + taskIndex, "Choose task" + taskIndex, false)
-		);
+		auto task_view_command 
+			= std::make_shared<TCLAP::SwitchArg>(
+					taskIndex,
+					resources::tasks_menu::TASK_NUMBER_COMMAND + taskIndex,
+					resources::tasks_menu::TASK_NUBMER_INFO + taskIndex,
+					false
+				);
+
+		console_view_->add_task_view_command(task_view_command);
 	}
 }
 
 void ListTask::show_task_info(int active_task_number)
 {
 	auto & taskItem = task_items_[active_task_number];
-
 	ConsoleWriter::print_task_description(taskItem);
 
 	console_view_->activate_console([&] ()
 	{
-		console_view_->add_simple_command(ConsoleCommandType::BACK_TO_PREVIOUS_MENU, "b", "Back", "Go to previous menu");
+		console_view_->add_simple_command(
+			ConsoleCommandType::BACK_TO_PREVIOUS_MENU,
+			resources::tasks_menu::BACK_SHORTCUT,
+			resources::tasks_menu::BACK_COMMAND,
+			resources::tasks_menu::BACK_INFO
+		);
+
 		console_view_->run_command_input();
 		if (console_view_->is_command_set(ConsoleCommandType::BACK_TO_PREVIOUS_MENU))
 			return false;

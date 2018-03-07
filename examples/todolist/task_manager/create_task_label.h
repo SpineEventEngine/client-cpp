@@ -56,10 +56,13 @@ private:
 	void update_new_labels(AddLabels * add_labels_command);
 	void update_existing_labels(AddLabels * add_labels_command);
 
+	void remove_label_from_list(AddLabels * add_labels_command, int label_number);
+
+	void initialize_commands();
+
+	bool process_command(AddLabels * add_labels_command, bool & assignment_result);
 	bool finish_label_assignment(AddLabels * add_labels_command);
 	bool no_assigned_labels();
-
-	LabelColor assign_label_color();
 
 private:
 	std::vector<LabelDetails * > new_labels_;

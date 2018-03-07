@@ -36,9 +36,10 @@ namespace todolist {
 class ConsoleView;
 class CommandHandler;
 
-enum class PropogationResult {
-	IN_PROGRESS,
-	FINISH,
+enum class TaskCreationResult {
+	REPEAT_MENU,
+	FINISH_MENU,
+	BACK_TO_PREVIOUS_MENU,
 	UNKNOWN
 };
 
@@ -49,8 +50,15 @@ public:
 		std::shared_ptr<ConsoleView> console_view,
 		std::shared_ptr<CommandHandler> command_handler);
 
+	static TaskPriority generate_task_priority();
+	static LabelColor generate_label_color();
+
+	static std::string generate_unique_id();
+	static std::string label_color_to_string(LabelColor label_color);
+
 protected:
-	bool should_continue_iteration(PropogationResult result) const;
+	bool task_creation_result_to_bool(TaskCreationResult result) const;
+
 protected:
 	std::shared_ptr<ConsoleView> console_view_;
 	std::shared_ptr<CommandHandler> command_handler_;

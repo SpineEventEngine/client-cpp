@@ -50,6 +50,9 @@ private:
 	void finish_task();
 	void cancel_task();
 
+	void initialize_commands();
+	bool process_command(bool & assignment_result);
+
 	TaskCreationId * wizard_id_;
 };
 

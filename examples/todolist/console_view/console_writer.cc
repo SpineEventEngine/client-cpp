@@ -19,57 +19,120 @@
 */
 
 #include "console_writer.h"
+#include "resources/resources.h"
 #include <iostream>
 
 namespace spine {
 namespace examples {
 namespace todolist {
 
-void ConsoleWriter::print_main_menu_help()
-{
-	std::cout << "----------------" << std::endl;
-	std::cout
-		<< "(c) Create a task.\n"
-		<< "(l) List tasks.\n"
-		<< "(q) Quit.\n";
-
-	std::cout << "----------------" << std::endl;
-}
-
-void ConsoleWriter::print_back_option()
-{
-	std::cout << "(b) " << "Back." << std::endl;
-	std::cout << "----------------" << std::endl;
-}
-
 void ConsoleWriter::print_task_description(TaskItem & task_item)
 {
-	std::cout << "My task details:\n";
-	std::cout << "----------------" << std::endl;
+	std::cout << resources::task_info::TASK_DETAILS;
+	std::cout << resources::command_line::LINE_SEPARATOR << std::endl;
 
-	std::cout << "Description: " << task_item.description().value() << std::endl;
-	std::cout << "Priority: " << TaskPriority_Name(task_item.priority()) << std::endl;
-	std::cout << "Due date: " << "default" << std::endl;
+	std::cout 
+			<< resources::task_info::TASK_DESCRIPTION
+			<< resources::command_line::COLON
+			<< resources::command_line::WHITE_SPACE_DELIMETER
+			<< task_item.description().value()
+			<< std::endl;
+
+	std::cout
+			<< resources::task_info::TASK_PRIORITY
+			<< resources::command_line::COLON
+			<< resources::command_line::WHITE_SPACE_DELIMETER
+			<< TaskPriority_Name(task_item.priority())
+			<< std::endl;
+
+	std::cout
+			<< resources::task_info::TASK_DUE_DATE
+			<< resources::command_line::COLON
+			<< resources::command_line::WHITE_SPACE_DELIMETER
+			<< resources::task_info::DEFAULT
+			<< std::endl;
 }
 
 void ConsoleWriter::print_undefined_action_message()
 {
-	std::cout << "There is no action with specified shortcut or argument is invalid.\n";
+	std::cout << resources::messages::NO_SPECIFIED_SHORTCUT;
 }
 
 void ConsoleWriter::print_select_an_action_prompt()
 {
-	std::cout << "Select an action (?)" << std::endl;
+	std::cout << resources::messages::SELECT_AN_ACTION << std::endl;
 }
 
-void ConsoleWriter::print_assign_label_option()
+void ConsoleWriter::print_existing_task_label_info(
+	const std::string & index,
+	const std::string & title,
+	const std::string & color
+)
 {
-	std::cout << "(a) " << "Assign label." << std::endl;
+	std::cout
+		<< resources::command_line::LEFT_BRACE
+		<< index
+		<< resources::command_line::RIGHT_BRACE
+		<< resources::command_line::WHITE_SPACE_DELIMETER
+		<< resources::command_line::DASH
+		<< resources::command_line::WHITE_SPACE_DELIMETER
+		<< resources::command_line::LEFT_BRACKET
+		<< resources::task_info::TITLE
+		<< resources::command_line::COLON
+		<< title
+		<< resources::command_line::WHITE_SPACE_DELIMETER
+		<< resources::task_info::COLOR
+		<< resources::command_line::WHITE_SPACE_DELIMETER
+		<< resources::command_line::COLON
+		<< resources::command_line::WHITE_SPACE_DELIMETER
+		<< color
+		<< resources::command_line::RIGHT_BRACKET
+		<< std::endl;
 }
 
-void ConsoleWriter::print_confirm_task_option()
+void ConsoleWriter::print_label_removed_from_task_message(const std::string & label_number)
 {
-	std::cout << "(f) " << "Complete task creation." << std::endl;
+	std::cout
+		<< resources::task_info::LABEL
+		<< resources::command_line::WHITE_SPACE_DELIMETER
+		<< resources::command_line::DASH
+		<< resources::command_line::WHITE_SPACE_DELIMETER
+		<< label_number
+		<< resources::messages::REMOVED_FROM_TASK;
+}
+
+void ConsoleWriter::print_label_number(const std::string & label_number)
+{
+	std::cout
+		<< resources::task_info::LABEL
+		<< resources::command_line::WHITE_SPACE_DELIMETER
+		<< resources::command_line::SHARP
+		<< resources::command_line::WHITE_SPACE_DELIMETER
+		<< label_number
+		<< resources::command_line::COLON
+		<< std::endl;
+}
+
+void ConsoleWriter::print_label_info(
+	const std::string & label_title,
+	const std::string & label_color
+)
+{
+	std::cout
+		<< resources::command_line::LEFT_BRACKET
+		<< resources::task_info::TITLE
+		<< resources::command_line::WHITE_SPACE_DELIMETER
+		<< resources::command_line::COLON
+		<< resources::command_line::WHITE_SPACE_DELIMETER
+		<< label_title
+		<< resources::command_line::COMMA
+		<< resources::command_line::WHITE_SPACE_DELIMETER
+		<< resources::task_info::COLOR
+		<< resources::command_line::WHITE_SPACE_DELIMETER
+		<< resources::command_line::COLON
+		<< label_color
+		<< resources::command_line::RIGHT_BRACKET
+		<< std::endl;
 }
 
 } // namespace todolist

@@ -21,13 +21,23 @@
 
 #include "console_view_impl.h"
 #include "console_view/console_writer.h"
+#include "resources/resources.h"
 
 namespace spine {
 namespace examples {
 namespace todolist {
 
+constexpr int INVALID_TASK_NUMBER = -1;
+
 ConsoleViewImpl::ConsoleViewImpl(std::string const & path_to_exec_file)
-	:	command_handler_(new TCLAP::CmdLine("Command description message", ' ', "0.9", false))
+	:	command_handler_(
+			new TCLAP::CmdLine(
+				resources::command_line::COMMAND_DESCRIPTION_MESSAGE,
+				resources::command_line::WHITE_SPACE_DELIMETER,
+				resources::command_line::COMMAND_LINE_VERSION,
+				false
+			)
+		)
 	,	path_to_exec_file_(path_to_exec_file)
 {
 	command_handler_->setExceptionHandling(false);
@@ -39,10 +49,20 @@ void ConsoleViewImpl::add_simple_command(
 	std::string const & command_name,
 	std::string const & command_description)
 {
-	std::cout << "(" + command_shortcut + ") " << command_description << std::endl;;
+	std::cout
+		<<	resources::command_line::LEFT_BRACE +
+			command_shortcut +
+			resources::command_line::RIGHT_BRACE
+		<< command_description
+		<< std::endl;
 
 	auto command_args
-		= std::make_shared<TCLAP::SwitchArg>(command_shortcut, command_name, command_description, false);
+		= std::make_shared<TCLAP::SwitchArg>(
+			command_shortcut,
+			command_name,
+			command_description,
+			false
+		);
 
 	commands_[command_type] = command_args;
 	command_handler_->add(command_args.get());
@@ -66,14 +86,13 @@ void ConsoleViewImpl::run_command_input()
 	ConsoleWriter::print_select_an_action_prompt();
 	std::string line;
 	std::getline(std::cin, line);
-	std::string command = "-" + line;
+	std::string command = resources::command_line::DASH + line;
 	std::istringstream iss(command);
 	std::vector<std::string> inputStrings;
 	inputStrings.push_back(path_to_exec_file_);
 
-	for (std::string word; iss >> word;) {
+	for (std::string word; iss >> word;)
 		inputStrings.push_back(word);
-	}
 
 	command_handler_->parse(inputStrings);
 }
@@ -132,7 +151,7 @@ int ConsoleViewImpl::get_active_task_index() const
 		if (task_command->isSet())
 			return task_index;
 	}
-	return -1;
+	return INVALID_TASK_NUMBER;
 }
 
 } // namespace todolist

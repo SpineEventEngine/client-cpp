@@ -24,16 +24,15 @@
 #include "console_view/console_writer.h"
 #include "console_view/console_view_impl.h"
 #include "command_handler/command_handler_impl.h"
+#include "resources/resources.h"
 
 namespace spine {
 namespace examples {
 namespace todolist {
 
-const std::string CHANNEL = "localhost:50051";
-
 TaskManager::TaskManager(const std::string & path_to_exec_file)
 	:	console_view_(new ConsoleViewImpl(path_to_exec_file))
-	,	command_handler_( new CommandHandlerImpl(CHANNEL))
+	,	command_handler_( new CommandHandlerImpl(resources::server_info::CHANNEL))
 {
 }
 
@@ -41,28 +40,56 @@ void TaskManager::start()
 {
 	console_view_->activate_console([&]()
 	{
-		std::cout << "Main menu" << std::endl;
-		std::cout << "----------------" << std::endl;
-		console_view_->add_simple_command(ConsoleCommandType::CREATE_TASK, "c", "Create_task", "Create a task");
-		console_view_->add_simple_command(ConsoleCommandType::LIST_TASK, "l", "List_task", "List tasks");
-		console_view_->add_simple_command(ConsoleCommandType::QUIT_PROGRAM, "q", "Quit", "Quit");
-		console_view_->run_command_input();
-
-		switch (console_view_->get_active_task())
-		{
-			case ConsoleCommandType::CREATE_TASK:
-				add_task();
-				break;
-			case ConsoleCommandType::LIST_TASK:
-				list_tasks();
-				break;
-			case ConsoleCommandType::QUIT_PROGRAM:
-				return false;
-			default:
-				ConsoleWriter::print_undefined_action_message();
-		}
-		return true;
+		std::cout << resources::messages::MAIN_MENU << std::endl;
+		std::cout << resources::command_line::LINE_SEPARATOR << std::endl;
+		
+		initialize_commands();
+		return process_command();
 	});
+}
+
+void TaskManager::initialize_commands()
+{
+	console_view_->add_simple_command(
+		ConsoleCommandType::CREATE_TASK,
+		resources::tasks_menu::CREATE_TASK_SHORTCUT,
+		resources::tasks_menu::CREATE_TASK_COMMAND,
+		resources::tasks_menu::CREATE_TASK_INFO
+	);
+
+	console_view_->add_simple_command(
+		ConsoleCommandType::LIST_TASK,
+		resources::tasks_menu::LIST_TASK_SHORTCUT,
+		resources::tasks_menu::LIST_TASK_COMMAND,
+		resources::tasks_menu::LIST_TASK_INFO
+	);
+
+	console_view_->add_simple_command(
+		ConsoleCommandType::QUIT_PROGRAM,
+		resources::tasks_menu::QUIT_TASK_SHORTCUT,
+		resources::tasks_menu::QUIT_TASK_COMMAND,
+		resources::tasks_menu::QUIT_TASK_INFO
+	);
+}
+
+bool TaskManager::process_command()
+{
+	console_view_->run_command_input();
+	switch (console_view_->get_active_task())
+	{
+		case ConsoleCommandType::CREATE_TASK:
+			add_task();
+			break;
+		case ConsoleCommandType::LIST_TASK:
+			list_tasks();
+			break;
+		case ConsoleCommandType::QUIT_PROGRAM:
+			return false;
+		default:
+			ConsoleWriter::print_undefined_action_message();
+	}
+
+	return true;
 }
 
 void TaskManager::add_task() {

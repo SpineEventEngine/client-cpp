@@ -55,11 +55,11 @@ private:
 	void update_description(const std::string & previous_description);
 	void update_priority(TaskPriority task_priority);
 
+	void initialize_commands();
+	
+	bool process_command();
 	bool move_to_next_stage();
 	bool assign_task_labels();
-
-	static TaskPriority generate_task_priority();
-	static std::string generate_unique_id();
 
 private:
 	TaskCreationId * wizard_id_;

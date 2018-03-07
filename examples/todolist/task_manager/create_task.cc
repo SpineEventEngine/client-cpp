@@ -25,6 +25,7 @@
 #include "console_view/console_view_impl.h"
 #include "console_view/console_writer.h"
 #include "Poco/UUIDGenerator.h"
+#include "resources/resources.h"
 
 #include <iostream>
 
@@ -45,7 +46,6 @@ CreateTask::CreateTask(
 	task_id_ = TaskId::default_instance().New();
 	std::string unique_task_id = generate_unique_id();
 	task_id_->set_value(unique_task_id);
-	
 
 	task_priority_ = TaskPriority::TP_UNDEFINED;
 	task_details_is_already_set = false;
@@ -56,34 +56,11 @@ void CreateTask::run_task_creation()
 	start_task_creation();
 	console_view_->activate_console([&]()
 	{
-		std::cout << "Create task menu" << std::endl;
-		std::cout << "----------------" << std::endl;
-		console_view_->add_simple_command(ConsoleCommandType::ADD_DESCRIPTION, "d", "Description", "Add/Edit description");
-		console_view_->add_simple_command(ConsoleCommandType::ADD_PRIORITY, "p", "Priority", "Add/Edit Priority");
-		console_view_->add_simple_command(ConsoleCommandType::NEXT_STAGE, "n", "Next_stage", "Next stage");
-		console_view_->add_simple_command(ConsoleCommandType::CANCEL_TASK, "c", "Cancel", "Cancel Task");
-		console_view_->add_simple_command(ConsoleCommandType::BACK_TO_PREVIOUS_MENU, "b", "Back", "Go to previous menu");
-		console_view_->run_command_input();
-		switch (console_view_->get_active_task())
-		{
-			case ConsoleCommandType::ADD_DESCRIPTION:
-				add_task_description();
-				break;
-			case ConsoleCommandType::ADD_PRIORITY:
-				add_task_priority();
-				break;
-			case ConsoleCommandType::CANCEL_TASK:
-				cancel_task();
-				return false;
-			case ConsoleCommandType::NEXT_STAGE:
-				return move_to_next_stage();
-				break;
-			case ConsoleCommandType::BACK_TO_PREVIOUS_MENU:
-				return false;
-			default:
-				return true;
-		}
-		return true;
+		std::cout << resources::messages::CREATE_TASK_MENU << std::endl;
+		std::cout << resources::command_line::LINE_SEPARATOR << std::endl;
+
+		initialize_commands();
+		return process_command();
 	});
 }
 
@@ -96,14 +73,78 @@ void CreateTask::start_task_creation()
 	command_handler_->post_command(*start_task_creation);
 }
 
+void CreateTask::initialize_commands()
+{
+	console_view_->add_simple_command(
+		ConsoleCommandType::ADD_DESCRIPTION,
+		resources::tasks_menu::DESCRIPTION_SHORTCUT,
+		resources::tasks_menu::DESCRIPTION_COMMAND,
+		resources::tasks_menu::DESCRIPTION_INFO
+	);
+
+	console_view_->add_simple_command(
+		ConsoleCommandType::ADD_PRIORITY,
+		resources::tasks_menu::PRIORITY_SHORTCUT,
+		resources::tasks_menu::PRIORITY_COMMAND,
+		resources::tasks_menu::PRIORITY_INFO
+	);
+
+	console_view_->add_simple_command(
+		ConsoleCommandType::NEXT_STAGE,
+		resources::tasks_menu::NEXT_STAGE_SHORTCUT,
+		resources::tasks_menu::NEXT_STAGE_COMMAND,
+		resources::tasks_menu::NEXT_STAGE_INFO
+	);
+
+	console_view_->add_simple_command(
+		ConsoleCommandType::CANCEL_TASK,
+		resources::tasks_menu::CANCEL_SHORTCUT,
+		resources::tasks_menu::CANCEL_COMMAND,
+		resources::tasks_menu::CANCEL_INFO
+	);
+
+	console_view_->add_simple_command(
+		ConsoleCommandType::BACK_TO_PREVIOUS_MENU,
+		resources::tasks_menu::BACK_SHORTCUT,
+		resources::tasks_menu::BACK_COMMAND,
+		resources::tasks_menu::BACK_INFO
+	);
+}
+
+bool CreateTask::process_command()
+{
+	console_view_->run_command_input();
+
+	switch (console_view_->get_active_task())
+	{
+	case ConsoleCommandType::ADD_DESCRIPTION:
+		add_task_description();
+		break;
+	case ConsoleCommandType::ADD_PRIORITY:
+		add_task_priority();
+		break;
+	case ConsoleCommandType::CANCEL_TASK:
+		cancel_task();
+		return false;
+	case ConsoleCommandType::NEXT_STAGE:
+		return move_to_next_stage();
+		break;
+	case ConsoleCommandType::BACK_TO_PREVIOUS_MENU:
+		return false;
+	default:
+		return true;
+	}
+	return true;
+}
+
 void CreateTask::add_task_description()
 {
-	std::cout << "Please enter the task description:\n";
+	std::cout << resources::messages::PLEASE_ENTER_THE_TASK_MENU;
 	std::string previous_description = task_description_;
 	task_description_.clear();
 	std::getline(std::cin, task_description_);
 	update_description(previous_description);
-	std::cout << "Task description updated.\n";
+	std::cout << resources::messages::TASK_DESCRIPTION_UPDATED;
 }
 
 void CreateTask::update_description(const std::string & previous_description)
@@ -125,7 +166,7 @@ void CreateTask::add_task_priority()
 	TaskPriority previous_task_priority = task_priority_;
 	task_priority_ = generate_task_priority();
 	update_priority(previous_task_priority);
-	std::cout << "Task priority updated.\n";
+	std::cout << resources::messages::TASK_PRIORITY_UPDATED;
 }
 
 void CreateTask::update_priority(TaskPriority previous_task_priority)
@@ -153,7 +194,7 @@ bool CreateTask::move_to_next_stage()
 {
 	if (task_description_.empty())
 	{
-		std::cout << "Task description is not add.\n" << "Please add task description.\n";
+		std::cout << resources::messages::TASK_DESCRIPTION_IS_EMPTY;
 		return true;
 	}
 
@@ -174,34 +215,6 @@ bool CreateTask::assign_task_labels()
 {
 	CreateTaskLabel create_task_label(console_view_, command_handler_, wizard_id_);
 	return create_task_label.add_labels();
-}
-
-TaskPriority CreateTask::generate_task_priority()
-{
-	std::cout << "Please enter the task priority:\n";
-	while (true)
-	{
-		std::cout
-			<< "(1) - HIGH \n"
-			<< "(2) - NORMAL \n"
-			<< "(3) - LOW    \n";
-
-		int task_priority;
-		std::cin >> task_priority;
-		std::cin.ignore();
-		if (TaskPriority::HIGH <= task_priority <= TaskPriority::LOW) {
-			return static_cast<TaskPriority>(task_priority);
-		}
-		else {
-			std::cout << "The value is incorrect. Please choose the proper task priority.\n";
-		}
-	}
-}
-
-std::string CreateTask::generate_unique_id()
-{
-	Poco::UUIDGenerator generator;
-	return generator.createRandom().toString();
 }
 
 } // namespace todolist

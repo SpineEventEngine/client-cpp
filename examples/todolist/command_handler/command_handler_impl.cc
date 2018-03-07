@@ -20,10 +20,13 @@
 
 #include "command_handler_impl.h"
 #include "spine/client/query_service.grpc.pb.h"
+#include "resources/resources.h"
 
 namespace spine {
 namespace examples {
 namespace todolist {
+
+constexpr int AMOUNT_SECONDS = 0;
 
 CommandHandlerImpl::CommandHandlerImpl(const std::string & channel)
 {
@@ -32,8 +35,8 @@ CommandHandlerImpl::CommandHandlerImpl(const std::string & channel)
 
 	parameters_
 		.set_tenant_id(tenant)
-		.set_actor(make_user_id("user"))
-		.set_zone_offset(make_zone_offset("UTC", 0));
+		.set_actor(make_user_id(resources::server_info::USER_ID))
+		.set_zone_offset(make_zone_offset(resources::server_info::ZONE_ID, AMOUNT_SECONDS));
 
 	command_factory_ = ActorRequestFactory::create(parameters_).command_factory();
 	stub_ = CommandService::NewStub(channel_);
@@ -45,7 +48,7 @@ void CommandHandlerImpl::post_command(Message & client_task)
 	core::Ack response;
 	grpc::ClientContext client_context;
 	if (!stub_->Post(&client_context, *command, &response).ok()) {
-		throw std::runtime_error("Invalid server status...");
+		throw std::runtime_error(resources::server_info::INVALID_SERVER_STATUS);
 	}
 }
 
@@ -70,7 +73,7 @@ T * CommandHandlerImpl::get_tasks()
 	grpc::ClientContext client_context;
 
 	if (!query_service->Read(&client_context, *query, &response).ok()) {
-		throw std::runtime_error("Invalid response....");
+		throw std::runtime_error(resources::server_info::INVALID_SERVER_RESPONSE);
 	}
 
 	T * task_list_view = T::default_instance().New();
@@ -93,7 +96,7 @@ std::vector<TaskLabel *> CommandHandlerImpl::get_labels()
 	grpc::ClientContext client_context;
 
 	if (!query_service->Read(&client_context, *query, &response).ok()) {
-		throw std::runtime_error("Invalid response....");
+		throw std::runtime_error(resources::server_info::INVALID_SERVER_RESPONSE);
 	}
 
 	std::vector<TaskLabel *> label_tasks;
