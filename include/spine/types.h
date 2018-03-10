@@ -23,6 +23,12 @@
 
 #include <memory>
 
+/**
+ * Forward declarations and aliases for all main types.
+ *
+ * @author Vladimir Moiseiev
+ * @file
+ */
 namespace spine
 {
     namespace client

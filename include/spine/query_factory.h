@@ -39,13 +39,28 @@ namespace core
 namespace client
 {
 
+/**
+ * Public API for creating Query instances, using the ActorRequestFactory
+ * configuration.
+ *
+ * @see ActorRequestFactory:query_factory()
+ *
+ * @author Vladimir Moiseiev
+ * @file
+ */
+
 class QueryFactory
 {
 public:
     QueryFactory(std::unique_ptr<core::ActorContext>&& actor_context);
 
 public:
-
+    /**
+     * Creates a Query to read all states of a certain entity.
+     *
+     * @tparam T Protobuf Message type of a target entity.
+     * @return an instance of Query formed according to the passed parameters.
+     */
     template <typename T, typename = enable_param_if_protobuf_message<T>>
     QueryPtr all()
     {

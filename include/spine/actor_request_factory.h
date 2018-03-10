@@ -48,15 +48,38 @@ class ActorRequestFactoryParams;
 /**
  * A factory for the various requests fired from the client-side by an actor.
  *
+ * @author Vladimir Moiseiev
+ * @file
  */
 class ActorRequestFactory
 {
 public:
+    /**
+     * Creates new ActorRequestFactory based on the provided parameter set.
+     *
+     * @param params ActorRequestFactoryParams.
+     * @return new ActorRequestFactory instance.
+     */
     static ActorRequestFactory create(const ActorRequestFactoryParams& params);
 
 public:
+    /**
+     * Creates new CommandFactory instance.
+     *
+     * @return unique_ptr with CommandFactory.
+     */
     CommandFactoryPtr command_factory();
+    /**
+     * Creates new TopicFactory instance.
+     *
+     * @return unique_ptr with TopicFactory.
+     */
     TopicFactoryPtr topic_factory();
+    /**
+     * Creates new QueryFactory instance.
+     *
+     * @return unique_ptr with QueryFactory.
+     */
     QueryFactoryPtr query_factory();
 
 public:

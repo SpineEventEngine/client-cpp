@@ -44,12 +44,37 @@ namespace core
 namespace client
 {
 
+/**
+* Public API for creating Command instances, using the ActorRequestFactory
+* configuration.
+*
+* @see ActorRequestFactory::command_factory()
+*
+* @author Vladimir Moiseiev
+ * @file
+*/
+
 class CommandFactory
 {
 public:
     CommandFactory(std::unique_ptr<ActorContext>&& actor_context);
 public:
+    /**
+     * Creates a command instance with the given message and the context
+     * provided during the construction.
+     *
+     * @param message the command message.
+     * @return a new Command instance.
+     */
     CommandPtr create(const Message& message);
+    /**
+     * Creates a command instance with the given message and the context
+     * provided during the construction.
+     *
+     * @param message the command message.
+     * @param target_version @todo
+     * @return a new Command instance.
+     */
     CommandPtr create(const Message& message, int target_version);
 
 private:

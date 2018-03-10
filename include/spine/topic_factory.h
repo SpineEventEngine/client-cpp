@@ -39,12 +39,28 @@ namespace core
 
 namespace client {
 
+/**
+ * Public API for creating Topic instances, using the ActorRequestFactory.
+ * configuration.
+ *
+ * @see ActorRequestFactory::topic_factory()
+ *
+ * @author Vladimir Moiseiev
+ * @file
+ */
+
 class TopicFactory
 {
 public:
     TopicFactory(std::unique_ptr<core::ActorContext>&& actor_context);
 
 public:
+    /**
+     * Creates a Topic for all of the specified entity states.
+     *
+     * @tparam T Protobuf Message type of a target entity.
+     * @return the instance of assembled according to the parameters.
+     */
     template <typename T, typename = enable_param_if_protobuf_message<T>>
     TopicPtr all()
     {
