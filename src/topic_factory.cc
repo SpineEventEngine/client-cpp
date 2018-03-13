@@ -21,6 +21,7 @@
 #include "spine/topic_factory.h"
 
 #include <spine/core/actor_context.pb.h>
+#include <spine/util/any_utils.h>
 
 using namespace spine::core;
 
@@ -32,7 +33,19 @@ TopicFactory::TopicFactory(std::unique_ptr<core::ActorContext> &&actor_context)
     actor_context_ = std::move(actor_context);
 }
 
-std::unique_ptr<Topic> TopicFactory::all(const std::string& prefix, const std::string& type)
+std::unique_ptr<Target> TopicFactory::compose_target(const std::string& prefix, const std::string& type, 
+                                       const std::set<std::unique_ptr<google::protobuf::Message>>& ids)
+{
+    std::unique_ptr<Target> target = std::move(compose_target(prefix, type));
+    if( !ids.empty() )
+    {
+        target->set_include_all(false);
+        target->set_allocated_filters(make_entity_filters(ids).release());    
+    }
+    return target;
+}
+
+std::unique_ptr<Target> TopicFactory::compose_target(const std::string& prefix, const std::string& type)
 {
     std::unique_ptr<Target> target { Target::default_instance().New() };
 
@@ -42,8 +55,25 @@ std::unique_ptr<Topic> TopicFactory::all(const std::string& prefix, const std::s
         type_url.insert(0, prefix + "/");
     }
     target->set_type(type_url);
+    target->set_include_all(true);
 
-    return for_target(std::move(target));
+    return target;
+}
+
+std::unique_ptr<EntityFilters> TopicFactory::make_entity_filters(const std::set<std::unique_ptr<google::protobuf::Message>>& ids)
+{
+    std::unique_ptr<EntityIdFilter> entity_id_filter { EntityIdFilter::default_instance().New() };
+    for (auto &message : ids)
+    {
+        std::unique_ptr<google::protobuf::Any> any = to_any(*message);
+        std::unique_ptr<EntityId> entity_id { EntityId::default_instance().New() };
+        entity_id->set_allocated_id(any.release());
+        entity_id_filter->mutable_ids()->AddAllocated(entity_id.release());
+    }
+    std::unique_ptr<EntityFilters> entity_filters { EntityFilters::default_instance().New() };
+    entity_filters->set_allocated_id_filter(entity_id_filter.release());
+
+    return entity_filters;
 }
 
 std::unique_ptr<Topic> TopicFactory::for_target(std::unique_ptr<Target>&& target)
