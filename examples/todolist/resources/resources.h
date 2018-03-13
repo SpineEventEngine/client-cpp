@@ -45,7 +45,7 @@ namespace tasks_menu {
 
 	constexpr char * BACK_SHORTCUT = "b";
 	constexpr char * BACK_COMMAND = "Back";
-	constexpr char * BACK_INFO = "Go to previous menu";
+	constexpr char * BACK_INFO = "Back to previous menu";
 
 	constexpr char * NEW_LABEL_SHORTCUT = "a";
 	constexpr char * NEW_LABEL_COMMAND = "assign_new_label";
@@ -67,9 +67,9 @@ namespace tasks_menu {
 	constexpr char * COMPLETED_TASK_COMMAND = "completed_tasks";
 	constexpr char * COMPLETED_TASK_INFO = "Completed Tasks";
 
-	constexpr char * ALL_TASKS_SHORTCUT = "c";
-	constexpr char * ALL_TASKS_COMMAND = "completed_tasks";
-	constexpr char * ALL_TASKS_INFO = "Completed Tasks";
+	constexpr char * ALL_TASKS_SHORTCUT = "a";
+	constexpr char * ALL_TASKS_COMMAND = "all_tasks";
+	constexpr char * ALL_TASKS_INFO = "All Tasks";
 
 	constexpr char * FINISH_TASK_SHORTCUT = "f";
 	constexpr char * FINISH_TASK_COMMAND = "finish_task";
@@ -130,7 +130,7 @@ namespace command_line
 	constexpr char * SHARP = "#";
 	constexpr char * LINE_SEPARATOR = "----------------";
 
-	char  WHITE_SPACE_DELIMETER = ' ';
+	constexpr char  WHITE_SPACE_DELIMETER = ' ';
 
 } // namespace command_line
 
@@ -143,7 +143,7 @@ namespace messages {
 	constexpr char * TASK_PRIORITY_UPDATED = "Task priority updated.\n";
 	constexpr char * TASK_DESCRIPTION_IS_EMPTY = "Task description is not add.\n Please add task description.\n";
 
-	constexpr char * TASK_PRIORITY_VALUES = "(1) - HIGH\n (2) - NORMAL\n (3) - LOW\n";
+	constexpr char * TASK_PRIORITY_VALUES = "(1) - HIGH\n(2) - NORMAL\n(3) - LOW\n";
 	constexpr char * TASK_PRIORITY_VALUE_IS_INCORRECT = "The value is incorrect. Please choose the proper task priority.\n";
 
 	constexpr char * PLEASE_ENTER_THE_TASK_LABEL = "Please enter the label title";
