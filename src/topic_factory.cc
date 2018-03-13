@@ -35,7 +35,7 @@ TopicFactory::TopicFactory(std::unique_ptr<core::ActorContext> &&actor_context)
 }
 
 
-std::unique_ptr<Topic> TopicFactory::for_target(std::unique_ptr<Target>&& target)
+TopicPtr TopicFactory::for_target(std::unique_ptr<Target>&& target)
 {
     TopicId* topic_id = TopicId::default_instance().New();
     topic_id->set_value(uuid_generator_.createRandom().toString());
