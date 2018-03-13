@@ -46,7 +46,6 @@ class QueryFactory;
  * An ActorRequestFactory parameters wrapper.
  *
  * @author Vladimir Moiseiev
- * @file
  */
 
 class ActorRequestFactoryParams

@@ -46,7 +46,6 @@ namespace client {
  * @see ActorRequestFactory::topic_factory()
  *
  * @author Vladimir Moiseiev
- * @file
  */
 
 class TopicFactory

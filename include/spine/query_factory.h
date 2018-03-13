@@ -46,7 +46,6 @@ namespace client
  * @see ActorRequestFactory:query_factory()
  *
  * @author Vladimir Moiseiev
- * @file
  */
 
 class QueryFactory

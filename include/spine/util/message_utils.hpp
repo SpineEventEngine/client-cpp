@@ -21,15 +21,16 @@
 #ifndef MESSAGE_UTILS_HPP_
 #define MESSAGE_UTILS_HPP_
 
-#include <memory>
-#include <google/protobuf/message.h>
-
 /**
+ * @file message_utils.hpp
+ *
  * Utility type traits and functions to operate with protobuf::Message.
  *
  * @author Vladimir Moiseiev
- * @file
  */
+
+#include <memory>
+#include <google/protobuf/message.h>
 
 namespace spine
 {

@@ -21,19 +21,20 @@
 #ifndef SPINE_ANY_UTILS_H
 #define SPINE_ANY_UTILS_H
 
+/**
+ * @file any_utils.h
+ *
+ * Utility functions to operate with protobuf::Any and protobuf::Message.
+ *
+ * @author Vladimir Moiseiev
+ */
+
 #include <memory>
 
 #include "spine/util/message_utils.hpp"
 
 #include <google/protobuf/any.pb.h>
 #include <google/protobuf/message.h>
-
-/**
- * Utility functions to operate with protobuf::Any and protobuf::Message.
- *
- * @author Vladimir Moiseiev
- * @file
- */
 
 namespace spine {
 namespace client {

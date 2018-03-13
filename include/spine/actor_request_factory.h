@@ -49,7 +49,6 @@ class ActorRequestFactoryParams;
  * A factory for the various requests fired from the client-side by an actor.
  *
  * @author Vladimir Moiseiev
- * @file
  */
 class ActorRequestFactory
 {
