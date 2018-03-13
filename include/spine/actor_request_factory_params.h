@@ -42,6 +42,12 @@ class CommandFactory;
 class TopicFactory;
 class QueryFactory;
 
+/**
+ * An ActorRequestFactory parameters wrapper.
+ *
+ * @author Vladimir Moiseiev
+ */
+
 class ActorRequestFactoryParams
 {
 public:
@@ -65,8 +71,20 @@ private:
     void set_params(const ActorRequestFactoryParams &that);
 
 private:
+    /**
+     * The ID for the user generating commands.
+     */
     std::unique_ptr<spine::core::UserId> actor_;
+    /**
+     * The ID of the tenant in a multitenant application.
+     *
+     * This field is null in a single tenant application.
+     */
     std::unique_ptr<spine::core::TenantId> tenant_id_;
+    /**<
+     * The time zone in which the user works.
+     * In case the zone offset is not defined, the current time zone offset value is set by default.
+     */
     std::unique_ptr<spine::time::ZoneOffset> zone_offset_;
 };
 

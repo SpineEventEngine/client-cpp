@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.5.1)
+cmake_minimum_required(VERSION 3.9.6)
 project(spine)
 
 option(BUILD_DEPENDENCIES "Try to download and build third party libraries" OFF)
@@ -49,3 +49,4 @@ include(cmake/dependencies.cmake)
 include(cmake/spine_proto.cmake)
 include(cmake/spine_cpp_lib.cmake)
 include(cmake/unit_tests.cmake)
+include(cmake/docs.cmake)

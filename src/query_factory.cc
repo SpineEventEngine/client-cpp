@@ -29,7 +29,7 @@ using namespace spine::core;
 namespace spine {
 namespace client {
 
-const std::string QUERY_ID_TEMPLATE = "query-";
+const std::string QUERY_ID_TEMPLATE = "query-"; // The format of all QueryId query identifiers.
 
 QueryFactory::QueryFactory(std::unique_ptr<core::ActorContext>&& actor_context)
 {
