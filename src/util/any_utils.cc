@@ -1,5 +1,5 @@
 /*
- * Copyright 2017, TeamDev Ltd. All rights reserved.
+ * Copyright 2018, TeamDev Ltd. All rights reserved.
  *
  * Redistribution and use in source and/or binary forms, with or without
  * modification, must retain the above copyright notice and the following
@@ -18,47 +18,27 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef SPINE_COMMANDFACTORY_H
-#define SPINE_COMMANDFACTORY_H
+#include "spine/util/any_utils.h"
+#include <google/protobuf/descriptor.pb.h>
+#include <spine/options.pb.h>
 
-#include <memory>
-#include <google/protobuf/message.h>
-#include <google/protobuf/timestamp.pb.h>
-#include <spine/time/zone.pb.h>
-#include <Poco/UUIDGenerator.h>
-#include <spine/core/command.pb.h>
+namespace spine {
+namespace client {
 
-#include "types.h"
-
-using namespace google::protobuf;
-using namespace spine::core;
-
-namespace spine
+std::unique_ptr<::google::protobuf::Any> to_any(const ::google::protobuf::Message &message)
 {
-namespace core
-{
-    class CommandContext;
-    class UserId;
-    class ActorContext;
+    std::unique_ptr<::google::protobuf::Any> any { ::google::protobuf::Any::default_instance().New() };
+    std::string url_prefix = message.GetDescriptor()->file()->options().GetExtension(type_url_prefix);
+
+    if (!url_prefix.empty())
+    {
+        any->PackFrom(message, url_prefix);
+    }
+    else
+    {
+        any->PackFrom(message);
+    }
+    return any;
 }
-namespace client
-{
 
-class CommandFactory
-{
-public:
-    CommandFactory(std::unique_ptr<ActorContext>&& actor_context);
-public:
-    CommandPtr create(const Message& message);
-    CommandPtr create(const Message& message, int target_version);
-
-private:
-    std::unique_ptr<ActorContext> actor_context_;
-    Poco::UUIDGenerator uuid_generator_;
-
-};
-
-}} //namespace
-
-
-#endif //SPINE_COMMANDFACTORY_H
+}}

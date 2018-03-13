@@ -27,12 +27,15 @@
 namespace spine
 {
 
-template<class Derived> constexpr bool is_protobuf_message
-        = std::is_base_of<google::protobuf::Message, Derived>::value;
+template<class Derived>
+constexpr bool is_protobuf_message =
+        std::is_base_of<google::protobuf::Message, Derived>::value;
 
-template <typename T> using enable_return_type_if_protobuf_message =
+template <typename T>
+using enable_return_type_if_protobuf_message =
                                 typename std::enable_if_t< is_protobuf_message< T >, T* >;
-template <typename T> using enable_param_if_protobuf_message =
+template <typename T>
+using enable_param_if_protobuf_message =
                                 typename std::enable_if_t< spine::is_protobuf_message<T>>;
 
 

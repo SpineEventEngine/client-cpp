@@ -22,9 +22,20 @@ syntax = "proto3";
 package spine.test;
 
 import "spine/options.proto";
+import "google/protobuf/any.proto";
 
 option (type_url_prefix) = "type.test.spine.io";
 
 message TestMessage {
     string value = 1;
+}
+
+message ProjectId {
+    int32 value = 1;
+}
+
+message CreateProject {
+    ProjectId id = 1;
+    string name = 2;
+    google.protobuf.Any details = 3 [ (required) = true ];
 }
