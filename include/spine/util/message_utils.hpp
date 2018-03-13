@@ -72,7 +72,7 @@ using enable_param_if_protobuf_message =
 
 
 /**
- * Type precondition check that ensures a type used as a parameter in a fcuntion
+ * Type precondition check that ensures a type used as a parameter in a function
  * is derived from protobuf::Message.
  *
  * Used for types wrapped in unique_ptr.
@@ -99,7 +99,7 @@ template <typename T> using enable_return_type_if_unique_ptr_protobuf_message =
 /**
  * Clones Protobuf Message.
  *
- * @tparam T parameter type. Must be a Ptotobuf generated Message.
+ * @tparam T parameter type. Must be a Protobuf generated Message.
  * @param p a Protobuf Message
  * @return A copy of the input Protobuf Message, with the supplied type.
  */
@@ -115,7 +115,7 @@ clone(const Msg& msg)
 /**
  * Clones Protobuf Message and wraps it in unique_ptr.
  *
- * @tparam T parameter type. Must be a Ptotobuf generated Message.
+ * @tparam T parameter type. Must be a Protobuf generated Message.
  * @param p a Protobuf Message
  * @return A copy of the input Protobuf Message, with the supplied type.
  */
