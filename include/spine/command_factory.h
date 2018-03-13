@@ -45,7 +45,7 @@ namespace client
 {
 
 /**
-* Public API for creating Command instances, using the ActorRequestFactory
+* Public API for creating \b Command instances, using the ActorRequestFactory
 * configuration.
 *
 * @see ActorRequestFactory::command_factory()
@@ -63,27 +63,27 @@ public:
      * provided during the construction.
      *
      * @param message the command message.
-     * @return a new Command instance.
+     * @return a new \b Command instance.
      */
     CommandPtr create(const Message& message);
     /**
      * Creates a command instance with the given message and the context
      * provided during the construction.
      *
-     * The @p target_version parameter defines the version of the entity which handles
+     * The \b target_version parameter defines the version of the entity which handles
      * the resulting command. Note that the framework performs no validation of the target version
      * before a command is handled. The validation may be performed by the user themselves instead.
      *
      * @param message the command message.
      * @param target_version the version of the entity for which this command is intended.
-     * @return a new Command instance.
+     * @return a new \b Command instance.
      *
      * @todo add a server side reference, and a link to QueryResponse, once the
      * feature is ready.
      *
      * @note Aggregates and ProcessManagers are the versioned entities, which can handle commands.
      * Each modification of their state leads to the version increment.
-     * At the same time the target version number can be used as a parameter for the Command,
+     * At the same time the target version number can be used as a parameter for the \b Command,
      * being a way to escape from updating the stale entities (see CommandContext.target_version attribute).
      * I.e. the client may specify the expected version of the target entity,
      * in which as he believes this entity resides. In case the actual entity version differs from the expected

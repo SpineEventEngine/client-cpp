@@ -36,7 +36,7 @@ namespace spine
 {
 
 /**
- * Type precondition check that ensures a type is derived from protobuf::Message.
+ * Type precondition check that ensures a type is derived from \b protobuf::Message.
  *
  * The check is based on the SFINAE mechanism, forcing compilation to fail if a check fails.
  *
@@ -47,7 +47,7 @@ constexpr bool is_protobuf_message =
         std::is_base_of<google::protobuf::Message, Derived>::value;
 
 /**
- * Type precondition check that ensures a type is derived from protobuf::Message
+ * Type precondition check that ensures a type is derived from \b protobuf::Message
  * and makes it a return type of a function, if this is true.
  *
  * The check is based on the SFINAE mechanism, forcing compilation to fail if a check fails.
@@ -60,7 +60,7 @@ using enable_return_type_if_protobuf_message =
 
 /**
  * Type precondition check that ensures a type used as a parameter in a function
- * is derived from protobuf::Message.
+ * is derived from \b protobuf::Message.
  *
  * The check is based on the SFINAE mechanism, forcing compilation to fail if a check fails.
  *
@@ -73,7 +73,7 @@ using enable_param_if_protobuf_message =
 
 /**
  * Type precondition check that ensures a type used as a parameter in a function
- * is derived from protobuf::Message.
+ * is derived from \b protobuf::Message.
  *
  * Used for types wrapped in unique_ptr.
  *
@@ -85,7 +85,7 @@ template<class Derived> constexpr bool is_unique_ptr_protobuf_message =
             std::is_base_of<google::protobuf::Message, typename std::unique_ptr<Derived>::element_type>::value;
 
 /**
- * Type precondition check that ensures a type is derived from protobuf::Message
+ * Type precondition check that ensures a type is derived from \b protobuf::Message
  * and makes it a return type of a function, if this is true.
  *
  * Used for types wrapped in unique_ptr.

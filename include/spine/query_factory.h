@@ -40,7 +40,7 @@ namespace client
 {
 
 /**
- * Public API for creating Query instances, using the ActorRequestFactory
+ * Public API for creating \b Query instances, using the ActorRequestFactory
  * configuration.
  *
  * @see ActorRequestFactory:query_factory()
@@ -55,7 +55,7 @@ public:
 
 public:
     /**
-     * Creates a Query to read all states of a certain entity.
+     * Creates a \b Query to read all states of a certain entity.
      *
      * @tparam T Protobuf Message type of a target entity.
      * @return an instance of Query formed according to the passed parameters.

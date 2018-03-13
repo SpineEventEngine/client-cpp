@@ -40,7 +40,7 @@ namespace core
 namespace client {
 
 /**
- * Public API for creating Topic instances, using the ActorRequestFactory.
+ * Public API for creating \b Topic instances, using the ActorRequestFactory.
  * configuration.
  *
  * @see ActorRequestFactory::topic_factory()
@@ -55,7 +55,7 @@ public:
 
 public:
     /**
-     * Creates a Topic for all of the specified entity states.
+     * Creates a \b Topic for all of the specified entity states.
      *
      * @tparam T Protobuf Message type of a target entity.
      * @return the instance of assembled according to the parameters.

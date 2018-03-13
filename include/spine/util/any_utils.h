@@ -24,7 +24,7 @@
 /**
  * @file any_utils.h
  *
- * Utility functions to operate with protobuf::Any and protobuf::Message.
+ * Utility functions to operate with \b protobuf::Any and \b protobuf::Message.
  *
  * @author Vladimir Moiseiev
  */
@@ -40,9 +40,9 @@ namespace spine {
 namespace client {
 
 /**
- * Converts protobuf::Message to protobuf::Any.
+ * Converts \b protobuf::Message to \b protobuf::Any.
  *
- * Any will be packed using certain Type URL prefix. If .proto file contains a custom
+ * Any will be packed using certain Type URL prefix. If `.proto file` contains a custom
  * prefix — it will be used, otherwise, it will be set to default
  * Google's prefix `type.googleapis.com`.
  *
@@ -52,10 +52,10 @@ namespace client {
 std::unique_ptr<::google::protobuf::Any> to_any(const ::google::protobuf::Message &message);
 
 /**
- * Converts protobuf::Any to protobuf::Message.
+ * Converts \b protobuf::Any to \b protobuf::Message.
  *
  * @tparam T A Protobuf Message type expected.
- * @param any Protobuf Any that contains Message.
+ * @param any Protobuf Any that contains \b Message.
  * @return unique_ptr of the supplied Protobuf Message. May return empty unique_ptr, if unpack fail.
  */
 template <typename T, typename = enable_param_if_protobuf_message<T>>
