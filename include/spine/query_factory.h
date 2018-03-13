@@ -22,11 +22,17 @@
 #define SPINE_QUERYFACTORY_H
 
 #include <memory>
+#include <vector>
 #include <Poco/UUIDGenerator.h>
 #include <spine/client/query.pb.h>
 
 #include "spine/types.h"
 #include "spine/util/message_utils.hpp"
+
+namespace google {
+namespace protobuf {
+    class FieldMask;
+}}
 
 namespace spine
 {
@@ -63,16 +69,59 @@ public:
     template <typename T, typename = enable_param_if_protobuf_message<T>>
     QueryPtr all()
     {
-        return all(
+        return make_query(
                 T::descriptor()->file()->options().GetExtension(type_url_prefix),
                 T::descriptor()->full_name()
+        );
+    };
+    template <typename T, typename = enable_param_if_protobuf_message<T>>
+    QueryPtr all_with_mask(const std::vector<std::string> masks)
+    {
+        return make_query(
+                T::descriptor()->file()->options().GetExtension(type_url_prefix),
+                T::descriptor()->full_name(),
+                masks
+        );
+    };
+
+    template <typename T, typename = enable_param_if_protobuf_message<T>>
+    QueryPtr by_ids(const std::vector<std::unique_ptr<google::protobuf::Message>>& ids)
+    {
+        return make_query(
+                T::descriptor()->file()->options().GetExtension(type_url_prefix),
+                T::descriptor()->full_name(),
+                ids
+        );
+    };
+
+    template <typename T, typename = enable_param_if_protobuf_message<T>>
+    QueryPtr by_ids_with_masks(const std::vector<std::string> masks,
+                               const std::vector<std::unique_ptr<google::protobuf::Message>>& ids)
+    {
+        return make_query(
+                T::descriptor()->file()->options().GetExtension(type_url_prefix),
+                T::descriptor()->full_name(),
+                masks,
+                ids
         );
     };
 
 private:
     QueryId *create_query_id();
-    QueryPtr all(const std::string& prefix, const std::string& type);
+    QueryPtr make_query(const std::string& prefix, const std::string& type);
+    QueryPtr make_query(const std::string& prefix, const std::string& type,
+                        const std::vector<std::string>& masks);
+    QueryPtr make_query(const std::string& prefix, const std::string& type,
+                                                    const std::vector<std::unique_ptr<google::protobuf::Message>>& ids);
+    QueryPtr make_query(const std::string& prefix, const std::string& type,
+                                      const std::vector<std::string>& masks,
+                                      const std::vector<std::unique_ptr<google::protobuf::Message>>& ids);
 
+    std::unique_ptr<Query> for_query(std::unique_ptr<Target>&& target);
+    std::unique_ptr<Query> for_query(std::unique_ptr<Target>&& target,
+                                                   std::unique_ptr<google::protobuf::FieldMask> && field_mask);
+
+    std::unique_ptr<google::protobuf::FieldMask> make_field_mask(const std::vector<std::string>& masks);
 private:
     std::unique_ptr<core::ActorContext> actor_context_;
     Poco::UUIDGenerator uuid_generator_;
