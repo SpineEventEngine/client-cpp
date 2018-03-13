@@ -63,6 +63,17 @@ std::unique_ptr<Command> CommandFactory::create(const Message& message, const in
 
 }
 
+std::unique_ptr<Command>  CommandFactory::create(const Message& message, const CommandContext& command_context)
+{
+    std::unique_ptr<Any> any = to_any(message);
+    std::unique_ptr<CommandContext> context { clone(command_context) };
+    Command* command = make_command(
+            context.release(),
+            any.release(),
+            make_command_id(uuid_generator_.createRandom().toString()));
+    return std::unique_ptr<Command>{command};
+}
+
 
 Command* make_command(CommandContext* command_context, Any* any, CommandId* command_id)
 {

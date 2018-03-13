@@ -91,6 +91,7 @@ public:
      * has been created with the stale entity state in mind.
      */
     CommandPtr create(const Message& message, int target_version);
+    CommandPtr create(const Message& message, const CommandContext& command_context);
 
 private:
     std::unique_ptr<ActorContext> actor_context_;
