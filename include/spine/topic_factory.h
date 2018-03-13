@@ -22,7 +22,7 @@
 #define SPINE_TOPICFACTORY_H
 
 #include <string>
-#include <set>
+#include <vector>
 #include <Poco/UUIDGenerator.h>
 
 #include "types.h"
@@ -64,29 +64,26 @@ public:
     template <typename T, typename = enable_param_if_protobuf_message<T>>
     TopicPtr all()
     {
-        return for_target(
-                std::move(compose_target(
+        return make_topic(
                         T::descriptor()->file()->options().GetExtension(type_url_prefix),
                         T::descriptor()->full_name()
-        )));
+                );
     };
     template <typename T, typename = enable_param_if_protobuf_message<T>>
-    TopicPtr some(const std::set<std::unique_ptr<google::protobuf::Message>>& ids)
+    TopicPtr some(const std::vector<std::unique_ptr<google::protobuf::Message>>& ids)
     {
-        return for_target(
-                std::move(compose_target(
+        return make_topic(
                         T::descriptor()->file()->options().GetExtension(type_url_prefix),
                         T::descriptor()->full_name(),
                         ids
-                )));
+                );
     };
 
 private:
+    TopicPtr make_topic(const std::string& prefix, const std::string& type);
+    TopicPtr make_topic(const std::string& prefix, const std::string& type,
+                        const std::vector<std::unique_ptr<google::protobuf::Message>>& ids);
     TopicPtr for_target(std::unique_ptr<Target> &&);
-    std::unique_ptr<EntityFilters> make_entity_filters(const std::set<std::unique_ptr<google::protobuf::Message>>& ids);
-    std::unique_ptr<Target> compose_target(const std::string& prefix, const std::string& type,
-                                           const std::set<std::unique_ptr<google::protobuf::Message>>& ids);
-    std::unique_ptr<Target> compose_target(const std::string& prefix, const std::string& type);
 
 private:
     std::unique_ptr<core::ActorContext> actor_context_;
