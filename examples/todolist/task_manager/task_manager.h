@@ -37,14 +37,14 @@ public:
 	TaskManager(const std::string & path_to_exec_file);
 
 public:
-	void start();
+	void Start();
 
 private:
-	void add_task();
-	void list_tasks() const;
+	void AddTask();
+	void ListTasks() const;
 
-	void initialize_commands();
-	bool process_command();
+	void InitializeCommands();
+	bool ProcessCommand();
 
 private:
 	std::shared_ptr<ConsoleView> console_view_;

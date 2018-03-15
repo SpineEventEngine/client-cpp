@@ -44,14 +44,14 @@ public:
 		std::shared_ptr<CommandHandler> command_handler,
 		TaskCreationId * wizard_id);
 
-    MenuResult run_complete_menu();
+    MenuResult RunCompleteMenu();
 
 private:
-    void initialize_commands();
-	void finish_task();
-	void cancel_task();
+    void InitializeCommands();
+	void FinishTask();
+	void CancelTask();
 
-    MenuResult process_command();
+    MenuResult ProcessCommand();
 
 private:
 

@@ -25,7 +25,7 @@ using namespace spine::examples::todolist;
 int main(int argc, char** argv)
 {
 	TaskManager taskManager(argv[0]);
-	taskManager.start();
+	taskManager.Start();
 
 	return 0;
 }

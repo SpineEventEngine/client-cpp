@@ -43,11 +43,11 @@ ConsoleViewImpl::ConsoleViewImpl(std::string const & path_to_exec_file)
 	command_handler_->setExceptionHandling(false);
 }
 
-void ConsoleViewImpl::add_simple_command(
-	ConsoleCommandType command_type,
-	std::string const & command_shortcut,
-	std::string const & command_name,
-	std::string const & command_description)
+void ConsoleViewImpl::AddSimpleCommand(
+        ConsoleCommandType command_type,
+        std::string const &command_shortcut,
+        std::string const &command_name,
+        std::string const &command_description)
 {
 	std::cout
 		<<	resources::command_line::LEFT_BRACE +
@@ -68,22 +68,22 @@ void ConsoleViewImpl::add_simple_command(
 	command_handler_->add(command_args.get());
 }
 
-void ConsoleViewImpl::add_task_view_command(std::shared_ptr<TCLAP::SwitchArg> command_args)
+void ConsoleViewImpl::AddTaskViewCommand(std::shared_ptr<TCLAP::SwitchArg> command_args)
 {
 	task_commands_.push_back(command_args);
 	command_handler_->add(command_args.get());
 }
 
-void ConsoleViewImpl::reset_tasks()
+void ConsoleViewImpl::ResetTasks()
 {
 	task_commands_.clear();
 	commands_.clear();
 	command_handler_->resetTasks();
 }
 
-void ConsoleViewImpl::run_command_input()
+void ConsoleViewImpl::RunCommandInput()
 {
-	ConsoleWriter::print_select_an_action_prompt();
+    ConsoleWriter::PrintSelectAnActionPrompt();
 	std::string line;
 	std::getline(std::cin, line);
 	std::string command = resources::command_line::DASH + line;
@@ -97,13 +97,13 @@ void ConsoleViewImpl::run_command_input()
 	command_handler_->parse(inputStrings);
 }
 
-void ConsoleViewImpl::activate_console(std::function<bool()> callback)
+void ConsoleViewImpl::ActivateConsole(std::function<bool()> callback)
 {
 	while(true)
 	{
 		try 
 		{
-			reset_tasks();
+            ResetTasks();
 			if (!callback())
 			{
 				break;
@@ -111,12 +111,12 @@ void ConsoleViewImpl::activate_console(std::function<bool()> callback)
 		}
 		catch (const TCLAP::ArgException &e)
 		{
-			ConsoleWriter::print_undefined_action_message();
+            ConsoleWriter::PrintUndefinedActionMessage();
 		}
 	}
 }
 
-ConsoleCommandType ConsoleViewImpl::get_active_task()
+ConsoleCommandType ConsoleViewImpl::GetActiveTask()
 {
 	for (auto it = commands_.begin(); it != commands_.end(); ++it)
 	{
@@ -126,7 +126,7 @@ ConsoleCommandType ConsoleViewImpl::get_active_task()
 	return ConsoleCommandType::UNKNOWN;
 }
 
-bool ConsoleViewImpl::is_task_set() const
+bool ConsoleViewImpl::IsTaskSet() const
 {
 	for (int task_index = 0; task_index < task_commands_.size(); ++task_index)
 	{
@@ -137,13 +137,13 @@ bool ConsoleViewImpl::is_task_set() const
 	return false;
 }
 
-bool ConsoleViewImpl::is_command_set(ConsoleCommandType command_type)
+bool ConsoleViewImpl::IsCommandSet(ConsoleCommandType command_type)
 {
 	std::shared_ptr<TCLAP::SwitchArg> command = commands_[command_type];
 	return command->isSet();
 }
 
-int ConsoleViewImpl::get_active_task_index() const
+int ConsoleViewImpl::GetActiveTaskIndex() const
 {
 	for (int task_index = 0; task_index < task_commands_.size(); ++task_index)
 	{

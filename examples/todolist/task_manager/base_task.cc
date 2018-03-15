@@ -35,7 +35,7 @@ BaseTask::BaseTask(
 {
 }
 
-bool BaseTask::convert_menu_result_too_bool(MenuResult result) const
+bool BaseTask::ConvertMenuResultTooBool(MenuResult result) const
 {
 	switch (result)
 	{
@@ -49,7 +49,7 @@ bool BaseTask::convert_menu_result_too_bool(MenuResult result) const
 	}
 }
 
-TaskPriority BaseTask::generate_task_priority()
+TaskPriority BaseTask::GenerateTaskPriority()
 {
 	std::cout << resources::messages::PLEASE_ENTER_THE_TASK_PRIORITY;
 	while (true)
@@ -65,7 +65,7 @@ TaskPriority BaseTask::generate_task_priority()
 	}
 }
 
-LabelColor BaseTask::generate_label_color()
+LabelColor BaseTask::GenerateLabelColor()
 {
 	std::cout << resources::messages::PLEASE_ENTER_THE_LABEL_COLOR;
 	while (true)
@@ -82,7 +82,7 @@ LabelColor BaseTask::generate_label_color()
 	}
 }
 
-std::string BaseTask::label_color_to_string(LabelColor label_color)
+std::string BaseTask::LabelColorToString(LabelColor label_color)
 {
 	switch (label_color)
 	{
@@ -99,7 +99,7 @@ std::string BaseTask::label_color_to_string(LabelColor label_color)
 	}
 }
 
-std::string BaseTask::generate_unique_id()
+std::string BaseTask::GenerateUniqueId()
 {
 	Poco::UUIDGenerator generator;
 	return generator.createRandom().toString();

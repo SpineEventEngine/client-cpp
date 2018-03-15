@@ -35,27 +35,27 @@ ListTask::ListTask(
 {
 }
 
-void ListTask::load_tasks(ConsoleCommandType command_type)
+void ListTask::LoadTasks(ConsoleCommandType command_type)
 {
 	task_items_.clear();
 	switch (command_type)
 	{
 		case ConsoleCommandType::DRAFT_TASKS:
 		{
-			auto const & task_list_view = command_handler_->get_draft_tasks();
+			auto const & task_list_view = command_handler_->GetDraftTasks();
 			task_items_.assign(task_list_view.items().begin(), task_list_view.items().end());
 			break;
 		}
 		case ConsoleCommandType::COMPLETED_TASKS:
 		{
-			auto const & task_list_view = command_handler_->get_completed_tasks();
+			auto const & task_list_view = command_handler_->GetCompletedTasks();
 			task_items_.assign(task_list_view.items().begin(), task_list_view.items().end());
 			break;
 		}
 		case ConsoleCommandType::ALL_TASKS:
 		{
-			auto const & completed_task_list_view = command_handler_->get_completed_tasks();
-			auto const & draft_task_list_view = command_handler_->get_draft_tasks();
+			auto const & completed_task_list_view = command_handler_->GetCompletedTasks();
+			auto const & draft_task_list_view = command_handler_->GetDraftTasks();
 			auto const & completed_items = completed_task_list_view.items();
 			auto const & draft_items = draft_task_list_view.items();
 
@@ -68,62 +68,61 @@ void ListTask::load_tasks(ConsoleCommandType command_type)
 	}
 }
 
-void ListTask::load_task_menu()
+void ListTask::LoadTaskMenu()
 {
-	console_view_->activate_console([&]()
-	{
-		initialize_commands();
-		MenuResult menu_result = process_command();
-        return convert_menu_result_too_bool(menu_result);
-	});
+    console_view_->ActivateConsole([&]() {
+        InitializeCommands();
+        MenuResult menu_result = ProcessCommand();
+        return ConvertMenuResultTooBool(menu_result);
+    });
 }
 
-void ListTask::initialize_commands()
+void ListTask::InitializeCommands()
 {
-	console_view_->add_simple_command(
-		ConsoleCommandType::DRAFT_TASKS,
-		resources::tasks_menu::DRAFT_TASK_SHORTCUT,
-		resources::tasks_menu::DRAFT_TASK_COMMAND,
-		resources::tasks_menu::DRAFT_TASK_INFO
-	);
-	console_view_->add_simple_command(
-		ConsoleCommandType::COMPLETED_TASKS,
-		resources::tasks_menu::COMPLETED_TASK_SHORTCUT,
-		resources::tasks_menu::COMPLETED_TASK_COMMAND,
-		resources::tasks_menu::COMPLETED_TASK_INFO
-	);
-	console_view_->add_simple_command(
-		ConsoleCommandType::ALL_TASKS,
-		resources::tasks_menu::ALL_TASKS_SHORTCUT,
-		resources::tasks_menu::ALL_TASKS_COMMAND,
-		resources::tasks_menu::ALL_TASKS_INFO
-	);
-	console_view_->add_simple_command(
-		ConsoleCommandType::BACK_TO_PREVIOUS_MENU,
-		resources::tasks_menu::BACK_SHORTCUT,
-		resources::tasks_menu::BACK_COMMAND,
-		resources::tasks_menu::BACK_INFO
-	);
+    console_view_->AddSimpleCommand(
+            ConsoleCommandType::DRAFT_TASKS,
+            resources::tasks_menu::DRAFT_TASK_SHORTCUT,
+            resources::tasks_menu::DRAFT_TASK_COMMAND,
+            resources::tasks_menu::DRAFT_TASK_INFO
+    );
+    console_view_->AddSimpleCommand(
+            ConsoleCommandType::COMPLETED_TASKS,
+            resources::tasks_menu::COMPLETED_TASK_SHORTCUT,
+            resources::tasks_menu::COMPLETED_TASK_COMMAND,
+            resources::tasks_menu::COMPLETED_TASK_INFO
+    );
+    console_view_->AddSimpleCommand(
+            ConsoleCommandType::ALL_TASKS,
+            resources::tasks_menu::ALL_TASKS_SHORTCUT,
+            resources::tasks_menu::ALL_TASKS_COMMAND,
+            resources::tasks_menu::ALL_TASKS_INFO
+    );
+    console_view_->AddSimpleCommand(
+            ConsoleCommandType::BACK_TO_PREVIOUS_MENU,
+            resources::tasks_menu::BACK_SHORTCUT,
+            resources::tasks_menu::BACK_COMMAND,
+            resources::tasks_menu::BACK_INFO
+    );
 }
 
-MenuResult ListTask::process_command()
+MenuResult ListTask::ProcessCommand()
 {
-	console_view_->run_command_input();
-	switch (console_view_->get_active_task())
+    console_view_->RunCommandInput();
+	switch (console_view_->GetActiveTask())
 	{
 		case ConsoleCommandType::DRAFT_TASKS:
         {
-            load_task_list(ConsoleCommandType::DRAFT_TASKS);
+            LoadTaskList(ConsoleCommandType::DRAFT_TASKS);
             break;
         }
 		case ConsoleCommandType::COMPLETED_TASKS:
         {
-            load_task_list(ConsoleCommandType::COMPLETED_TASKS);
+            LoadTaskList(ConsoleCommandType::COMPLETED_TASKS);
             break;
         }
 		case ConsoleCommandType::ALL_TASKS:
         {
-            load_task_list(ConsoleCommandType::ALL_TASKS);
+            LoadTaskList(ConsoleCommandType::ALL_TASKS);
             break;
         }
 		case ConsoleCommandType::BACK_TO_PREVIOUS_MENU:
@@ -134,37 +133,33 @@ MenuResult ListTask::process_command()
     return MenuResult::REPEAT_MENU;
 }
 
-void ListTask::load_task_list(ConsoleCommandType command_type)
+void ListTask::LoadTaskList(ConsoleCommandType command_type)
 {
-	console_view_->activate_console([&]()
-	{
-		load_tasks(command_type);
-		print_task_list();
+    console_view_->ActivateConsole([&]() {
+        LoadTasks(command_type);
+        PrintTaskList();
 
-		console_view_->add_simple_command(
-			ConsoleCommandType::BACK_TO_PREVIOUS_MENU,
-			resources::tasks_menu::BACK_SHORTCUT,
-			resources::tasks_menu::BACK_COMMAND,
-			resources::tasks_menu::BACK_INFO
-		);
+        console_view_->AddSimpleCommand(
+                ConsoleCommandType::BACK_TO_PREVIOUS_MENU,
+                resources::tasks_menu::BACK_SHORTCUT,
+                resources::tasks_menu::BACK_COMMAND,
+                resources::tasks_menu::BACK_INFO
+        );
 
-		console_view_->run_command_input();
-		if (console_view_->is_task_set())
-		{
-			show_task_info(console_view_->get_active_task_index());
-			return true;
-		}
-		else if (console_view_->is_command_set(ConsoleCommandType::BACK_TO_PREVIOUS_MENU))
-		{
-			return false;
-		}
+        console_view_->RunCommandInput();
+        if (console_view_->IsTaskSet()) {
+            ShowTaskInfo(console_view_->GetActiveTaskIndex());
+            return true;
+        } else if (console_view_->IsCommandSet(ConsoleCommandType::BACK_TO_PREVIOUS_MENU)) {
+            return false;
+        }
 
-		ConsoleWriter::print_undefined_action_message();
-		return true;
-	});
+        ConsoleWriter::PrintUndefinedActionMessage();
+        return true;
+    });
 }
 
-void ListTask::print_task_list()
+void ListTask::PrintTaskList()
 {
 	std::cout << resources::messages::MY_TASKS_LIST << std::endl;
 	std::cout << resources::command_line::LINE_SEPARATOR << std::endl;
@@ -193,31 +188,30 @@ void ListTask::print_task_list()
 					false
 				);
 
-		console_view_->add_task_view_command(task_view_command);
+		console_view_->AddTaskViewCommand(task_view_command);
 	}
 }
 
-void ListTask::show_task_info(int active_task_number)
+void ListTask::ShowTaskInfo(int active_task_number)
 {
 	auto & taskItem = task_items_[active_task_number];
-	ConsoleWriter::print_task_description(taskItem);
+    ConsoleWriter::PrintTaskDescription(taskItem);
 
-	console_view_->activate_console([&] ()
-	{
-		console_view_->add_simple_command(
-			ConsoleCommandType::BACK_TO_PREVIOUS_MENU,
-			resources::tasks_menu::BACK_SHORTCUT,
-			resources::tasks_menu::BACK_COMMAND,
-			resources::tasks_menu::BACK_INFO
-		);
+    console_view_->ActivateConsole([&]() {
+        console_view_->AddSimpleCommand(
+                ConsoleCommandType::BACK_TO_PREVIOUS_MENU,
+                resources::tasks_menu::BACK_SHORTCUT,
+                resources::tasks_menu::BACK_COMMAND,
+                resources::tasks_menu::BACK_INFO
+        );
 
-		console_view_->run_command_input();
-		if (console_view_->is_command_set(ConsoleCommandType::BACK_TO_PREVIOUS_MENU))
-			return false;
+        console_view_->RunCommandInput();
+        if (console_view_->IsCommandSet(ConsoleCommandType::BACK_TO_PREVIOUS_MENU))
+            return false;
 
-		ConsoleWriter::print_undefined_action_message();
-		return true;
-	});
+        ConsoleWriter::PrintUndefinedActionMessage();
+        return true;
+    });
 }
 
 } // namespace todolist

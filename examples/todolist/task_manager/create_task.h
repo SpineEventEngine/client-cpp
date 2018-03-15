@@ -44,22 +44,22 @@ public:
 		std::shared_ptr<CommandHandler> command_handler);
 
 public:
-	void run_task_creation();
+	void RunTaskCreation();
 
 private:
-	void start_task_creation();
-	void add_task_description();
-	void add_task_priority();
-	void cancel_task();
+	void StartTaskCreationProcess();
+	void AddDescription();
+	void AddPriority();
+	void CancelTask();
 
-	void update_description(const std::string & previous_description);
-	void update_priority(TaskPriority task_priority);
+	void UpdateDescription(const std::string &previous_description);
+	void UpdatePriority(TaskPriority task_priority);
 
-	void initialize_commands();
+	void InitializeCommands();
 
-    MenuResult process_command();
-    MenuResult move_to_next_stage();
-	MenuResult assign_task_labels();
+    MenuResult ProcessCommand();
+    MenuResult MoveToNextStage();
+	MenuResult AssignTaskLabel();
 
 private:
 	TaskCreationId * wizard_id_;

@@ -36,71 +36,70 @@ TaskManager::TaskManager(const std::string & path_to_exec_file)
 {
 }
 
-void TaskManager::start()
+void TaskManager::Start()
 {
-	console_view_->activate_console([&]()
-	{
-		std::cout << resources::messages::MAIN_MENU << std::endl;
-		std::cout << resources::command_line::LINE_SEPARATOR << std::endl;
-		
-		initialize_commands();
-        return process_command();
-	});
+    console_view_->ActivateConsole([&]() {
+        std::cout << resources::messages::MAIN_MENU << std::endl;
+        std::cout << resources::command_line::LINE_SEPARATOR << std::endl;
+
+        InitializeCommands();
+        return ProcessCommand();
+    });
 }
 
-void TaskManager::initialize_commands()
+void TaskManager::InitializeCommands()
 {
-	console_view_->add_simple_command(
-		ConsoleCommandType::CREATE_TASK,
-		resources::tasks_menu::CREATE_TASK_SHORTCUT,
-		resources::tasks_menu::CREATE_TASK_COMMAND,
-		resources::tasks_menu::CREATE_TASK_INFO
-	);
+    console_view_->AddSimpleCommand(
+            ConsoleCommandType::CREATE_TASK,
+            resources::tasks_menu::CREATE_TASK_SHORTCUT,
+            resources::tasks_menu::CREATE_TASK_COMMAND,
+            resources::tasks_menu::CREATE_TASK_INFO
+    );
 
-	console_view_->add_simple_command(
-		ConsoleCommandType::LIST_TASK,
-		resources::tasks_menu::LIST_TASK_SHORTCUT,
-		resources::tasks_menu::LIST_TASK_COMMAND,
-		resources::tasks_menu::LIST_TASK_INFO
-	);
+    console_view_->AddSimpleCommand(
+            ConsoleCommandType::LIST_TASK,
+            resources::tasks_menu::LIST_TASK_SHORTCUT,
+            resources::tasks_menu::LIST_TASK_COMMAND,
+            resources::tasks_menu::LIST_TASK_INFO
+    );
 
-	console_view_->add_simple_command(
-		ConsoleCommandType::QUIT_PROGRAM,
-		resources::tasks_menu::QUIT_TASK_SHORTCUT,
-		resources::tasks_menu::QUIT_TASK_COMMAND,
-		resources::tasks_menu::QUIT_TASK_INFO
-	);
+    console_view_->AddSimpleCommand(
+            ConsoleCommandType::QUIT_PROGRAM,
+            resources::tasks_menu::QUIT_TASK_SHORTCUT,
+            resources::tasks_menu::QUIT_TASK_COMMAND,
+            resources::tasks_menu::QUIT_TASK_INFO
+    );
 }
 
-bool TaskManager::process_command()
+bool TaskManager::ProcessCommand()
 {
-	console_view_->run_command_input();
-	switch (console_view_->get_active_task())
+    console_view_->RunCommandInput();
+	switch (console_view_->GetActiveTask())
 	{
 		case ConsoleCommandType::CREATE_TASK:
 		{
-			add_task();
+            AddTask();
 			break;
 		}
 		case ConsoleCommandType::LIST_TASK:
 		{
-			list_tasks();
+            ListTasks();
 			break;
 		}
 		case ConsoleCommandType::QUIT_PROGRAM:
 			return false;
 		default:
-			ConsoleWriter::print_undefined_action_message();
+            ConsoleWriter::PrintUndefinedActionMessage();
 	}
 
 	return true;
 }
 
-void TaskManager::add_task() {
+void TaskManager::AddTask() {
 	auto create_task_command = std::make_unique<CreateTask>(console_view_, command_handler_);
 	try
 	{
-		create_task_command->run_task_creation();
+        create_task_command->RunTaskCreation();
 	}
 	catch (std::exception & _exception)
 	{
@@ -108,12 +107,12 @@ void TaskManager::add_task() {
 	}
 }
 
-void TaskManager::list_tasks() const {
+void TaskManager::ListTasks() const {
 
 	auto list_task_command = std::make_unique<ListTask>(console_view_, command_handler_);
 	try
 	{
-		list_task_command->load_task_menu();
+        list_task_command->LoadTaskMenu();
 	}
 	catch (std::exception & _exception)
 	{

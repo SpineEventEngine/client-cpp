@@ -35,101 +35,100 @@ CreateTask::CreateTask(
 	: BaseTask(console_view, command_handler)
 {
 	wizard_id_ = TaskCreationId::default_instance().New();
-	std::string task_id = generate_unique_id();
+	std::string task_id = GenerateUniqueId();
 	wizard_id_->set_value(std::move(task_id));
 
 	task_id_ = TaskId::default_instance().New();
-	std::string unique_task_id = generate_unique_id();
+	std::string unique_task_id = GenerateUniqueId();
 	task_id_->set_value(unique_task_id);
 
 	task_priority_ = TaskPriority::TP_UNDEFINED;
 	task_details_is_already_set = false;
 }
 
-void CreateTask::run_task_creation()
+void CreateTask::RunTaskCreation()
 {
-	start_task_creation();
-	console_view_->activate_console([&]()
-	{
-		std::cout << resources::messages::CREATE_TASK_MENU << std::endl;
-		std::cout << resources::command_line::LINE_SEPARATOR << std::endl;
+    StartTaskCreationProcess();
+    console_view_->ActivateConsole([&]() {
+        std::cout << resources::messages::CREATE_TASK_MENU << std::endl;
+        std::cout << resources::command_line::LINE_SEPARATOR << std::endl;
 
-		initialize_commands();
-		MenuResult menu_result = process_command();
-        return convert_menu_result_too_bool(menu_result);
-	});
+        InitializeCommands();
+        MenuResult menu_result = ProcessCommand();
+        return ConvertMenuResultTooBool(menu_result);
+    });
 }
 
-void CreateTask::start_task_creation()
+void CreateTask::StartTaskCreationProcess()
 {
 	StartTaskCreation * start_task_creation = StartTaskCreation::default_instance().New();
 	start_task_creation->set_allocated_id(wizard_id_);
 	start_task_creation->set_allocated_task_id(task_id_);
 
-	command_handler_->post_command(*start_task_creation);
+    command_handler_->PostCommand(*start_task_creation);
 }
 
-void CreateTask::initialize_commands()
+void CreateTask::InitializeCommands()
 {
-	console_view_->add_simple_command(
-		ConsoleCommandType::ADD_DESCRIPTION,
-		resources::tasks_menu::DESCRIPTION_SHORTCUT,
-		resources::tasks_menu::DESCRIPTION_COMMAND,
-		resources::tasks_menu::DESCRIPTION_INFO
-	);
+    console_view_->AddSimpleCommand(
+            ConsoleCommandType::ADD_DESCRIPTION,
+            resources::tasks_menu::DESCRIPTION_SHORTCUT,
+            resources::tasks_menu::DESCRIPTION_COMMAND,
+            resources::tasks_menu::DESCRIPTION_INFO
+    );
 
-	console_view_->add_simple_command(
-		ConsoleCommandType::ADD_PRIORITY,
-		resources::tasks_menu::PRIORITY_SHORTCUT,
-		resources::tasks_menu::PRIORITY_COMMAND,
-		resources::tasks_menu::PRIORITY_INFO
-	);
+    console_view_->AddSimpleCommand(
+            ConsoleCommandType::ADD_PRIORITY,
+            resources::tasks_menu::PRIORITY_SHORTCUT,
+            resources::tasks_menu::PRIORITY_COMMAND,
+            resources::tasks_menu::PRIORITY_INFO
+    );
 
-	console_view_->add_simple_command(
-		ConsoleCommandType::NEXT_STAGE,
-		resources::tasks_menu::NEXT_STAGE_SHORTCUT,
-		resources::tasks_menu::NEXT_STAGE_COMMAND,
-		resources::tasks_menu::NEXT_STAGE_INFO
-	);
+    console_view_->AddSimpleCommand(
+            ConsoleCommandType::NEXT_STAGE,
+            resources::tasks_menu::NEXT_STAGE_SHORTCUT,
+            resources::tasks_menu::NEXT_STAGE_COMMAND,
+            resources::tasks_menu::NEXT_STAGE_INFO
+    );
 
-	console_view_->add_simple_command(
-		ConsoleCommandType::CANCEL_TASK,
-		resources::tasks_menu::CANCEL_SHORTCUT,
-		resources::tasks_menu::CANCEL_COMMAND,
-		resources::tasks_menu::CANCEL_INFO
-	);
+    console_view_->AddSimpleCommand(
+            ConsoleCommandType::CANCEL_TASK,
+            resources::tasks_menu::CANCEL_SHORTCUT,
+            resources::tasks_menu::CANCEL_COMMAND,
+            resources::tasks_menu::CANCEL_INFO
+    );
 
-	console_view_->add_simple_command(
-		ConsoleCommandType::BACK_TO_PREVIOUS_MENU,
-		resources::tasks_menu::BACK_SHORTCUT,
-		resources::tasks_menu::BACK_COMMAND,
-		resources::tasks_menu::BACK_INFO
-	);
+    console_view_->AddSimpleCommand(
+            ConsoleCommandType::BACK_TO_PREVIOUS_MENU,
+            resources::tasks_menu::BACK_SHORTCUT,
+            resources::tasks_menu::BACK_COMMAND,
+            resources::tasks_menu::BACK_INFO
+    );
 }
 
-MenuResult CreateTask::process_command()
+MenuResult CreateTask::ProcessCommand()
 {
-	console_view_->run_command_input();
+    console_view_->RunCommandInput();
 
-	switch (console_view_->get_active_task())
+	switch (console_view_->GetActiveTask())
 	{
 		case ConsoleCommandType::ADD_DESCRIPTION:
 		{
-			add_task_description();
+            AddDescription();
 			break;
 		}
 		case ConsoleCommandType::ADD_PRIORITY:
 		{
-			add_task_priority();
+            AddPriority();
 			break;
 		}
 		case ConsoleCommandType::CANCEL_TASK:
 		{
-			cancel_task();
+            CancelTask();
 			return MenuResult::FINISH_MENU;
 		}
 		case ConsoleCommandType::NEXT_STAGE:
-			return move_to_next_stage();
+			return MoveToNextStage();
 		case ConsoleCommandType::BACK_TO_PREVIOUS_MENU:
 			return MenuResult::BACK_TO_PREVIOUS_MENU;
 		default:
@@ -138,17 +137,17 @@ MenuResult CreateTask::process_command()
 	return MenuResult::REPEAT_MENU;
 }
 
-void CreateTask::add_task_description()
+void CreateTask::AddDescription()
 {
 	std::cout << resources::messages::PLEASE_ENTER_THE_TASK_MENU;
 	std::string previous_description = task_description_;
 	task_description_.clear();
 	std::getline(std::cin, task_description_);
-	update_description(previous_description);
+    UpdateDescription(previous_description);
 	std::cout << resources::messages::TASK_DESCRIPTION_UPDATED;
 }
 
-void CreateTask::update_description(const std::string & previous_description)
+void CreateTask::UpdateDescription(const std::string &previous_description)
 {
 	if (!task_details_is_already_set)
 		return;
@@ -159,18 +158,18 @@ void CreateTask::update_description(const std::string & previous_description)
 	string_change->set_previous_value(previous_description);
 	update_task_description->set_allocated_description_change(string_change);
 	update_task_description->set_allocated_id(task_id_);
-	command_handler_->post_command(* update_task_description);
+    command_handler_->PostCommand(*update_task_description);
 }
 
-void CreateTask::add_task_priority()
+void CreateTask::AddPriority()
 {
 	TaskPriority previous_task_priority = task_priority_;
-	task_priority_ = generate_task_priority();
-	update_priority(previous_task_priority);
+	task_priority_ = GenerateTaskPriority();
+    UpdatePriority(previous_task_priority);
 	std::cout << resources::messages::TASK_PRIORITY_UPDATED;
 }
 
-void CreateTask::update_priority(TaskPriority previous_task_priority)
+void CreateTask::UpdatePriority(TaskPriority previous_task_priority)
 {
 	if (!task_details_is_already_set)
 		return;
@@ -181,17 +180,17 @@ void CreateTask::update_priority(TaskPriority previous_task_priority)
 	priority_change->set_previous_value(previous_task_priority);
 	update_task_priority->set_allocated_priority_change(priority_change);
 	update_task_priority->set_allocated_id(task_id_);
-	command_handler_->post_command(* update_task_priority);
+    command_handler_->PostCommand(*update_task_priority);
 }
 
-void CreateTask::cancel_task()
+void CreateTask::CancelTask()
 {
 	CancelTaskCreation cancel_task_creation;
 	cancel_task_creation.set_allocated_id(wizard_id_);
-	command_handler_->post_command(cancel_task_creation);
+    command_handler_->PostCommand(cancel_task_creation);
 }
 
-MenuResult CreateTask::move_to_next_stage()
+MenuResult CreateTask::MoveToNextStage()
 {
 	if (task_description_.empty())
 	{
@@ -207,15 +206,15 @@ MenuResult CreateTask::move_to_next_stage()
 	task_details->set_priority(task_priority_);
 	task_details->set_allocated_description(task_description);
 
-	command_handler_->post_command(*task_details);
+    command_handler_->PostCommand(*task_details);
 	task_details_is_already_set = true;
-	return assign_task_labels();
+	return AssignTaskLabel();
 }
 
-MenuResult CreateTask::assign_task_labels()
+MenuResult CreateTask::AssignTaskLabel()
 {
 	CreateTaskLabel create_task_label(console_view_, command_handler_, wizard_id_);
-	return (create_task_label.add_labels() == MenuResult::BACK_TO_PREVIOUS_MENU) ?
+	return (create_task_label.AddTaskLabels() == MenuResult::BACK_TO_PREVIOUS_MENU) ?
            MenuResult::REPEAT_MENU : MenuResult::FINISH_MENU;
 }
 

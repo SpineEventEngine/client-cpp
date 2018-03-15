@@ -41,93 +41,92 @@ CreateTaskLabel::CreateTaskLabel(
 {
 }
 
-MenuResult CreateTaskLabel::add_labels()
+MenuResult CreateTaskLabel::AddTaskLabels()
 {
 	AddLabels * add_labels_command = AddLabels::default_instance().New();
 	add_labels_command->set_allocated_id(wizard_id_);
     MenuResult menu_result = MenuResult ::UNKNOWN;
-	console_view_->activate_console([&]()
-	{
-		std::cout << resources::messages::TASK_LABEL_MENU << std::endl;
-		std::cout << resources::command_line::LINE_SEPARATOR << std::endl;
+    console_view_->ActivateConsole([&]() {
+        std::cout << resources::messages::TASK_LABEL_MENU << std::endl;
+        std::cout << resources::command_line::LINE_SEPARATOR << std::endl;
 
-		print_assigned_labels();
-		initialize_commands();
+        PrintAssignedLabels();
+        InitializeCommands();
 
-        menu_result = process_command(add_labels_command);
-        return convert_menu_result_too_bool(menu_result);
-	});
+        menu_result = ProcessCommand(add_labels_command);
+        return ConvertMenuResultTooBool(menu_result);
+    });
 
 	return menu_result;
 }
 
-void CreateTaskLabel::initialize_commands()
+void CreateTaskLabel::InitializeCommands()
 {
-	console_view_->add_simple_command(
-		ConsoleCommandType::ASSIGN_NEW_LABEL,
-		resources::tasks_menu::NEW_LABEL_SHORTCUT,
-		resources::tasks_menu::NEW_LABEL_COMMAND,
-		resources::tasks_menu::NEW_LABEL_INFO
-	);
-	console_view_->add_simple_command(
-		ConsoleCommandType::ASSIGN_EXISTING_LABEL,
-		resources::tasks_menu::EXISTING_LABEL_SHORTCUT,
-		resources::tasks_menu::EXISTING_LABEL_COMMAND,
-		resources::tasks_menu::EXISTING_LABEL_INFO
-	);
-	console_view_->add_simple_command(
-		ConsoleCommandType::REMOVE_LABEL,
-		resources::tasks_menu::REMOVE_LABEL_SHORTCUT,
-		resources::tasks_menu::REMOVE_LABEL_COMMAND,
-		resources::tasks_menu::REMOVE_LABEL_INFO
-	);
-	console_view_->add_simple_command(
-		ConsoleCommandType::NEXT_STAGE,
-		resources::tasks_menu::NEXT_STAGE_SHORTCUT,
-		resources::tasks_menu::NEXT_STAGE_COMMAND,
-		resources::tasks_menu::NEXT_STAGE_INFO
-	);
-	console_view_->add_simple_command(
-		ConsoleCommandType::CANCEL_TASK,
-		resources::tasks_menu::CANCEL_SHORTCUT,
-		resources::tasks_menu::CANCEL_COMMAND,
-		resources::tasks_menu::CANCEL_INFO
-	);
+    console_view_->AddSimpleCommand(
+            ConsoleCommandType::ASSIGN_NEW_LABEL,
+            resources::tasks_menu::NEW_LABEL_SHORTCUT,
+            resources::tasks_menu::NEW_LABEL_COMMAND,
+            resources::tasks_menu::NEW_LABEL_INFO
+    );
+    console_view_->AddSimpleCommand(
+            ConsoleCommandType::ASSIGN_EXISTING_LABEL,
+            resources::tasks_menu::EXISTING_LABEL_SHORTCUT,
+            resources::tasks_menu::EXISTING_LABEL_COMMAND,
+            resources::tasks_menu::EXISTING_LABEL_INFO
+    );
+    console_view_->AddSimpleCommand(
+            ConsoleCommandType::REMOVE_LABEL,
+            resources::tasks_menu::REMOVE_LABEL_SHORTCUT,
+            resources::tasks_menu::REMOVE_LABEL_COMMAND,
+            resources::tasks_menu::REMOVE_LABEL_INFO
+    );
+    console_view_->AddSimpleCommand(
+            ConsoleCommandType::NEXT_STAGE,
+            resources::tasks_menu::NEXT_STAGE_SHORTCUT,
+            resources::tasks_menu::NEXT_STAGE_COMMAND,
+            resources::tasks_menu::NEXT_STAGE_INFO
+    );
+    console_view_->AddSimpleCommand(
+            ConsoleCommandType::CANCEL_TASK,
+            resources::tasks_menu::CANCEL_SHORTCUT,
+            resources::tasks_menu::CANCEL_COMMAND,
+            resources::tasks_menu::CANCEL_INFO
+    );
 
-	console_view_->add_simple_command(
-		ConsoleCommandType::BACK_TO_PREVIOUS_MENU,
-		resources::tasks_menu::BACK_SHORTCUT,
-		resources::tasks_menu::BACK_COMMAND,
-		resources::tasks_menu::BACK_INFO
-	);
+    console_view_->AddSimpleCommand(
+            ConsoleCommandType::BACK_TO_PREVIOUS_MENU,
+            resources::tasks_menu::BACK_SHORTCUT,
+            resources::tasks_menu::BACK_COMMAND,
+            resources::tasks_menu::BACK_INFO
+    );
 }
 
-MenuResult CreateTaskLabel::process_command(AddLabels * add_labels_command)
+MenuResult CreateTaskLabel::ProcessCommand(AddLabels *add_labels_command)
 {
-	console_view_->run_command_input();
-	switch (console_view_->get_active_task()) {
+    console_view_->RunCommandInput();
+	switch (console_view_->GetActiveTask()) {
         case ConsoleCommandType::ASSIGN_NEW_LABEL:
         {
-            assign_new_label(add_labels_command);
+            AssignNewLabel(add_labels_command);
             break;
         }
         case ConsoleCommandType::ASSIGN_EXISTING_LABEL:
         {
-            assign_existing_labels(add_labels_command);
+            AssignExistingLabel(add_labels_command);
             break;
         }
         case ConsoleCommandType::REMOVE_LABEL:
         {
-            remove_task_label(add_labels_command);
+            RemoveTaskLabel(add_labels_command);
             break;
         }
         case ConsoleCommandType::NEXT_STAGE:
         {
-            return finish_label_assignment(add_labels_command);
+            return FinishLabelAssignment(add_labels_command);
         }
         case ConsoleCommandType::CANCEL_TASK:
         {
-            cancel_task();
+            CancelTask();
             return MenuResult::FINISH_MENU;
         }
         case ConsoleCommandType::BACK_TO_PREVIOUS_MENU:
@@ -140,14 +139,14 @@ MenuResult CreateTaskLabel::process_command(AddLabels * add_labels_command)
 	return MenuResult::REPEAT_MENU;
 }
 
-void CreateTaskLabel::cancel_task()
+void CreateTaskLabel::CancelTask()
 {
 	CancelTaskCreation cancel_task_creation;
 	cancel_task_creation.set_allocated_id(wizard_id_);
-	command_handler_->post_command(cancel_task_creation);
+    command_handler_->PostCommand(cancel_task_creation);
 }
 
-void CreateTaskLabel::assign_new_label(AddLabels * add_labels_command)
+void CreateTaskLabel::AssignNewLabel(AddLabels *add_labels_command)
 {
 	std::cout << resources::messages::PLEASE_ENTER_THE_TASK_LABEL << std::endl;
 	std::string label_title;
@@ -155,16 +154,16 @@ void CreateTaskLabel::assign_new_label(AddLabels * add_labels_command)
 	LabelDetails * label_details = add_labels_command->add_new_labels();
 	label_details->set_title(label_title);
 
-	LabelColor label_color = generate_label_color();
+	LabelColor label_color = GenerateLabelColor();
 	label_details->set_color(label_color);
 
 	new_labels_.push_back(label_details);
 }
 
 
-void CreateTaskLabel::assign_existing_labels(AddLabels * add_labels_command)
+void CreateTaskLabel::AssignExistingLabel(AddLabels *add_labels_command)
 {
-	auto task_labels = command_handler_->get_labels();
+	auto task_labels = command_handler_->GetLabels();
 	std::cout << resources::messages::EXISTING_LABELS;
 	if (task_labels.empty())
 	{
@@ -175,11 +174,11 @@ void CreateTaskLabel::assign_existing_labels(AddLabels * add_labels_command)
 	for (int i = 0; i < task_labels.size(); ++i)
 	{
 		TaskLabel * label = task_labels[i];
-		ConsoleWriter::print_existing_task_label_info(
-			std::to_string(i + MIN_TASK_NUMBER),
-			label->title(),
-			label_color_to_string(label->color())
-		);
+        ConsoleWriter::PrintExistingTaskLabelInfo(
+                std::to_string(i + MIN_TASK_NUMBER),
+                label->title(),
+                LabelColorToString(label->color())
+        );
 	}
 
 	while (true)
@@ -201,15 +200,15 @@ void CreateTaskLabel::assign_existing_labels(AddLabels * add_labels_command)
 	}
 }
 
-void CreateTaskLabel::remove_task_label(AddLabels * add_labels_command)
+void CreateTaskLabel::RemoveTaskLabel(AddLabels *add_labels_command)
 {
-	if (no_assigned_labels())
+	if (NoAssignedLabels())
 	{
 		std::cout << resources::messages::NO_LABELS_ON_THIS_TASK << std::endl;
 		return;
 	}
-	
-	print_assigned_labels();
+
+    PrintAssignedLabels();
 	unsigned long task_labels_count = existing_labels_.size() + new_labels_.size();
 
 	while (true)
@@ -220,7 +219,7 @@ void CreateTaskLabel::remove_task_label(AddLabels * add_labels_command)
 		std::cin.ignore();
 		if (MIN_TASK_NUMBER < label_number < task_labels_count)
 		{
-			remove_label_from_list(add_labels_command, label_number);	
+            RemoveLabelFromList(add_labels_command, label_number);
 			return;
 		}
 		else
@@ -230,26 +229,26 @@ void CreateTaskLabel::remove_task_label(AddLabels * add_labels_command)
 	}
 }
 
-void CreateTaskLabel::remove_label_from_list(AddLabels * add_labels_command, int label_number)
+void CreateTaskLabel::RemoveLabelFromList(AddLabels *add_labels_command, int label_number)
 {
 	if (label_number <= new_labels_.size())
 	{
 		--label_number;
 		new_labels_.erase(new_labels_.begin() + label_number);
-		update_new_labels(add_labels_command);
+        UpdateNewLabels(add_labels_command);
 	}
 	else
 	{
 		label_number -= new_labels_.size();
 		--label_number;
 		existing_labels_.erase(existing_labels_.begin() + label_number);
-		update_existing_labels(add_labels_command);
+        UpdateExistingLabels(add_labels_command);
 	}
 
-	ConsoleWriter::print_label_removed_from_task_message(std::to_string(label_number));
+    ConsoleWriter::PrintLabelRemovedFromTaskMessage(std::to_string(label_number));
 }
 
-void CreateTaskLabel::update_new_labels(AddLabels * add_labels_command)
+void CreateTaskLabel::UpdateNewLabels(AddLabels *add_labels_command)
 {
 	add_labels_command->clear_new_labels();
 	std::for_each(new_labels_.begin(), new_labels_.end(), [&](LabelDetails * label_details)
@@ -260,7 +259,7 @@ void CreateTaskLabel::update_new_labels(AddLabels * add_labels_command)
 	});
 }
 
-void CreateTaskLabel::update_existing_labels(AddLabels * add_labels_command)
+void CreateTaskLabel::UpdateExistingLabels(AddLabels *add_labels_command)
 {
 	add_labels_command->clear_existing_labels();
 	std::for_each(existing_labels_.begin(), existing_labels_.end(), [&](TaskLabel * task_label)
@@ -270,19 +269,19 @@ void CreateTaskLabel::update_existing_labels(AddLabels * add_labels_command)
 	});
 }
 
-MenuResult CreateTaskLabel::finish_label_assignment(AddLabels * add_labels_command)
+MenuResult CreateTaskLabel::FinishLabelAssignment(AddLabels *add_labels_command)
 {
-	command_handler_->post_command(*add_labels_command);
+    command_handler_->PostCommand(*add_labels_command);
 	TaskCompleter task_completer(console_view_, command_handler_, wizard_id_);
-	MenuResult menu_result = task_completer.run_complete_menu();
+	MenuResult menu_result = task_completer.RunCompleteMenu();
     return (menu_result == MenuResult::BACK_TO_PREVIOUS_MENU) ?
            MenuResult::REPEAT_MENU : MenuResult::FINISH_MENU;
 }
 
-void CreateTaskLabel::print_assigned_labels()
+void CreateTaskLabel::PrintAssignedLabels()
 {
 	std::cout << resources::messages::ASSIGNED_LABELS;
-	if (no_assigned_labels())
+	if (NoAssignedLabels())
 	{
 		std::cout << resources::messages::NO_ASSIGNED_LABELS << std::endl;
 		return;
@@ -292,25 +291,25 @@ void CreateTaskLabel::print_assigned_labels()
 	{
 		LabelDetails * label_detail = new_labels_[i];
 
-		ConsoleWriter::print_label_number(std::to_string(i + MIN_TASK_NUMBER));
-		ConsoleWriter::print_label_info(
-			label_detail->title(),
-			label_color_to_string(label_detail->color())
-		);
+        ConsoleWriter::PrintLabelNumber(std::to_string(i + MIN_TASK_NUMBER));
+        ConsoleWriter::PrintLabelInfo(
+                label_detail->title(),
+                LabelColorToString(label_detail->color())
+        );
 	}
 
 	for (int i = 0; i < existing_labels_.size(); ++i)
 	{
 		TaskLabel * task_label = existing_labels_[i];
-		ConsoleWriter::print_label_number(std::to_string(i + MIN_TASK_NUMBER));
-		ConsoleWriter::print_label_info(
-			task_label->title(),
-			label_color_to_string(task_label->color())
-		);
+        ConsoleWriter::PrintLabelNumber(std::to_string(i + MIN_TASK_NUMBER));
+        ConsoleWriter::PrintLabelInfo(
+                task_label->title(),
+                LabelColorToString(task_label->color())
+        );
 	}
 }
 
-bool CreateTaskLabel::no_assigned_labels()
+bool CreateTaskLabel::NoAssignedLabels()
 {
 	return new_labels_.empty() && existing_labels_.empty();
 }

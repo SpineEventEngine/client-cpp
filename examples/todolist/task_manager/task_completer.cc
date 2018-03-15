@@ -39,59 +39,58 @@ TaskCompleter::TaskCompleter(
 {
 }
 
-MenuResult TaskCompleter::run_complete_menu()
+MenuResult TaskCompleter::RunCompleteMenu()
 {
     MenuResult menu_result = MenuResult ::UNKNOWN;
-    console_view_->activate_console([&]()
-    {
+    console_view_->ActivateConsole([&]() {
         std::cout << resources::messages::TASK_COMPLETION_MENU << std::endl;
         std::cout << resources::command_line::LINE_SEPARATOR << std::endl;
 
-        initialize_commands();
-        menu_result = process_command();
-        return convert_menu_result_too_bool(menu_result);
+        InitializeCommands();
+        menu_result = ProcessCommand();
+        return ConvertMenuResultTooBool(menu_result);
     });
 
     return menu_result;
 }
 
-void TaskCompleter::initialize_commands()
+void TaskCompleter::InitializeCommands()
 {
-    console_view_->add_simple_command(
-        ConsoleCommandType::FINISH_TASK,
-        resources::tasks_menu::FINISH_TASK_SHORTCUT,
-        resources::tasks_menu::FINISH_TASK_COMMAND,
-        resources::tasks_menu::FINSH_TASK_INFO
+    console_view_->AddSimpleCommand(
+            ConsoleCommandType::FINISH_TASK,
+            resources::tasks_menu::FINISH_TASK_SHORTCUT,
+            resources::tasks_menu::FINISH_TASK_COMMAND,
+            resources::tasks_menu::FINSH_TASK_INFO
     );
 
-    console_view_->add_simple_command(
-        ConsoleCommandType::CANCEL_TASK,
-        resources::tasks_menu::CANCEL_SHORTCUT,
-        resources::tasks_menu::CANCEL_COMMAND,
-        resources::tasks_menu::CANCEL_INFO
+    console_view_->AddSimpleCommand(
+            ConsoleCommandType::CANCEL_TASK,
+            resources::tasks_menu::CANCEL_SHORTCUT,
+            resources::tasks_menu::CANCEL_COMMAND,
+            resources::tasks_menu::CANCEL_INFO
     );
 
-    console_view_->add_simple_command(
-        ConsoleCommandType::BACK_TO_PREVIOUS_MENU,
-        resources::tasks_menu::BACK_SHORTCUT,
-        resources::tasks_menu::BACK_COMMAND,
-        resources::tasks_menu::BACK_INFO
+    console_view_->AddSimpleCommand(
+            ConsoleCommandType::BACK_TO_PREVIOUS_MENU,
+            resources::tasks_menu::BACK_SHORTCUT,
+            resources::tasks_menu::BACK_COMMAND,
+            resources::tasks_menu::BACK_INFO
     );
 }
 
-MenuResult TaskCompleter::process_command()
+MenuResult TaskCompleter::ProcessCommand()
 {
-    console_view_->run_command_input();
-    switch (console_view_->get_active_task())
+    console_view_->RunCommandInput();
+    switch (console_view_->GetActiveTask())
     {
         case ConsoleCommandType::FINISH_TASK:
         {
-            finish_task();
+            FinishTask();
             return MenuResult::FINISH_MENU;
         }
         case ConsoleCommandType::CANCEL_TASK:
         {
-            cancel_task();
+            CancelTask();
             return MenuResult::FINISH_MENU;
         }
         case ConsoleCommandType::BACK_TO_PREVIOUS_MENU:
@@ -103,18 +102,18 @@ MenuResult TaskCompleter::process_command()
     }
 }
 
-void TaskCompleter::finish_task()
+void TaskCompleter::FinishTask()
 {
     CompleteTaskCreation complete_task_creation;
     complete_task_creation.set_allocated_id(wizard_id_);
-    command_handler_->post_command(complete_task_creation);
+    command_handler_->PostCommand(complete_task_creation);
 }
 
-void TaskCompleter::cancel_task()
+void TaskCompleter::CancelTask()
 {
     CancelTaskCreation cancel_task_creation;
     cancel_task_creation.set_allocated_id(wizard_id_);
-    command_handler_->post_command(cancel_task_creation);
+    command_handler_->PostCommand(cancel_task_creation);
 }
 
 } // namespace todolist

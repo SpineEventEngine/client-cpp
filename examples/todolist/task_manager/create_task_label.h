@@ -44,25 +44,25 @@ public:
 		std::shared_ptr<CommandHandler> command_handler,
 		TaskCreationId * wizard_id);
 
-    MenuResult add_labels();
+    MenuResult AddTaskLabels();
 
 private:
-    void initialize_commands();
+    void InitializeCommands();
 
-	void assign_new_label(AddLabels * add_labels_command);
-	void assign_existing_labels(AddLabels * add_labels_command);
-	void remove_task_label(AddLabels * add_labels_command);
-	void print_assigned_labels();
-	void cancel_task();
+	void AssignNewLabel(AddLabels *add_labels_command);
+	void AssignExistingLabel(AddLabels *add_labels_command);
+	void RemoveTaskLabel(AddLabels *add_labels_command);
+	void PrintAssignedLabels();
+	void CancelTask();
 
-	void update_new_labels(AddLabels * add_labels_command);
-	void update_existing_labels(AddLabels * add_labels_command);
-	void remove_label_from_list(AddLabels * add_labels_command, int label_number);
+	void UpdateNewLabels(AddLabels *add_labels_command);
+	void UpdateExistingLabels(AddLabels *add_labels_command);
+	void RemoveLabelFromList(AddLabels *add_labels_command, int label_number);
 
-    bool no_assigned_labels();
+    bool NoAssignedLabels();
 
-    MenuResult process_command(AddLabels * add_labels_command);
-    MenuResult finish_label_assignment(AddLabels * add_labels_command);
+    MenuResult ProcessCommand(AddLabels *add_labels_command);
+    MenuResult FinishLabelAssignment(AddLabels *add_labels_command);
 
 private:
 	std::vector<LabelDetails * > new_labels_;

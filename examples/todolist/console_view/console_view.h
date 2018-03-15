@@ -59,24 +59,24 @@ public:
 
 	virtual ~ConsoleView() {}
 
-	virtual void add_simple_command(
-		ConsoleCommandType command_type,
-		std::string const & command_shortcut,
-		std::string const & command_name,
-		std::string const & command_description
-	) = 0;
+	virtual void AddSimpleCommand(
+            ConsoleCommandType command_type,
+            std::string const &command_shortcut,
+            std::string const &command_name,
+            std::string const &command_description
+    ) = 0;
 
-	virtual void add_task_view_command(std::shared_ptr<TCLAP::SwitchArg> command_args) = 0;
-	virtual void run_command_input() = 0;
-	virtual void activate_console(std::function<bool()> callback) = 0;
-	virtual void reset_tasks() = 0;
+	virtual void AddTaskViewCommand(std::shared_ptr<TCLAP::SwitchArg> command_args) = 0;
+	virtual void RunCommandInput() = 0;
+	virtual void ActivateConsole(std::function<bool()> callback) = 0;
+	virtual void ResetTasks() = 0;
 
-	virtual ConsoleCommandType get_active_task() = 0;
+	virtual ConsoleCommandType GetActiveTask() = 0;
 
-	virtual bool is_command_set(ConsoleCommandType command_type) = 0;
-	virtual bool is_task_set() const = 0;
+	virtual bool IsCommandSet(ConsoleCommandType command_type) = 0;
+	virtual bool IsTaskSet() const = 0;
 	
-	virtual int get_active_task_index() const = 0;
+	virtual int GetActiveTaskIndex() const = 0;
 };
 
 } // namespace todolist

@@ -50,14 +50,14 @@ public:
 		std::shared_ptr<ConsoleView> console_view,
 		std::shared_ptr<CommandHandler> command_handler);
 
-	static TaskPriority generate_task_priority();
-	static LabelColor generate_label_color();
+	static TaskPriority GenerateTaskPriority();
+	static LabelColor GenerateLabelColor();
 
-	static std::string generate_unique_id();
-	static std::string label_color_to_string(LabelColor label_color);
+	static std::string GenerateUniqueId();
+	static std::string LabelColorToString(LabelColor label_color);
 
 protected:
-	bool convert_menu_result_too_bool(MenuResult result) const;
+	bool ConvertMenuResultTooBool(MenuResult result) const;
 
 protected:
 	std::shared_ptr<ConsoleView> console_view_;

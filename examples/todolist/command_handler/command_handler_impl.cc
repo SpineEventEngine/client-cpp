@@ -35,14 +35,14 @@ CommandHandlerImpl::CommandHandlerImpl(const std::string & channel)
 
 	parameters_
 		.set_tenant_id(tenant)
-		.set_actor(make_user_id(resources::server_info::USER_ID))
-		.set_zone_offset(make_zone_offset(resources::server_info::ZONE_ID, AMOUNT_SECONDS));
+		.set_actor(MakeUserId(resources::server_info::USER_ID))
+		.set_zone_offset(MakeZoneOffset(resources::server_info::ZONE_ID, AMOUNT_SECONDS));
 
 	command_factory_ = ActorRequestFactory::create(parameters_).command_factory();
 	stub_ = CommandService::NewStub(channel_);
 }
 
-void CommandHandlerImpl::post_command(Message & client_task)
+void CommandHandlerImpl::PostCommand(Message &client_task)
 {
 	CommandPtr command = command_factory_->create(client_task);
 	core::Ack response;
@@ -52,18 +52,18 @@ void CommandHandlerImpl::post_command(Message & client_task)
 	}
 }
 
-TaskListView const &CommandHandlerImpl::get_completed_tasks()
+TaskListView const &CommandHandlerImpl::GetCompletedTasks()
 {
-	return get_tasks<MyListView>()->my_list();
+	return GetTasks<MyListView>()->my_list();
 }
 
-TaskListView const & CommandHandlerImpl::get_draft_tasks()
+TaskListView const & CommandHandlerImpl::GetDraftTasks()
 {
-	return get_tasks<DraftTasksView>()->draft_tasks();
+	return GetTasks<DraftTasksView>()->draft_tasks();
 }
 
 template <typename T>
-T * CommandHandlerImpl::get_tasks()
+T * CommandHandlerImpl::GetTasks()
 {
 	ActorRequestFactory factory = ActorRequestFactory::create(parameters_);
 	QueryPtr query = factory.query_factory()->all<T>();
@@ -86,7 +86,7 @@ T * CommandHandlerImpl::get_tasks()
 	return task_list_view;
 }
 
-std::vector<TaskLabel *> CommandHandlerImpl::get_labels()
+std::vector<TaskLabel *> CommandHandlerImpl::GetLabels()
 {
 	ActorRequestFactory factory = ActorRequestFactory::create(parameters_);
 	QueryPtr query = factory.query_factory()->all<TaskLabel>();
@@ -113,7 +113,7 @@ std::vector<TaskLabel *> CommandHandlerImpl::get_labels()
 }
 
 std::unique_ptr<core::UserId>
-CommandHandlerImpl::make_user_id(const std::string & value)
+CommandHandlerImpl::MakeUserId(const std::string & value)
 {
 	auto actor = std::make_unique<core::UserId>();
 	actor->set_value(value);
@@ -121,7 +121,7 @@ CommandHandlerImpl::make_user_id(const std::string & value)
 }
 
 std::unique_ptr<time::ZoneOffset>
-CommandHandlerImpl::make_zone_offset(const std::string &zone_id, int amount)
+CommandHandlerImpl::MakeZoneOffset(const std::string &zone_id, int amount)
 {
 	time::ZoneId* zone_id_ptr = time::ZoneId::default_instance().New();
 	zone_id_ptr->set_value(zone_id);

@@ -47,21 +47,22 @@ public:
 	CommandHandlerImpl(const std::string & channel);
 
 public:
-	void post_command(Message & client_task);
+	void PostCommand(Message &client_task);
 
-	TaskListView const & get_completed_tasks();
-	TaskListView const & get_draft_tasks();
+	TaskListView const & GetCompletedTasks();
+	TaskListView const & GetDraftTasks();
 
-	std::vector<TaskLabel *> get_labels();
+	std::vector<TaskLabel *> GetLabels();
 
 private:
 	template <typename T>
-    T * get_tasks();
+    T * GetTasks();
 
 private:
-	std::unique_ptr<core::UserId> make_user_id(const std::string & value);
-	std::unique_ptr<time::ZoneOffset> make_zone_offset(const std::string & zone_id, int amount);
+	std::unique_ptr<core::UserId> MakeUserId(const std::string & value);
+	std::unique_ptr<time::ZoneOffset> MakeZoneOffset(const std::string & zone_id, int amount);
 
+private:
 	std::shared_ptr<grpc::Channel> channel_;
 	std::unique_ptr<CommandService::Stub> stub_;
 

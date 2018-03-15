@@ -45,17 +45,17 @@ public:
 		std::shared_ptr<CommandHandler> command_handler);
 
 public:
-	void load_task_menu();
+	void LoadTaskMenu();
 
 private:
-	void load_task_list(ConsoleCommandType command_type);
-	void load_tasks(ConsoleCommandType command_type);
+    void InitializeCommands();
+	void LoadTaskList(ConsoleCommandType command_type);
+	void LoadTasks(ConsoleCommandType command_type);
 
-	void show_task_info(int taskId);
-	void print_task_list();
+	void ShowTaskInfo(int taskId);
+	void PrintTaskList();
 
-	void initialize_commands();
-    MenuResult process_command();
+    MenuResult ProcessCommand();
 
 private:
 	std::vector<TaskItem> task_items_;

@@ -26,7 +26,7 @@ namespace spine {
 namespace examples {
 namespace todolist {
 
-void ConsoleWriter::print_task_description(TaskItem & task_item)
+void ConsoleWriter::PrintTaskDescription(TaskItem &task_item)
 {
 	std::cout << resources::task_info::TASK_DETAILS;
 	std::cout << resources::command_line::LINE_SEPARATOR << std::endl;
@@ -53,20 +53,20 @@ void ConsoleWriter::print_task_description(TaskItem & task_item)
 			<< std::endl;
 }
 
-void ConsoleWriter::print_undefined_action_message()
+void ConsoleWriter::PrintUndefinedActionMessage()
 {
 	std::cout << resources::messages::NO_SPECIFIED_SHORTCUT;
 }
 
-void ConsoleWriter::print_select_an_action_prompt()
+void ConsoleWriter::PrintSelectAnActionPrompt()
 {
 	std::cout << resources::messages::SELECT_AN_ACTION << std::endl;
 }
 
-void ConsoleWriter::print_existing_task_label_info(
-	const std::string & index,
-	const std::string & title,
-	const std::string & color
+void ConsoleWriter::PrintExistingTaskLabelInfo(
+        const std::string &index,
+        const std::string &title,
+        const std::string &color
 )
 {
 	std::cout
@@ -90,7 +90,7 @@ void ConsoleWriter::print_existing_task_label_info(
 		<< std::endl;
 }
 
-void ConsoleWriter::print_label_removed_from_task_message(const std::string & label_number)
+void ConsoleWriter::PrintLabelRemovedFromTaskMessage(const std::string &label_number)
 {
 	std::cout
 		<< resources::task_info::LABEL
@@ -101,7 +101,7 @@ void ConsoleWriter::print_label_removed_from_task_message(const std::string & la
 		<< resources::messages::REMOVED_FROM_TASK;
 }
 
-void ConsoleWriter::print_label_number(const std::string & label_number)
+void ConsoleWriter::PrintLabelNumber(const std::string &label_number)
 {
 	std::cout
 		<< resources::task_info::LABEL
@@ -113,9 +113,9 @@ void ConsoleWriter::print_label_number(const std::string & label_number)
 		<< std::endl;
 }
 
-void ConsoleWriter::print_label_info(
-	const std::string & label_title,
-	const std::string & label_color
+void ConsoleWriter::PrintLabelInfo(
+        const std::string &label_title,
+        const std::string &label_color
 )
 {
 	std::cout
