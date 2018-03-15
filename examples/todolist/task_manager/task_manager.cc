@@ -44,7 +44,7 @@ void TaskManager::start()
 		std::cout << resources::command_line::LINE_SEPARATOR << std::endl;
 		
 		initialize_commands();
-		return process_command();
+        return process_command();
 	});
 }
 

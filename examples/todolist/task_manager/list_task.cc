@@ -73,7 +73,8 @@ void ListTask::load_task_menu()
 	console_view_->activate_console([&]()
 	{
 		initialize_commands();
-		return process_command();
+		MenuResult menu_result = process_command();
+        return convert_menu_result_too_bool(menu_result);
 	});
 }
 
@@ -105,7 +106,7 @@ void ListTask::initialize_commands()
 	);
 }
 
-bool ListTask::process_command()
+MenuResult ListTask::process_command()
 {
 	console_view_->run_command_input();
 	switch (console_view_->get_active_task())
@@ -126,11 +127,11 @@ bool ListTask::process_command()
             break;
         }
 		case ConsoleCommandType::BACK_TO_PREVIOUS_MENU:
-			return false;
+			return MenuResult::BACK_TO_PREVIOUS_MENU;
 		default:
-			return true;
+			return MenuResult::REPEAT_MENU;
 	}
-	return true;
+    return MenuResult::REPEAT_MENU;
 }
 
 void ListTask::load_task_list(ConsoleCommandType command_type)

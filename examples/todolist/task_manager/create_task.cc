@@ -24,8 +24,6 @@
 
 #include "resources/resources.h"
 
-#include <iostream>
-
 namespace spine {
 namespace examples {
 namespace todolist {
@@ -57,7 +55,8 @@ void CreateTask::run_task_creation()
 		std::cout << resources::command_line::LINE_SEPARATOR << std::endl;
 
 		initialize_commands();
-		return process_command();
+		MenuResult menu_result = process_command();
+        return convert_menu_result_too_bool(menu_result);
 	});
 }
 
@@ -108,7 +107,7 @@ void CreateTask::initialize_commands()
 	);
 }
 
-bool CreateTask::process_command()
+MenuResult CreateTask::process_command()
 {
 	console_view_->run_command_input();
 
@@ -127,16 +126,16 @@ bool CreateTask::process_command()
 		case ConsoleCommandType::CANCEL_TASK:
 		{
 			cancel_task();
-			return false;
+			return MenuResult::FINISH_MENU;
 		}
 		case ConsoleCommandType::NEXT_STAGE:
 			return move_to_next_stage();
 		case ConsoleCommandType::BACK_TO_PREVIOUS_MENU:
-			return false;
+			return MenuResult::BACK_TO_PREVIOUS_MENU;
 		default:
-			return true;
+			return MenuResult::REPEAT_MENU;
 	}
-	return true;
+	return MenuResult::REPEAT_MENU;
 }
 
 void CreateTask::add_task_description()
@@ -192,12 +191,12 @@ void CreateTask::cancel_task()
 	command_handler_->post_command(cancel_task_creation);
 }
 
-bool CreateTask::move_to_next_stage()
+MenuResult CreateTask::move_to_next_stage()
 {
 	if (task_description_.empty())
 	{
 		std::cout << resources::messages::TASK_DESCRIPTION_IS_EMPTY;
-		return true;
+		return MenuResult::REPEAT_MENU;
 	}
 
 	TaskDescription *task_description = TaskDescription::default_instance().New();
@@ -213,10 +212,11 @@ bool CreateTask::move_to_next_stage()
 	return assign_task_labels();
 }
 
-bool CreateTask::assign_task_labels()
+MenuResult CreateTask::assign_task_labels()
 {
 	CreateTaskLabel create_task_label(console_view_, command_handler_, wizard_id_);
-	return create_task_label.add_labels();
+	return (create_task_label.add_labels() == MenuResult::BACK_TO_PREVIOUS_MENU) ?
+           MenuResult::REPEAT_MENU : MenuResult::FINISH_MENU;
 }
 
 } // namespace todolist

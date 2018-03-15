@@ -36,7 +36,7 @@ namespace todolist {
 class ConsoleView;
 class CommandHandler;
 
-enum class TaskCreationResult {
+enum class MenuResult {
 	REPEAT_MENU,
 	FINISH_MENU,
 	BACK_TO_PREVIOUS_MENU,
@@ -57,7 +57,7 @@ public:
 	static std::string label_color_to_string(LabelColor label_color);
 
 protected:
-	bool task_creation_result_to_bool(TaskCreationResult result) const;
+	bool convert_menu_result_too_bool(MenuResult result) const;
 
 protected:
 	std::shared_ptr<ConsoleView> console_view_;

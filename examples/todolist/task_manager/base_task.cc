@@ -35,18 +35,17 @@ BaseTask::BaseTask(
 {
 }
 
-bool BaseTask::task_creation_result_to_bool(TaskCreationResult result) const
+bool BaseTask::convert_menu_result_too_bool(MenuResult result) const
 {
 	switch (result)
 	{
-		case TaskCreationResult::REPEAT_MENU:
+		case MenuResult::REPEAT_MENU:
 			return true;
-		case TaskCreationResult::FINISH_MENU:
-		case TaskCreationResult::BACK_TO_PREVIOUS_MENU:
+		case MenuResult::FINISH_MENU:
+		case MenuResult::BACK_TO_PREVIOUS_MENU:
 			return false;
-
-		default:
-			assert(false);
+        case MenuResult::UNKNOWN:
+            assert(false);
 	}
 }
 

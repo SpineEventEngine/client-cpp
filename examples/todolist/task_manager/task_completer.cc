@@ -30,93 +30,91 @@ namespace examples {
 namespace todolist {
 
 TaskCompleter::TaskCompleter(
-	std::shared_ptr<ConsoleView> console_view,
-	std::shared_ptr<CommandHandler> command_handler,
-	TaskCreationId * wizard_id
+    std::shared_ptr<ConsoleView> console_view,
+    std::shared_ptr<CommandHandler> command_handler,
+    TaskCreationId * wizard_id
 )
-	: BaseTask(console_view, command_handler)
-	, wizard_id_(wizard_id)
+    : BaseTask(console_view, command_handler)
+    , wizard_id_(wizard_id)
 {
 }
 
-bool TaskCompleter::run_complete_menu()
+MenuResult TaskCompleter::run_complete_menu()
 {
-	bool assignment_result = false;
-	console_view_->activate_console([&]()
-	{
-		std::cout << resources::messages::TASK_COMPLETION_MENU << std::endl;
-		std::cout << resources::command_line::LINE_SEPARATOR << std::endl;
+    MenuResult menu_result = MenuResult ::UNKNOWN;
+    console_view_->activate_console([&]()
+    {
+        std::cout << resources::messages::TASK_COMPLETION_MENU << std::endl;
+        std::cout << resources::command_line::LINE_SEPARATOR << std::endl;
 
-		initialize_commands();
-		return process_command(assignment_result);	
-	});
+        initialize_commands();
+        menu_result = process_command();
+        return convert_menu_result_too_bool(menu_result);
+    });
 
-	return assignment_result;
+    return menu_result;
 }
 
 void TaskCompleter::initialize_commands()
 {
-	console_view_->add_simple_command(
-		ConsoleCommandType::FINISH_TASK,
-		resources::tasks_menu::FINISH_TASK_SHORTCUT,
-		resources::tasks_menu::FINISH_TASK_COMMAND,
-		resources::tasks_menu::FINSH_TASK_INFO
-	);
+    console_view_->add_simple_command(
+        ConsoleCommandType::FINISH_TASK,
+        resources::tasks_menu::FINISH_TASK_SHORTCUT,
+        resources::tasks_menu::FINISH_TASK_COMMAND,
+        resources::tasks_menu::FINSH_TASK_INFO
+    );
 
-	console_view_->add_simple_command(
-		ConsoleCommandType::CANCEL_TASK,
-		resources::tasks_menu::CANCEL_SHORTCUT,
-		resources::tasks_menu::CANCEL_COMMAND,
-		resources::tasks_menu::CANCEL_INFO
-	);
+    console_view_->add_simple_command(
+        ConsoleCommandType::CANCEL_TASK,
+        resources::tasks_menu::CANCEL_SHORTCUT,
+        resources::tasks_menu::CANCEL_COMMAND,
+        resources::tasks_menu::CANCEL_INFO
+    );
 
-	console_view_->add_simple_command(
-		ConsoleCommandType::BACK_TO_PREVIOUS_MENU,
-		resources::tasks_menu::BACK_SHORTCUT,
-		resources::tasks_menu::BACK_COMMAND,
-		resources::tasks_menu::BACK_INFO
-	);
+    console_view_->add_simple_command(
+        ConsoleCommandType::BACK_TO_PREVIOUS_MENU,
+        resources::tasks_menu::BACK_SHORTCUT,
+        resources::tasks_menu::BACK_COMMAND,
+        resources::tasks_menu::BACK_INFO
+    );
 }
 
-bool TaskCompleter::process_command(bool & assignment_result)
+MenuResult TaskCompleter::process_command()
 {
-	console_view_->run_command_input();
-	switch (console_view_->get_active_task())
-	{
-		case ConsoleCommandType::FINISH_TASK:
-		{
-			finish_task();
-			assignment_result = false;
-			return false;
-		}
-		case ConsoleCommandType::CANCEL_TASK:
-		{
-			cancel_task();
-			assignment_result = false;
-			return assignment_result;
-		}
-		case ConsoleCommandType::BACK_TO_PREVIOUS_MENU:
-		{
-			assignment_result = true;
-			return false;
-		}
-		default:
-			return true;
-	}
+    console_view_->run_command_input();
+    switch (console_view_->get_active_task())
+    {
+        case ConsoleCommandType::FINISH_TASK:
+        {
+            finish_task();
+            return MenuResult::FINISH_MENU;
+        }
+        case ConsoleCommandType::CANCEL_TASK:
+        {
+            cancel_task();
+            return MenuResult::FINISH_MENU;
+        }
+        case ConsoleCommandType::BACK_TO_PREVIOUS_MENU:
+        {
+            return MenuResult::BACK_TO_PREVIOUS_MENU;
+        }
+        default:
+            return MenuResult::REPEAT_MENU;
+    }
 }
 
 void TaskCompleter::finish_task()
 {
-	CompleteTaskCreation complete_task_creation;
-	complete_task_creation.set_allocated_id(wizard_id_);
-	command_handler_->post_command(complete_task_creation);
+    CompleteTaskCreation complete_task_creation;
+    complete_task_creation.set_allocated_id(wizard_id_);
+    command_handler_->post_command(complete_task_creation);
 }
 
 void TaskCompleter::cancel_task()
 {
-	CancelTaskCreation cancel_task_creation;
-	cancel_task_creation.set_allocated_id(wizard_id_);
-	command_handler_->post_command(cancel_task_creation);
+    CancelTaskCreation cancel_task_creation;
+    cancel_task_creation.set_allocated_id(wizard_id_);
+    command_handler_->post_command(cancel_task_creation);
 }
 
 } // namespace todolist

@@ -56,10 +56,10 @@ private:
 	void update_priority(TaskPriority task_priority);
 
 	void initialize_commands();
-	
-	bool process_command();
-	bool move_to_next_stage();
-	bool assign_task_labels();
+
+    MenuResult process_command();
+    MenuResult move_to_next_stage();
+	MenuResult assign_task_labels();
 
 private:
 	TaskCreationId * wizard_id_;

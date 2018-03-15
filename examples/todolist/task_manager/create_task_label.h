@@ -44,9 +44,11 @@ public:
 		std::shared_ptr<CommandHandler> command_handler,
 		TaskCreationId * wizard_id);
 
-	bool add_labels();
+    MenuResult add_labels();
 
 private:
+    void initialize_commands();
+
 	void assign_new_label(AddLabels * add_labels_command);
 	void assign_existing_labels(AddLabels * add_labels_command);
 	void remove_task_label(AddLabels * add_labels_command);
@@ -55,14 +57,12 @@ private:
 
 	void update_new_labels(AddLabels * add_labels_command);
 	void update_existing_labels(AddLabels * add_labels_command);
-
 	void remove_label_from_list(AddLabels * add_labels_command, int label_number);
 
-	void initialize_commands();
+    bool no_assigned_labels();
 
-	bool process_command(AddLabels * add_labels_command, bool & assignment_result);
-	bool finish_label_assignment(AddLabels * add_labels_command);
-	bool no_assigned_labels();
+    MenuResult process_command(AddLabels * add_labels_command);
+    MenuResult finish_label_assignment(AddLabels * add_labels_command);
 
 private:
 	std::vector<LabelDetails * > new_labels_;

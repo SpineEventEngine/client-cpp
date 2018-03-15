@@ -55,7 +55,7 @@ private:
 	void print_task_list();
 
 	void initialize_commands();
-	bool process_command();
+    MenuResult process_command();
 
 private:
 	std::vector<TaskItem> task_items_;
