@@ -37,31 +37,31 @@ class ConsoleView;
 class CommandHandler;
 
 enum class MenuResult {
-	REPEAT_MENU,
-	FINISH_MENU,
-	BACK_TO_PREVIOUS_MENU,
-	UNKNOWN
+    REPEAT_MENU,
+    FINISH_MENU,
+    BACK_TO_PREVIOUS_MENU,
+    UNKNOWN
 };
 
 class BaseTask
 {
 public:
-	BaseTask(
-		std::shared_ptr<ConsoleView> console_view,
-		std::shared_ptr<CommandHandler> command_handler);
+    BaseTask(
+        std::shared_ptr<ConsoleView> console_view,
+        std::shared_ptr<CommandHandler> command_handler);
 
-	static TaskPriority GenerateTaskPriority();
-	static LabelColor GenerateLabelColor();
+    static TaskPriority GenerateTaskPriority();
+    static LabelColor GenerateLabelColor();
 
-	static std::string GenerateUniqueId();
-	static std::string LabelColorToString(LabelColor label_color);
-
-protected:
-	bool ConvertMenuResultTooBool(MenuResult result) const;
+    static std::string GenerateUniqueId();
+    static std::string LabelColorToString(LabelColor label_color);
 
 protected:
-	std::shared_ptr<ConsoleView> console_view_;
-	std::shared_ptr<CommandHandler> command_handler_;
+    bool ConvertMenuResultTooBool(MenuResult result) const;
+
+protected:
+    std::shared_ptr<ConsoleView> console_view_;
+    std::shared_ptr<CommandHandler> command_handler_;
 };
 
 } // namespace todolist

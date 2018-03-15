@@ -29,21 +29,21 @@ namespace examples {
 namespace todolist {
 
 CreateTask::CreateTask(
-	std::shared_ptr<ConsoleView> console_view,
-	std::shared_ptr<CommandHandler> command_handler
+    std::shared_ptr<ConsoleView> console_view,
+    std::shared_ptr<CommandHandler> command_handler
 )
-	: BaseTask(console_view, command_handler)
+    : BaseTask(console_view, command_handler)
 {
-	wizard_id_ = TaskCreationId::default_instance().New();
-	std::string task_id = GenerateUniqueId();
-	wizard_id_->set_value(std::move(task_id));
+    wizard_id_ = TaskCreationId::default_instance().New();
+    std::string task_id = GenerateUniqueId();
+    wizard_id_->set_value(std::move(task_id));
 
-	task_id_ = TaskId::default_instance().New();
-	std::string unique_task_id = GenerateUniqueId();
-	task_id_->set_value(unique_task_id);
+    task_id_ = TaskId::default_instance().New();
+    std::string unique_task_id = GenerateUniqueId();
+    task_id_->set_value(unique_task_id);
 
-	task_priority_ = TaskPriority::TP_UNDEFINED;
-	task_details_is_already_set = false;
+    task_priority_ = TaskPriority::TP_UNDEFINED;
+    task_details_is_already_set = false;
 }
 
 void CreateTask::RunTaskCreation()
@@ -61,9 +61,9 @@ void CreateTask::RunTaskCreation()
 
 void CreateTask::StartTaskCreationProcess()
 {
-	StartTaskCreation * start_task_creation = StartTaskCreation::default_instance().New();
-	start_task_creation->set_allocated_id(wizard_id_);
-	start_task_creation->set_allocated_task_id(task_id_);
+    StartTaskCreation * start_task_creation = StartTaskCreation::default_instance().New();
+    start_task_creation->set_allocated_id(wizard_id_);
+    start_task_creation->set_allocated_task_id(task_id_);
 
     command_handler_->PostCommand(*start_task_creation);
 }
@@ -110,111 +110,111 @@ MenuResult CreateTask::ProcessCommand()
 {
     console_view_->RunCommandInput();
 
-	switch (console_view_->GetActiveTask())
-	{
-		case ConsoleCommandType::ADD_DESCRIPTION:
-		{
+    switch (console_view_->GetActiveTask())
+    {
+        case ConsoleCommandType::ADD_DESCRIPTION:
+        {
             AddDescription();
-			break;
-		}
-		case ConsoleCommandType::ADD_PRIORITY:
-		{
+            break;
+        }
+        case ConsoleCommandType::ADD_PRIORITY:
+        {
             AddPriority();
-			break;
-		}
-		case ConsoleCommandType::CANCEL_TASK:
-		{
+            break;
+        }
+        case ConsoleCommandType::CANCEL_TASK:
+        {
             CancelTask();
-			return MenuResult::FINISH_MENU;
-		}
-		case ConsoleCommandType::NEXT_STAGE:
-			return MoveToNextStage();
-		case ConsoleCommandType::BACK_TO_PREVIOUS_MENU:
-			return MenuResult::BACK_TO_PREVIOUS_MENU;
-		default:
-			return MenuResult::REPEAT_MENU;
-	}
-	return MenuResult::REPEAT_MENU;
+            return MenuResult::FINISH_MENU;
+        }
+        case ConsoleCommandType::NEXT_STAGE:
+            return MoveToNextStage();
+        case ConsoleCommandType::BACK_TO_PREVIOUS_MENU:
+            return MenuResult::BACK_TO_PREVIOUS_MENU;
+        default:
+            return MenuResult::REPEAT_MENU;
+    }
+    return MenuResult::REPEAT_MENU;
 }
 
 void CreateTask::AddDescription()
 {
-	std::cout << resources::messages::PLEASE_ENTER_THE_TASK_MENU;
-	std::string previous_description = task_description_;
-	task_description_.clear();
-	std::getline(std::cin, task_description_);
+    std::cout << resources::messages::PLEASE_ENTER_THE_TASK_MENU;
+    std::string previous_description = task_description_;
+    task_description_.clear();
+    std::getline(std::cin, task_description_);
     UpdateDescription(previous_description);
-	std::cout << resources::messages::TASK_DESCRIPTION_UPDATED;
+    std::cout << resources::messages::TASK_DESCRIPTION_UPDATED;
 }
 
 void CreateTask::UpdateDescription(const std::string &previous_description)
 {
-	if (!task_details_is_already_set)
-		return;
+    if (!task_details_is_already_set)
+        return;
 
-	UpdateTaskDescription * update_task_description = UpdateTaskDescription::default_instance().New();
-	change::StringChange * string_change = change::StringChange::default_instance().New();
-	string_change->set_new_value(task_description_);
-	string_change->set_previous_value(previous_description);
-	update_task_description->set_allocated_description_change(string_change);
-	update_task_description->set_allocated_id(task_id_);
+    UpdateTaskDescription * update_task_description = UpdateTaskDescription::default_instance().New();
+    change::StringChange * string_change = change::StringChange::default_instance().New();
+    string_change->set_new_value(task_description_);
+    string_change->set_previous_value(previous_description);
+    update_task_description->set_allocated_description_change(string_change);
+    update_task_description->set_allocated_id(task_id_);
     command_handler_->PostCommand(*update_task_description);
 }
 
 void CreateTask::AddPriority()
 {
-	TaskPriority previous_task_priority = task_priority_;
-	task_priority_ = GenerateTaskPriority();
+    TaskPriority previous_task_priority = task_priority_;
+    task_priority_ = GenerateTaskPriority();
     UpdatePriority(previous_task_priority);
-	std::cout << resources::messages::TASK_PRIORITY_UPDATED;
+    std::cout << resources::messages::TASK_PRIORITY_UPDATED;
 }
 
 void CreateTask::UpdatePriority(TaskPriority previous_task_priority)
 {
-	if (!task_details_is_already_set)
-		return;
+    if (!task_details_is_already_set)
+        return;
 
-	UpdateTaskPriority *  update_task_priority = UpdateTaskPriority::default_instance().New();
-	PriorityChange * priority_change = PriorityChange::default_instance().New();
-	priority_change->set_new_value(task_priority_);
-	priority_change->set_previous_value(previous_task_priority);
-	update_task_priority->set_allocated_priority_change(priority_change);
-	update_task_priority->set_allocated_id(task_id_);
+    UpdateTaskPriority *  update_task_priority = UpdateTaskPriority::default_instance().New();
+    PriorityChange * priority_change = PriorityChange::default_instance().New();
+    priority_change->set_new_value(task_priority_);
+    priority_change->set_previous_value(previous_task_priority);
+    update_task_priority->set_allocated_priority_change(priority_change);
+    update_task_priority->set_allocated_id(task_id_);
     command_handler_->PostCommand(*update_task_priority);
 }
 
 void CreateTask::CancelTask()
 {
-	CancelTaskCreation cancel_task_creation;
-	cancel_task_creation.set_allocated_id(wizard_id_);
+    CancelTaskCreation cancel_task_creation;
+    cancel_task_creation.set_allocated_id(wizard_id_);
     command_handler_->PostCommand(cancel_task_creation);
 }
 
 MenuResult CreateTask::MoveToNextStage()
 {
-	if (task_description_.empty())
-	{
-		std::cout << resources::messages::TASK_DESCRIPTION_IS_EMPTY;
-		return MenuResult::REPEAT_MENU;
-	}
+    if (task_description_.empty())
+    {
+        std::cout << resources::messages::TASK_DESCRIPTION_IS_EMPTY;
+        return MenuResult::REPEAT_MENU;
+    }
 
-	TaskDescription *task_description = TaskDescription::default_instance().New();
-	task_description->set_value(task_description_);
+    TaskDescription *task_description = TaskDescription::default_instance().New();
+    task_description->set_value(task_description_);
 
-	SetTaskDetails * task_details = SetTaskDetails::default_instance().New();
-	task_details->set_allocated_id(wizard_id_);
-	task_details->set_priority(task_priority_);
-	task_details->set_allocated_description(task_description);
+    SetTaskDetails * task_details = SetTaskDetails::default_instance().New();
+    task_details->set_allocated_id(wizard_id_);
+    task_details->set_priority(task_priority_);
+    task_details->set_allocated_description(task_description);
 
     command_handler_->PostCommand(*task_details);
-	task_details_is_already_set = true;
-	return AssignTaskLabel();
+    task_details_is_already_set = true;
+    return AssignTaskLabel();
 }
 
 MenuResult CreateTask::AssignTaskLabel()
 {
-	CreateTaskLabel create_task_label(console_view_, command_handler_, wizard_id_);
-	return (create_task_label.AddTaskLabels() == MenuResult::BACK_TO_PREVIOUS_MENU) ?
+    CreateTaskLabel create_task_label(console_view_, command_handler_, wizard_id_);
+    return (create_task_label.AddTaskLabels() == MenuResult::BACK_TO_PREVIOUS_MENU) ?
            MenuResult::REPEAT_MENU : MenuResult::FINISH_MENU;
 }
 

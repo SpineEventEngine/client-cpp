@@ -38,33 +38,33 @@ namespace todolist {
 class ConsoleViewImpl: public ConsoleView
 {
 public:
-	ConsoleViewImpl(std::string const & path_to_exec_file);
+    ConsoleViewImpl(std::string const & path_to_exec_file);
 
 public:
-	void AddSimpleCommand(
-            ConsoleCommandType command_type,
-            std::string const &command_shortcut,
-            std::string const &command_name,
-            std::string const &command_description) override final;
+    void AddSimpleCommand(
+        ConsoleCommandType command_type,
+        std::string const &command_shortcut,
+        std::string const &command_name,
+        std::string const &command_description) override final;
 
-	void AddTaskViewCommand(std::shared_ptr<TCLAP::SwitchArg> command_args) override final;
-	void RunCommandInput() override final;
-	void ResetTasks() override final;
-	void ActivateConsole(std::function<bool()> callback) override final;
+    void AddTaskViewCommand(std::shared_ptr<TCLAP::SwitchArg> command_args) override final;
+    void RunCommandInput() override final;
+    void ResetTasks() override final;
+    void ActivateConsole(std::function<bool()> callback) override final;
 
-	ConsoleCommandType GetActiveTask() override final;
+    ConsoleCommandType GetActiveTask() override final;
 
-	bool IsTaskSet() const override final;
-	bool IsCommandSet(ConsoleCommandType command_type) override final;
+    bool IsTaskSet() const override final;
+    bool IsCommandSet(ConsoleCommandType command_type) override final;
 
-	int GetActiveTaskIndex() const override final;
+    int GetActiveTaskIndex() const override final;
 
 private:
-	std::unique_ptr<TCLAP::CmdLine> command_handler_;
-	std::map<ConsoleCommandType, std::shared_ptr<TCLAP::SwitchArg> > commands_;
-	std::vector<std::shared_ptr<TCLAP::SwitchArg>> task_commands_;
+    std::unique_ptr<TCLAP::CmdLine> command_handler_;
+    std::map<ConsoleCommandType, std::shared_ptr<TCLAP::SwitchArg> > commands_;
+    std::vector<std::shared_ptr<TCLAP::SwitchArg>> task_commands_;
 
-	const std::string path_to_exec_file_;
+    const std::string path_to_exec_file_;
 };
 
 } // namespace todolist

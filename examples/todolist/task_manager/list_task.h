@@ -40,25 +40,25 @@ class CommandHandler;
 class ListTask : public BaseTask
 {
 public:
-	ListTask(
-		std::shared_ptr<ConsoleView> console_view,
-		std::shared_ptr<CommandHandler> command_handler);
+    ListTask(
+        std::shared_ptr<ConsoleView> console_view,
+        std::shared_ptr<CommandHandler> command_handler);
 
 public:
-	void LoadTaskMenu();
+    void LoadTaskMenu();
 
 private:
     void InitializeCommands();
-	void LoadTaskList(ConsoleCommandType command_type);
-	void LoadTasks(ConsoleCommandType command_type);
+    void LoadTaskList(ConsoleCommandType command_type);
+    void LoadTasks(ConsoleCommandType command_type);
 
-	void ShowTaskInfo(int taskId);
-	void PrintTaskList();
+    void ShowTaskInfo(int taskId);
+    void PrintTaskList();
 
     MenuResult ProcessCommand();
 
 private:
-	std::vector<TaskItem> task_items_;
+    std::vector<TaskItem> task_items_;
 };
 
 } // namespace todolist

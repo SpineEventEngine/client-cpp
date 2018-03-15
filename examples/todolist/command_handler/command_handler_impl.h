@@ -44,30 +44,30 @@ using namespace client;
 class CommandHandlerImpl: public CommandHandler
 {
 public:
-	CommandHandlerImpl(const std::string & channel);
+    CommandHandlerImpl(const std::string & channel);
 
 public:
-	void PostCommand(Message &client_task);
+    void PostCommand(Message &client_task);
 
-	TaskListView const & GetCompletedTasks();
-	TaskListView const & GetDraftTasks();
+    TaskListView const & GetCompletedTasks();
+    TaskListView const & GetDraftTasks();
 
-	std::vector<TaskLabel *> GetLabels();
+    std::vector<TaskLabel *> GetLabels();
 
 private:
-	template <typename T>
+    template <typename T>
     T * GetTasks();
 
 private:
-	std::unique_ptr<core::UserId> MakeUserId(const std::string & value);
-	std::unique_ptr<time::ZoneOffset> MakeZoneOffset(const std::string & zone_id, int amount);
+    std::unique_ptr<core::UserId> MakeUserId(const std::string & value);
+    std::unique_ptr<time::ZoneOffset> MakeZoneOffset(const std::string & zone_id, int amount);
 
 private:
-	std::shared_ptr<grpc::Channel> channel_;
-	std::unique_ptr<CommandService::Stub> stub_;
+    std::shared_ptr<grpc::Channel> channel_;
+    std::unique_ptr<CommandService::Stub> stub_;
 
-	ActorRequestFactoryParams parameters_;
-	CommandFactoryPtr command_factory_;
+    ActorRequestFactoryParams parameters_;
+    CommandFactoryPtr command_factory_;
 };
 
 } // namespace todolist

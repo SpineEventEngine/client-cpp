@@ -30,17 +30,17 @@ namespace todolist {
 constexpr int INVALID_TASK_NUMBER = -1;
 
 ConsoleViewImpl::ConsoleViewImpl(std::string const & path_to_exec_file)
-	:	command_handler_(
-			new TCLAP::CmdLine(
-				resources::command_line::COMMAND_DESCRIPTION_MESSAGE,
-				resources::command_line::WHITE_SPACE_DELIMETER,
-				resources::command_line::COMMAND_LINE_VERSION,
-				false
-			)
-		)
-	,	path_to_exec_file_(path_to_exec_file)
+    :   command_handler_(
+            new TCLAP::CmdLine(
+                resources::command_line::COMMAND_DESCRIPTION_MESSAGE,
+                resources::command_line::WHITE_SPACE_DELIMETER,
+                resources::command_line::COMMAND_LINE_VERSION,
+                false
+            )
+        )
+    ,   path_to_exec_file_(path_to_exec_file)
 {
-	command_handler_->setExceptionHandling(false);
+    command_handler_->setExceptionHandling(false);
 }
 
 void ConsoleViewImpl::AddSimpleCommand(
@@ -49,109 +49,109 @@ void ConsoleViewImpl::AddSimpleCommand(
         std::string const &command_name,
         std::string const &command_description)
 {
-	std::cout
-		<<	resources::command_line::LEFT_BRACE +
-			command_shortcut +
-			resources::command_line::RIGHT_BRACE
-		<< command_description
-		<< std::endl;
+    std::cout
+        <<  resources::command_line::LEFT_BRACE +
+            command_shortcut +
+            resources::command_line::RIGHT_BRACE
+        << command_description
+        << std::endl;
 
-	auto command_args
-		= std::make_shared<TCLAP::SwitchArg>(
-			command_shortcut,
-			command_name,
-			command_description,
-			false
-		);
+    auto command_args
+        = std::make_shared<TCLAP::SwitchArg>(
+            command_shortcut,
+            command_name,
+            command_description,
+            false
+        );
 
-	commands_[command_type] = command_args;
-	command_handler_->add(command_args.get());
+    commands_[command_type] = command_args;
+    command_handler_->add(command_args.get());
 }
 
 void ConsoleViewImpl::AddTaskViewCommand(std::shared_ptr<TCLAP::SwitchArg> command_args)
 {
-	task_commands_.push_back(command_args);
-	command_handler_->add(command_args.get());
+    task_commands_.push_back(command_args);
+    command_handler_->add(command_args.get());
 }
 
 void ConsoleViewImpl::ResetTasks()
 {
-	task_commands_.clear();
-	commands_.clear();
-	command_handler_->resetTasks();
+    task_commands_.clear();
+    commands_.clear();
+    command_handler_->resetTasks();
 }
 
 void ConsoleViewImpl::RunCommandInput()
 {
     ConsoleWriter::PrintSelectAnActionPrompt();
-	std::string line;
-	std::getline(std::cin, line);
-	std::string command = resources::command_line::DASH + line;
-	std::istringstream iss(command);
-	std::vector<std::string> inputStrings;
-	inputStrings.push_back(path_to_exec_file_);
+    std::string line;
+    std::getline(std::cin, line);
+    std::string command = resources::command_line::DASH + line;
+    std::istringstream iss(command);
+    std::vector<std::string> inputStrings;
+    inputStrings.push_back(path_to_exec_file_);
 
-	for (std::string word; iss >> word;)
-		inputStrings.push_back(word);
+    for (std::string word; iss >> word;)
+        inputStrings.push_back(word);
 
-	command_handler_->parse(inputStrings);
+    command_handler_->parse(inputStrings);
 }
 
 void ConsoleViewImpl::ActivateConsole(std::function<bool()> callback)
 {
-	while(true)
-	{
-		try 
-		{
+    while(true)
+    {
+        try
+        {
             ResetTasks();
-			if (!callback())
-			{
-				break;
-			}
-		}
-		catch (const TCLAP::ArgException &e)
-		{
+            if (!callback())
+            {
+                break;
+            }
+        }
+        catch (const TCLAP::ArgException &e)
+        {
             ConsoleWriter::PrintUndefinedActionMessage();
-		}
-	}
+        }
+    }
 }
 
 ConsoleCommandType ConsoleViewImpl::GetActiveTask()
 {
-	for (auto it = commands_.begin(); it != commands_.end(); ++it)
-	{
-		if (it->second->isSet())
-			return it->first;
-	}
-	return ConsoleCommandType::UNKNOWN;
+    for (auto it = commands_.begin(); it != commands_.end(); ++it)
+    {
+        if (it->second->isSet())
+            return it->first;
+    }
+    return ConsoleCommandType::UNKNOWN;
 }
 
 bool ConsoleViewImpl::IsTaskSet() const
 {
-	for (int task_index = 0; task_index < task_commands_.size(); ++task_index)
-	{
-		auto task_command = task_commands_[task_index];
-		if (task_command->isSet())
-			return true;
-	}
-	return false;
+    for (int task_index = 0; task_index < task_commands_.size(); ++task_index)
+    {
+        auto task_command = task_commands_[task_index];
+        if (task_command->isSet())
+            return true;
+    }
+    return false;
 }
 
 bool ConsoleViewImpl::IsCommandSet(ConsoleCommandType command_type)
 {
-	std::shared_ptr<TCLAP::SwitchArg> command = commands_[command_type];
-	return command->isSet();
+    std::shared_ptr<TCLAP::SwitchArg> command = commands_[command_type];
+    return command->isSet();
 }
 
 int ConsoleViewImpl::GetActiveTaskIndex() const
 {
-	for (int task_index = 0; task_index < task_commands_.size(); ++task_index)
-	{
-		auto task_command = task_commands_[task_index];
-		if (task_command->isSet())
-			return task_index;
-	}
-	return INVALID_TASK_NUMBER;
+    for (int task_index = 0; task_index < task_commands_.size(); ++task_index)
+    {
+        auto task_command = task_commands_[task_index];
+        if (task_command->isSet())
+            return task_index;
+    }
+    return INVALID_TASK_NUMBER;
 }
 
 } // namespace todolist

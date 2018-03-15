@@ -27,82 +27,82 @@ namespace examples {
 namespace todolist {
 
 BaseTask::BaseTask(
-	std::shared_ptr<ConsoleView> console_view,
-	std::shared_ptr<CommandHandler> command_handler
+    std::shared_ptr<ConsoleView> console_view,
+    std::shared_ptr<CommandHandler> command_handler
 )
-	: console_view_(console_view)
-	, command_handler_(command_handler)
+    : console_view_(console_view)
+    , command_handler_(command_handler)
 {
 }
 
 bool BaseTask::ConvertMenuResultTooBool(MenuResult result) const
 {
-	switch (result)
-	{
-		case MenuResult::REPEAT_MENU:
-			return true;
-		case MenuResult::FINISH_MENU:
-		case MenuResult::BACK_TO_PREVIOUS_MENU:
-			return false;
+    switch (result)
+    {
+        case MenuResult::REPEAT_MENU:
+            return true;
+        case MenuResult::FINISH_MENU:
+        case MenuResult::BACK_TO_PREVIOUS_MENU:
+            return false;
         case MenuResult::UNKNOWN:
             assert(false);
-	}
+    }
 }
 
 TaskPriority BaseTask::GenerateTaskPriority()
 {
-	std::cout << resources::messages::PLEASE_ENTER_THE_TASK_PRIORITY;
-	while (true)
-	{
-		std::cout << resources::messages::TASK_PRIORITY_VALUES;
-		int task_priority;
-		std::cin >> task_priority;
-		std::cin.ignore();
-		if (TaskPriority::HIGH <= task_priority <= TaskPriority::LOW)
-			return static_cast<TaskPriority>(task_priority);
-		else
-			std::cout << resources::messages::TASK_PRIORITY_VALUE_IS_INCORRECT;
-	}
+    std::cout << resources::messages::PLEASE_ENTER_THE_TASK_PRIORITY;
+    while (true)
+    {
+        std::cout << resources::messages::TASK_PRIORITY_VALUES;
+        int task_priority;
+        std::cin >> task_priority;
+        std::cin.ignore();
+        if (TaskPriority::HIGH <= task_priority <= TaskPriority::LOW)
+            return static_cast<TaskPriority>(task_priority);
+        else
+            std::cout << resources::messages::TASK_PRIORITY_VALUE_IS_INCORRECT;
+    }
 }
 
 LabelColor BaseTask::GenerateLabelColor()
 {
-	std::cout << resources::messages::PLEASE_ENTER_THE_LABEL_COLOR;
-	while (true)
-	{
-		std::cout << resources::messages::LABEL_VALUES;
+    std::cout << resources::messages::PLEASE_ENTER_THE_LABEL_COLOR;
+    while (true)
+    {
+        std::cout << resources::messages::LABEL_VALUES;
 
-		int label_color = 0;
-		std::cin >> label_color;
-		std::cin.ignore();
-		if (LabelColor::RED <= label_color <= LabelColor::GRAY)
-			return static_cast<LabelColor>(label_color);
-		else
-			std::cout << resources::messages::LABEL_COLOR_IS_INCORRECT;
-	}
+        int label_color = 0;
+        std::cin >> label_color;
+        std::cin.ignore();
+        if (LabelColor::RED <= label_color <= LabelColor::GRAY)
+            return static_cast<LabelColor>(label_color);
+        else
+            std::cout << resources::messages::LABEL_COLOR_IS_INCORRECT;
+    }
 }
 
 std::string BaseTask::LabelColorToString(LabelColor label_color)
 {
-	switch (label_color)
-	{
-		case LabelColor::BLUE:
-			return std::string("BLUE");
-		case LabelColor::RED:
-			return std::string("RED");
-		case LabelColor::GRAY:
-			return std::string("GRAY");
-		case LabelColor::GREEN:
-			return std::string("GREEN");
-		default:
-			assert(false);
-	}
+    switch (label_color)
+    {
+        case LabelColor::BLUE:
+            return std::string("BLUE");
+        case LabelColor::RED:
+            return std::string("RED");
+        case LabelColor::GRAY:
+            return std::string("GRAY");
+        case LabelColor::GREEN:
+            return std::string("GREEN");
+        default:
+            assert(false);
+    }
 }
 
 std::string BaseTask::GenerateUniqueId()
 {
-	Poco::UUIDGenerator generator;
-	return generator.createRandom().toString();
+    Poco::UUIDGenerator generator;
+    return generator.createRandom().toString();
 }
 
 } // namespace todolist

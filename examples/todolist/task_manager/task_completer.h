@@ -39,23 +39,23 @@ class CommandHandler;
 class TaskCompleter : BaseTask
 {
 public:
-	TaskCompleter(
-		std::shared_ptr<ConsoleView> console_view,
-		std::shared_ptr<CommandHandler> command_handler,
-		TaskCreationId * wizard_id);
+    TaskCompleter(
+        std::shared_ptr<ConsoleView> console_view,
+        std::shared_ptr<CommandHandler> command_handler,
+        TaskCreationId * wizard_id);
 
     MenuResult RunCompleteMenu();
 
 private:
     void InitializeCommands();
-	void FinishTask();
-	void CancelTask();
+    void FinishTask();
+    void CancelTask();
 
     MenuResult ProcessCommand();
 
 private:
 
-	TaskCreationId * wizard_id_;
+    TaskCreationId * wizard_id_;
 };
 
 } // namespace todolist

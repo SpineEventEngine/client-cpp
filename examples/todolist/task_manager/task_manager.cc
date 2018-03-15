@@ -31,8 +31,8 @@ namespace examples {
 namespace todolist {
 
 TaskManager::TaskManager(const std::string & path_to_exec_file)
-	:	console_view_(new ConsoleViewImpl(path_to_exec_file))
-	,	command_handler_( new CommandHandlerImpl(resources::server_info::CHANNEL))
+    :	console_view_(new ConsoleViewImpl(path_to_exec_file))
+    ,	command_handler_( new CommandHandlerImpl(resources::server_info::CHANNEL))
 {
 }
 
@@ -74,50 +74,50 @@ void TaskManager::InitializeCommands()
 bool TaskManager::ProcessCommand()
 {
     console_view_->RunCommandInput();
-	switch (console_view_->GetActiveTask())
-	{
-		case ConsoleCommandType::CREATE_TASK:
-		{
+    switch (console_view_->GetActiveTask())
+    {
+        case ConsoleCommandType::CREATE_TASK:
+        {
             AddTask();
-			break;
-		}
-		case ConsoleCommandType::LIST_TASK:
-		{
+            break;
+        }
+        case ConsoleCommandType::LIST_TASK:
+        {
             ListTasks();
-			break;
-		}
-		case ConsoleCommandType::QUIT_PROGRAM:
-			return false;
-		default:
+            break;
+        }
+        case ConsoleCommandType::QUIT_PROGRAM:
+            return false;
+        default:
             ConsoleWriter::PrintUndefinedActionMessage();
-	}
+    }
 
-	return true;
+    return true;
 }
 
 void TaskManager::AddTask() {
-	auto create_task_command = std::make_unique<CreateTask>(console_view_, command_handler_);
-	try
-	{
+    auto create_task_command = std::make_unique<CreateTask>(console_view_, command_handler_);
+    try
+    {
         create_task_command->RunTaskCreation();
-	}
-	catch (std::exception & _exception)
-	{
-		std::cout << _exception.what() << std::endl;
-	}
+    }
+    catch (std::exception & _exception)
+    {
+        std::cout << _exception.what() << std::endl;
+    }
 }
 
 void TaskManager::ListTasks() const {
 
-	auto list_task_command = std::make_unique<ListTask>(console_view_, command_handler_);
-	try
-	{
+    auto list_task_command = std::make_unique<ListTask>(console_view_, command_handler_);
+    try
+    {
         list_task_command->LoadTaskMenu();
-	}
-	catch (std::exception & _exception)
-	{
-		std::cout << _exception.what() << std::endl;
-	}
+    }
+    catch (std::exception & _exception)
+    {
+        std::cout << _exception.what() << std::endl;
+    }
 }
 
 } // namespace todolist

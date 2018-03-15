@@ -34,21 +34,21 @@ class CommandHandler;
 class TaskManager
 {
 public:
-	TaskManager(const std::string & path_to_exec_file);
+    TaskManager(const std::string & path_to_exec_file);
 
 public:
-	void Start();
+    void Start();
 
 private:
-	void AddTask();
-	void ListTasks() const;
+    void AddTask();
+    void ListTasks() const;
 
-	void InitializeCommands();
-	bool ProcessCommand();
+    void InitializeCommands();
+    bool ProcessCommand();
 
 private:
-	std::shared_ptr<ConsoleView> console_view_;
-	std::shared_ptr<CommandHandler> command_handler_;
+    std::shared_ptr<ConsoleView> console_view_;
+    std::shared_ptr<CommandHandler> command_handler_;
 };
 
 } // namespace todolist

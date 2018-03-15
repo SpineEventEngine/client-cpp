@@ -28,112 +28,112 @@ namespace todolist {
 
 void ConsoleWriter::PrintTaskDescription(TaskItem &task_item)
 {
-	std::cout << resources::task_info::TASK_DETAILS;
-	std::cout << resources::command_line::LINE_SEPARATOR << std::endl;
+    std::cout << resources::task_info::TASK_DETAILS;
+    std::cout << resources::command_line::LINE_SEPARATOR << std::endl;
 
-	std::cout 
-			<< resources::task_info::TASK_DESCRIPTION
-			<< resources::command_line::COLON
-			<< resources::command_line::WHITE_SPACE_DELIMETER
-			<< task_item.description().value()
-			<< std::endl;
+    std::cout
+            << resources::task_info::TASK_DESCRIPTION
+            << resources::command_line::COLON
+            << resources::command_line::WHITE_SPACE_DELIMETER
+            << task_item.description().value()
+            << std::endl;
 
-	std::cout
-			<< resources::task_info::TASK_PRIORITY
-			<< resources::command_line::COLON
-			<< resources::command_line::WHITE_SPACE_DELIMETER
-			<< TaskPriority_Name(task_item.priority())
-			<< std::endl;
+    std::cout
+            << resources::task_info::TASK_PRIORITY
+            << resources::command_line::COLON
+            << resources::command_line::WHITE_SPACE_DELIMETER
+            << TaskPriority_Name(task_item.priority())
+            << std::endl;
 
-	std::cout
-			<< resources::task_info::TASK_DUE_DATE
-			<< resources::command_line::COLON
-			<< resources::command_line::WHITE_SPACE_DELIMETER
-			<< resources::task_info::DEFAULT
-			<< std::endl;
+    std::cout
+            << resources::task_info::TASK_DUE_DATE
+            << resources::command_line::COLON
+            << resources::command_line::WHITE_SPACE_DELIMETER
+            << resources::task_info::DEFAULT
+            << std::endl;
 }
 
 void ConsoleWriter::PrintUndefinedActionMessage()
 {
-	std::cout << resources::messages::NO_SPECIFIED_SHORTCUT;
+    std::cout << resources::messages::NO_SPECIFIED_SHORTCUT;
 }
 
 void ConsoleWriter::PrintSelectAnActionPrompt()
 {
-	std::cout << resources::messages::SELECT_AN_ACTION << std::endl;
+    std::cout << resources::messages::SELECT_AN_ACTION << std::endl;
 }
 
 void ConsoleWriter::PrintExistingTaskLabelInfo(
-        const std::string &index,
-        const std::string &title,
-        const std::string &color
+    const std::string &index,
+    const std::string &title,
+    const std::string &color
 )
 {
-	std::cout
-		<< resources::command_line::LEFT_BRACE
-		<< index
-		<< resources::command_line::RIGHT_BRACE
-		<< resources::command_line::WHITE_SPACE_DELIMETER
-		<< resources::command_line::DASH
-		<< resources::command_line::WHITE_SPACE_DELIMETER
-		<< resources::command_line::LEFT_BRACKET
-		<< resources::task_info::TITLE
-		<< resources::command_line::COLON
-		<< title
-		<< resources::command_line::WHITE_SPACE_DELIMETER
-		<< resources::task_info::COLOR
-		<< resources::command_line::WHITE_SPACE_DELIMETER
-		<< resources::command_line::COLON
-		<< resources::command_line::WHITE_SPACE_DELIMETER
-		<< color
-		<< resources::command_line::RIGHT_BRACKET
-		<< std::endl;
+    std::cout
+        << resources::command_line::LEFT_BRACE
+        << index
+        << resources::command_line::RIGHT_BRACE
+        << resources::command_line::WHITE_SPACE_DELIMETER
+        << resources::command_line::DASH
+        << resources::command_line::WHITE_SPACE_DELIMETER
+        << resources::command_line::LEFT_BRACKET
+        << resources::task_info::TITLE
+        << resources::command_line::COLON
+        << title
+        << resources::command_line::WHITE_SPACE_DELIMETER
+        << resources::task_info::COLOR
+        << resources::command_line::WHITE_SPACE_DELIMETER
+        << resources::command_line::COLON
+        << resources::command_line::WHITE_SPACE_DELIMETER
+        << color
+        << resources::command_line::RIGHT_BRACKET
+        << std::endl;
 }
 
 void ConsoleWriter::PrintLabelRemovedFromTaskMessage(const std::string &label_number)
 {
-	std::cout
-		<< resources::task_info::LABEL
-		<< resources::command_line::WHITE_SPACE_DELIMETER
-		<< resources::command_line::DASH
-		<< resources::command_line::WHITE_SPACE_DELIMETER
-		<< label_number
-		<< resources::messages::REMOVED_FROM_TASK;
+    std::cout
+        << resources::task_info::LABEL
+        << resources::command_line::WHITE_SPACE_DELIMETER
+        << resources::command_line::DASH
+        << resources::command_line::WHITE_SPACE_DELIMETER
+        << label_number
+        << resources::messages::REMOVED_FROM_TASK;
 }
 
 void ConsoleWriter::PrintLabelNumber(const std::string &label_number)
 {
-	std::cout
-		<< resources::task_info::LABEL
-		<< resources::command_line::WHITE_SPACE_DELIMETER
-		<< resources::command_line::SHARP
-		<< resources::command_line::WHITE_SPACE_DELIMETER
-		<< label_number
-		<< resources::command_line::COLON
-		<< std::endl;
+    std::cout
+        << resources::task_info::LABEL
+        << resources::command_line::WHITE_SPACE_DELIMETER
+        << resources::command_line::SHARP
+        << resources::command_line::WHITE_SPACE_DELIMETER
+        << label_number
+        << resources::command_line::COLON
+        << std::endl;
 }
 
 void ConsoleWriter::PrintLabelInfo(
-        const std::string &label_title,
-        const std::string &label_color
+    const std::string &label_title,
+    const std::string &label_color
 )
 {
-	std::cout
-		<< resources::command_line::LEFT_BRACKET
-		<< resources::task_info::TITLE
-		<< resources::command_line::WHITE_SPACE_DELIMETER
-		<< resources::command_line::COLON
-		<< resources::command_line::WHITE_SPACE_DELIMETER
-		<< label_title
-		<< resources::command_line::COMMA
-		<< resources::command_line::WHITE_SPACE_DELIMETER
-		<< resources::task_info::COLOR
-		<< resources::command_line::WHITE_SPACE_DELIMETER
-		<< resources::command_line::COLON
-		<< resources::command_line::WHITE_SPACE_DELIMETER
-		<< label_color
-		<< resources::command_line::RIGHT_BRACKET
-		<< std::endl;
+    std::cout
+        << resources::command_line::LEFT_BRACKET
+        << resources::task_info::TITLE
+        << resources::command_line::WHITE_SPACE_DELIMETER
+        << resources::command_line::COLON
+        << resources::command_line::WHITE_SPACE_DELIMETER
+        << label_title
+        << resources::command_line::COMMA
+        << resources::command_line::WHITE_SPACE_DELIMETER
+        << resources::task_info::COLOR
+        << resources::command_line::WHITE_SPACE_DELIMETER
+        << resources::command_line::COLON
+        << resources::command_line::WHITE_SPACE_DELIMETER
+        << label_color
+        << resources::command_line::RIGHT_BRACKET
+        << std::endl;
 }
 
 } // namespace todolist

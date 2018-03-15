@@ -39,35 +39,35 @@ class CommandHandler;
 class CreateTask : public BaseTask
 {
 public:
-	CreateTask(
-		std::shared_ptr<ConsoleView> console_view, 
-		std::shared_ptr<CommandHandler> command_handler);
+    CreateTask(
+        std::shared_ptr<ConsoleView> console_view,
+        std::shared_ptr<CommandHandler> command_handler);
 
 public:
-	void RunTaskCreation();
+    void RunTaskCreation();
 
 private:
-	void StartTaskCreationProcess();
-	void AddDescription();
-	void AddPriority();
-	void CancelTask();
+    void StartTaskCreationProcess();
+    void AddDescription();
+    void AddPriority();
+    void CancelTask();
 
-	void UpdateDescription(const std::string &previous_description);
-	void UpdatePriority(TaskPriority task_priority);
+    void UpdateDescription(const std::string &previous_description);
+    void UpdatePriority(TaskPriority task_priority);
 
-	void InitializeCommands();
+    void InitializeCommands();
 
     MenuResult ProcessCommand();
     MenuResult MoveToNextStage();
-	MenuResult AssignTaskLabel();
+    MenuResult AssignTaskLabel();
 
 private:
-	TaskCreationId * wizard_id_;
-	TaskId * task_id_;
-	TaskPriority task_priority_;
+    TaskCreationId * wizard_id_;
+    TaskId * task_id_;
+    TaskPriority task_priority_;
 
-	std::string task_description_;
-	bool task_details_is_already_set;
+    std::string task_description_;
+    bool task_details_is_already_set;
 };
 
 } // namespace todolist

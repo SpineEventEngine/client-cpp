@@ -28,50 +28,51 @@ namespace examples {
 namespace todolist {
 
 ListTask::ListTask(
-	std::shared_ptr<ConsoleView> console_view,
-	std::shared_ptr<CommandHandler> command_handler
+    std::shared_ptr<ConsoleView> console_view,
+    std::shared_ptr<CommandHandler> command_handler
 )
-	: BaseTask(console_view, command_handler)
+    : BaseTask(console_view, command_handler)
 {
 }
 
 void ListTask::LoadTasks(ConsoleCommandType command_type)
 {
-	task_items_.clear();
-	switch (command_type)
-	{
-		case ConsoleCommandType::DRAFT_TASKS:
-		{
-			auto const & task_list_view = command_handler_->GetDraftTasks();
-			task_items_.assign(task_list_view.items().begin(), task_list_view.items().end());
-			break;
-		}
-		case ConsoleCommandType::COMPLETED_TASKS:
-		{
-			auto const & task_list_view = command_handler_->GetCompletedTasks();
-			task_items_.assign(task_list_view.items().begin(), task_list_view.items().end());
-			break;
-		}
-		case ConsoleCommandType::ALL_TASKS:
-		{
-			auto const & completed_task_list_view = command_handler_->GetCompletedTasks();
-			auto const & draft_task_list_view = command_handler_->GetDraftTasks();
-			auto const & completed_items = completed_task_list_view.items();
-			auto const & draft_items = draft_task_list_view.items();
+    task_items_.clear();
+    switch (command_type)
+    {
+        case ConsoleCommandType::DRAFT_TASKS:
+        {
+            auto const & task_list_view = command_handler_->GetDraftTasks();
+            task_items_.assign(task_list_view.items().begin(), task_list_view.items().end());
+            break;
+        }
+        case ConsoleCommandType::COMPLETED_TASKS:
+        {
+            auto const & task_list_view = command_handler_->GetCompletedTasks();
+            task_items_.assign(task_list_view.items().begin(), task_list_view.items().end());
+            break;
+        }
+        case ConsoleCommandType::ALL_TASKS:
+        {
+            auto const & completed_task_list_view = command_handler_->GetCompletedTasks();
+            auto const & draft_task_list_view = command_handler_->GetDraftTasks();
+            auto const & completed_items = completed_task_list_view.items();
+            auto const & draft_items = draft_task_list_view.items();
 
-			std::copy(completed_items.begin(), completed_items.end(), std::back_inserter(task_items_));
-			std::copy(draft_items.begin(), draft_items.end(), std::back_inserter(task_items_));
-			break;
-		}
-		default:
-			break;
-	}
+            std::copy(completed_items.begin(), completed_items.end(), std::back_inserter(task_items_));
+            std::copy(draft_items.begin(), draft_items.end(), std::back_inserter(task_items_));
+            break;
+        }
+        default:
+            break;
+    }
 }
 
 void ListTask::LoadTaskMenu()
 {
     console_view_->ActivateConsole([&]() {
         InitializeCommands();
+
         MenuResult menu_result = ProcessCommand();
         return ConvertMenuResultTooBool(menu_result);
     });
@@ -108,28 +109,28 @@ void ListTask::InitializeCommands()
 MenuResult ListTask::ProcessCommand()
 {
     console_view_->RunCommandInput();
-	switch (console_view_->GetActiveTask())
-	{
-		case ConsoleCommandType::DRAFT_TASKS:
+    switch (console_view_->GetActiveTask())
+    {
+        case ConsoleCommandType::DRAFT_TASKS:
         {
             LoadTaskList(ConsoleCommandType::DRAFT_TASKS);
             break;
         }
-		case ConsoleCommandType::COMPLETED_TASKS:
+        case ConsoleCommandType::COMPLETED_TASKS:
         {
             LoadTaskList(ConsoleCommandType::COMPLETED_TASKS);
             break;
         }
-		case ConsoleCommandType::ALL_TASKS:
+        case ConsoleCommandType::ALL_TASKS:
         {
             LoadTaskList(ConsoleCommandType::ALL_TASKS);
             break;
         }
-		case ConsoleCommandType::BACK_TO_PREVIOUS_MENU:
-			return MenuResult::BACK_TO_PREVIOUS_MENU;
-		default:
-			return MenuResult::REPEAT_MENU;
-	}
+        case ConsoleCommandType::BACK_TO_PREVIOUS_MENU:
+            return MenuResult::BACK_TO_PREVIOUS_MENU;
+        default:
+            return MenuResult::REPEAT_MENU;
+    }
     return MenuResult::REPEAT_MENU;
 }
 
@@ -161,40 +162,40 @@ void ListTask::LoadTaskList(ConsoleCommandType command_type)
 
 void ListTask::PrintTaskList()
 {
-	std::cout << resources::messages::MY_TASKS_LIST << std::endl;
-	std::cout << resources::command_line::LINE_SEPARATOR << std::endl;
+    std::cout << resources::messages::MY_TASKS_LIST << std::endl;
+    std::cout << resources::command_line::LINE_SEPARATOR << std::endl;
 
-	if (task_items_.empty())
-	{
-		std::cout << resources::messages::NO_TASKS;
-		return;
-	}
+    if (task_items_.empty())
+    {
+        std::cout << resources::messages::NO_TASKS;
+        return;
+    }
 
-	for (int index = 0; index < task_items_.size(); ++index)
-	{
-		std::string taskIndex = std::to_string(index + 1);
-		std::cout
-				<< resources::command_line::LEFT_BRACE
-				<< std::to_string(index + 1)
-				<< resources::command_line::RIGHT_BRACE
-				<< task_items_[index].description().value()
-				<< std::endl;
+    for (int index = 0; index < task_items_.size(); ++index)
+    {
+        std::string taskIndex = std::to_string(index + 1);
+        std::cout
+                << resources::command_line::LEFT_BRACE
+                << std::to_string(index + 1)
+                << resources::command_line::RIGHT_BRACE
+                << task_items_[index].description().value()
+                << std::endl;
 
-		auto task_view_command 
-			= std::make_shared<TCLAP::SwitchArg>(
-					taskIndex,
-					resources::tasks_menu::TASK_NUMBER_COMMAND + taskIndex,
-					resources::tasks_menu::TASK_NUBMER_INFO + taskIndex,
-					false
-				);
+        auto task_view_command
+            = std::make_shared<TCLAP::SwitchArg>(
+                    taskIndex,
+                    resources::tasks_menu::TASK_NUMBER_COMMAND + taskIndex,
+                    resources::tasks_menu::TASK_NUBMER_INFO + taskIndex,
+                    false
+                );
 
-		console_view_->AddTaskViewCommand(task_view_command);
-	}
+        console_view_->AddTaskViewCommand(task_view_command);
+    }
 }
 
 void ListTask::ShowTaskInfo(int active_task_number)
 {
-	auto & taskItem = task_items_[active_task_number];
+    auto & taskItem = task_items_[active_task_number];
     ConsoleWriter::PrintTaskDescription(taskItem);
 
     console_view_->ActivateConsole([&]() {

@@ -30,108 +30,108 @@ constexpr int AMOUNT_SECONDS = 0;
 
 CommandHandlerImpl::CommandHandlerImpl(const std::string & channel)
 {
-	channel_ = ::grpc::CreateChannel(channel, grpc::InsecureChannelCredentials());
-	auto tenant = std::unique_ptr<TenantId>(TenantId::default_instance().New());
+    channel_ = ::grpc::CreateChannel(channel, grpc::InsecureChannelCredentials());
+    auto tenant = std::unique_ptr<TenantId>(TenantId::default_instance().New());
 
-	parameters_
-		.set_tenant_id(tenant)
-		.set_actor(MakeUserId(resources::server_info::USER_ID))
-		.set_zone_offset(MakeZoneOffset(resources::server_info::ZONE_ID, AMOUNT_SECONDS));
+    parameters_
+        .set_tenant_id(tenant)
+        .set_actor(MakeUserId(resources::server_info::USER_ID))
+        .set_zone_offset(MakeZoneOffset(resources::server_info::ZONE_ID, AMOUNT_SECONDS));
 
-	command_factory_ = ActorRequestFactory::create(parameters_).command_factory();
-	stub_ = CommandService::NewStub(channel_);
+    command_factory_ = ActorRequestFactory::create(parameters_).command_factory();
+    stub_ = CommandService::NewStub(channel_);
 }
 
 void CommandHandlerImpl::PostCommand(Message &client_task)
 {
-	CommandPtr command = command_factory_->create(client_task);
-	core::Ack response;
-	grpc::ClientContext client_context;
-	if (!stub_->Post(&client_context, *command, &response).ok()) {
-		throw std::runtime_error(resources::server_info::INVALID_SERVER_STATUS);
-	}
+    CommandPtr command = command_factory_->create(client_task);
+    core::Ack response;
+    grpc::ClientContext client_context;
+    if (!stub_->Post(&client_context, *command, &response).ok()) {
+        throw std::runtime_error(resources::server_info::INVALID_SERVER_STATUS);
+    }
 }
 
 TaskListView const &CommandHandlerImpl::GetCompletedTasks()
 {
-	return GetTasks<MyListView>()->my_list();
+    return GetTasks<MyListView>()->my_list();
 }
 
 TaskListView const & CommandHandlerImpl::GetDraftTasks()
 {
-	return GetTasks<DraftTasksView>()->draft_tasks();
+    return GetTasks<DraftTasksView>()->draft_tasks();
 }
 
 template <typename T>
 T * CommandHandlerImpl::GetTasks()
 {
-	ActorRequestFactory factory = ActorRequestFactory::create(parameters_);
-	QueryPtr query = factory.query_factory()->all<T>();
-	std::unique_ptr<QueryService::Stub> query_service = QueryService::NewStub(channel_);
+    ActorRequestFactory factory = ActorRequestFactory::create(parameters_);
+    QueryPtr query = factory.query_factory()->all<T>();
+    std::unique_ptr<QueryService::Stub> query_service = QueryService::NewStub(channel_);
 
-	QueryResponse response;
-	grpc::ClientContext client_context;
+    QueryResponse response;
+    grpc::ClientContext client_context;
 
-	if (!query_service->Read(&client_context, *query, &response).ok()) {
-		throw std::runtime_error(resources::server_info::INVALID_SERVER_RESPONSE);
-	}
+    if (!query_service->Read(&client_context, *query, &response).ok()) {
+        throw std::runtime_error(resources::server_info::INVALID_SERVER_RESPONSE);
+    }
 
-	T * task_list_view = T::default_instance().New();
-	if (response.messages_size() > 0)
-	{
-		const Any& any = response.messages(0);
-		any.UnpackTo(task_list_view);
-	}
+    T * task_list_view = T::default_instance().New();
+    if (response.messages_size() > 0)
+    {
+        const Any& any = response.messages(0);
+        any.UnpackTo(task_list_view);
+    }
 
-	return task_list_view;
+    return task_list_view;
 }
 
 std::vector<TaskLabel *> CommandHandlerImpl::GetLabels()
 {
-	ActorRequestFactory factory = ActorRequestFactory::create(parameters_);
-	QueryPtr query = factory.query_factory()->all<TaskLabel>();
-	std::unique_ptr<QueryService::Stub> query_service = QueryService::NewStub(channel_);
+    ActorRequestFactory factory = ActorRequestFactory::create(parameters_);
+    QueryPtr query = factory.query_factory()->all<TaskLabel>();
+    std::unique_ptr<QueryService::Stub> query_service = QueryService::NewStub(channel_);
 
-	QueryResponse response;
-	grpc::ClientContext client_context;
+    QueryResponse response;
+    grpc::ClientContext client_context;
 
-	if (!query_service->Read(&client_context, *query, &response).ok()) {
-		throw std::runtime_error(resources::server_info::INVALID_SERVER_RESPONSE);
-	}
+    if (!query_service->Read(&client_context, *query, &response).ok()) {
+        throw std::runtime_error(resources::server_info::INVALID_SERVER_RESPONSE);
+    }
 
-	std::vector<TaskLabel *> label_tasks;
-	TaskLabel * task_label = TaskLabel::default_instance().New();
-	int messages_count = response.messages_size();
-	for (int i = 0; i < messages_count; ++i)
-	{
-		const Any& any = response.messages(i);
-		any.UnpackTo(task_label);
-		label_tasks.push_back(task_label);
-	}
+    std::vector<TaskLabel *> label_tasks;
+    TaskLabel * task_label = TaskLabel::default_instance().New();
+    int messages_count = response.messages_size();
+    for (int i = 0; i < messages_count; ++i)
+    {
+        const Any& any = response.messages(i);
+        any.UnpackTo(task_label);
+        label_tasks.push_back(task_label);
+    }
 
-	return std::move(label_tasks);
+    return std::move(label_tasks);
 }
 
 std::unique_ptr<core::UserId>
 CommandHandlerImpl::MakeUserId(const std::string & value)
 {
-	auto actor = std::make_unique<core::UserId>();
-	actor->set_value(value);
-	return actor;
+    auto actor = std::make_unique<core::UserId>();
+    actor->set_value(value);
+    return actor;
 }
 
 std::unique_ptr<time::ZoneOffset>
 CommandHandlerImpl::MakeZoneOffset(const std::string &zone_id, int amount)
 {
-	time::ZoneId* zone_id_ptr = time::ZoneId::default_instance().New();
-	zone_id_ptr->set_value(zone_id);
+    time::ZoneId* zone_id_ptr = time::ZoneId::default_instance().New();
+    zone_id_ptr->set_value(zone_id);
 
-	std::unique_ptr<spine::time::ZoneOffset> zone_offset
-		= std::make_unique<time::ZoneOffset>();
+    std::unique_ptr<spine::time::ZoneOffset> zone_offset
+        = std::make_unique<time::ZoneOffset>();
 
-	zone_offset->set_allocated_id(zone_id_ptr);
-	zone_offset->set_amountseconds(amount);
-	return zone_offset;
+    zone_offset->set_allocated_id(zone_id_ptr);
+    zone_offset->set_amountseconds(amount);
+    return zone_offset;
 }
 
 } // namespace todolist

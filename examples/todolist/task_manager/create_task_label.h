@@ -39,25 +39,25 @@ class CommandHandler;
 class CreateTaskLabel : BaseTask
 {
 public:
-	CreateTaskLabel(
-		std::shared_ptr<ConsoleView> console_view,
-		std::shared_ptr<CommandHandler> command_handler,
-		TaskCreationId * wizard_id);
+    CreateTaskLabel(
+        std::shared_ptr<ConsoleView> console_view,
+        std::shared_ptr<CommandHandler> command_handler,
+        TaskCreationId * wizard_id);
 
     MenuResult AddTaskLabels();
 
 private:
     void InitializeCommands();
 
-	void AssignNewLabel(AddLabels *add_labels_command);
-	void AssignExistingLabel(AddLabels *add_labels_command);
-	void RemoveTaskLabel(AddLabels *add_labels_command);
-	void PrintAssignedLabels();
-	void CancelTask();
+    void AssignNewLabel(AddLabels *add_labels_command);
+    void AssignExistingLabel(AddLabels *add_labels_command);
+    void RemoveTaskLabel(AddLabels *add_labels_command);
+    void PrintAssignedLabels();
+    void CancelTask();
 
-	void UpdateNewLabels(AddLabels *add_labels_command);
-	void UpdateExistingLabels(AddLabels *add_labels_command);
-	void RemoveLabelFromList(AddLabels *add_labels_command, int label_number);
+    void UpdateNewLabels(AddLabels *add_labels_command);
+    void UpdateExistingLabels(AddLabels *add_labels_command);
+    void RemoveLabelFromList(AddLabels *add_labels_command, int label_number);
 
     bool NoAssignedLabels();
 
@@ -65,10 +65,10 @@ private:
     MenuResult FinishLabelAssignment(AddLabels *add_labels_command);
 
 private:
-	std::vector<LabelDetails * > new_labels_;
-	std::vector<TaskLabel * > existing_labels_;
+    std::vector<LabelDetails * > new_labels_;
+    std::vector<TaskLabel * > existing_labels_;
 
-	TaskCreationId * wizard_id_;
+    TaskCreationId * wizard_id_;
 };
 
 } // namespace todolist

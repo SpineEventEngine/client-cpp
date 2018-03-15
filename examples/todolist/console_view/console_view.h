@@ -32,51 +32,50 @@ namespace todolist {
 
 enum ConsoleCommandType
 {
-	CREATE_TASK,
-	LIST_TASK,
-	VIEW_TASK,
-	ADD_DESCRIPTION,
-	ADD_PRIORITY,
-	ASSIGN_TASK_LABEL,
-	ASSIGN_EXISTING_LABEL,
-	ASSIGN_NEW_LABEL,
-	REMOVE_LABEL,
-	FINISH_LABEL_ASSIGNMENT,
-	FINISH_TASK,
-	CANCEL_TASK,
-	NEXT_STAGE,
-	BACK_TO_PREVIOUS_MENU,
-	DRAFT_TASKS,
-	COMPLETED_TASKS,
-	ALL_TASKS = (DRAFT_TASKS | COMPLETED_TASKS) << 1,
-	QUIT_PROGRAM,
-	UNKNOWN
+    CREATE_TASK,
+    LIST_TASK,
+    VIEW_TASK,
+    ADD_DESCRIPTION,
+    ADD_PRIORITY,
+    ASSIGN_TASK_LABEL,
+    ASSIGN_EXISTING_LABEL,
+    ASSIGN_NEW_LABEL,
+    REMOVE_LABEL,
+    FINISH_LABEL_ASSIGNMENT,
+    FINISH_TASK,
+    CANCEL_TASK,
+    NEXT_STAGE,
+    BACK_TO_PREVIOUS_MENU,
+    DRAFT_TASKS,
+    COMPLETED_TASKS,
+    ALL_TASKS = (DRAFT_TASKS | COMPLETED_TASKS) << 1,
+    QUIT_PROGRAM,
+    UNKNOWN
 };
 
 class ConsoleView
 {
 public:
 
-	virtual ~ConsoleView() {}
+    virtual ~ConsoleView() {}
 
-	virtual void AddSimpleCommand(
-            ConsoleCommandType command_type,
-            std::string const &command_shortcut,
-            std::string const &command_name,
-            std::string const &command_description
-    ) = 0;
+    virtual void AddSimpleCommand(
+        ConsoleCommandType command_type,
+        std::string const &command_shortcut,
+        std::string const &command_name,
+        std::string const &command_description) = 0;
 
-	virtual void AddTaskViewCommand(std::shared_ptr<TCLAP::SwitchArg> command_args) = 0;
-	virtual void RunCommandInput() = 0;
-	virtual void ActivateConsole(std::function<bool()> callback) = 0;
-	virtual void ResetTasks() = 0;
+    virtual void AddTaskViewCommand(std::shared_ptr<TCLAP::SwitchArg> command_args) = 0;
+    virtual void RunCommandInput() = 0;
+    virtual void ActivateConsole(std::function<bool()> callback) = 0;
+    virtual void ResetTasks() = 0;
 
-	virtual ConsoleCommandType GetActiveTask() = 0;
+    virtual ConsoleCommandType GetActiveTask() = 0;
 
-	virtual bool IsCommandSet(ConsoleCommandType command_type) = 0;
-	virtual bool IsTaskSet() const = 0;
-	
-	virtual int GetActiveTaskIndex() const = 0;
+    virtual bool IsCommandSet(ConsoleCommandType command_type) = 0;
+    virtual bool IsTaskSet() const = 0;
+
+    virtual int GetActiveTaskIndex() const = 0;
 };
 
 } // namespace todolist

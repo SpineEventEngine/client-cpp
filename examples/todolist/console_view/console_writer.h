@@ -32,26 +32,22 @@ namespace todolist {
 class ConsoleWriter
 {
 public:
-	static void PrintTaskDescription(TaskItem &task_item);
-	static void PrintUndefinedActionMessage();
-	static void PrintSelectAnActionPrompt();
+    static void PrintTaskDescription(TaskItem &task_item);
+    static void PrintUndefinedActionMessage();
+    static void PrintSelectAnActionPrompt();
 
-	static void PrintExistingTaskLabelInfo(
-            const std::string &index,
-            const std::string &title,
-            const std::string &color
-    );
+    static void PrintExistingTaskLabelInfo(
+        const std::string &index,
+        const std::string &title,
+        const std::string &color);
 
-	static void PrintLabelRemovedFromTaskMessage(
-            const std::string &label_number
-    );
+    static void PrintLabelRemovedFromTaskMessage(const std::string &label_number);
 
-	static void PrintLabelNumber(const std::string &label_number);
+    static void PrintLabelNumber(const std::string &label_number);
 
-	static void PrintLabelInfo(
-            const std::string &label_title,
-            const std::string &label_color
-    );
+    static void PrintLabelInfo(
+        const std::string &label_title,
+        const std::string &label_color);
 };
 
 } // namespace todolist
