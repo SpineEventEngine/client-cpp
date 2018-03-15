@@ -30,7 +30,7 @@ namespace spine {
 namespace examples {
 namespace todolist {
 
-enum class ConsoleCommandType
+enum ConsoleCommandType
 {
 	CREATE_TASK,
 	LIST_TASK,
@@ -72,6 +72,7 @@ public:
 	virtual void reset_tasks() = 0;
 
 	virtual ConsoleCommandType get_active_task() = 0;
+
 	virtual bool is_command_set(ConsoleCommandType command_type) = 0;
 	virtual bool is_task_set() const = 0;
 	

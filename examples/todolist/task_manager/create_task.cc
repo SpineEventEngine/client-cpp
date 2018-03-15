@@ -22,9 +22,6 @@
 #include "create_task_label.h"
 #include "command_handler/command_handler.h"
 
-#include "console_view/console_view_impl.h"
-#include "console_view/console_writer.h"
-#include "Poco/UUIDGenerator.h"
 #include "resources/resources.h"
 
 #include <iostream>
@@ -117,22 +114,27 @@ bool CreateTask::process_command()
 
 	switch (console_view_->get_active_task())
 	{
-	case ConsoleCommandType::ADD_DESCRIPTION:
-		add_task_description();
-		break;
-	case ConsoleCommandType::ADD_PRIORITY:
-		add_task_priority();
-		break;
-	case ConsoleCommandType::CANCEL_TASK:
-		cancel_task();
-		return false;
-	case ConsoleCommandType::NEXT_STAGE:
-		return move_to_next_stage();
-		break;
-	case ConsoleCommandType::BACK_TO_PREVIOUS_MENU:
-		return false;
-	default:
-		return true;
+		case ConsoleCommandType::ADD_DESCRIPTION:
+		{
+			add_task_description();
+			break;
+		}
+		case ConsoleCommandType::ADD_PRIORITY:
+		{
+			add_task_priority();
+			break;
+		}
+		case ConsoleCommandType::CANCEL_TASK:
+		{
+			cancel_task();
+			return false;
+		}
+		case ConsoleCommandType::NEXT_STAGE:
+			return move_to_next_stage();
+		case ConsoleCommandType::BACK_TO_PREVIOUS_MENU:
+			return false;
+		default:
+			return true;
 	}
 	return true;
 }

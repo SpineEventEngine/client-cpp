@@ -62,7 +62,7 @@ TaskListView const & CommandHandlerImpl::get_draft_tasks()
 	return get_tasks<DraftTasksView>()->draft_tasks();
 }
 
-template <typename T, typename = enable_param_if_protobuf_message<T>>
+template <typename T>
 T * CommandHandlerImpl::get_tasks()
 {
 	ActorRequestFactory factory = ActorRequestFactory::create(parameters_);

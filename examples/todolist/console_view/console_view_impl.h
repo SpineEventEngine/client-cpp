@@ -27,10 +27,13 @@
 #include <vector>
 #include <memory>
 #include <unordered_map>
+#include <utility>
+#include <map>
 
 namespace spine {
 namespace examples {
 namespace todolist {
+
 
 class ConsoleViewImpl: public ConsoleView
 {
@@ -43,6 +46,7 @@ public:
 		std::string const & command_shortcut,
 		std::string const & command_name,
 		std::string const & command_description) override final;
+
 	void add_task_view_command(std::shared_ptr<TCLAP::SwitchArg> command_args) override final;
 	void run_command_input() override final;
 	void reset_tasks() override final;
@@ -57,7 +61,7 @@ public:
 
 private:
 	std::unique_ptr<TCLAP::CmdLine> command_handler_;
-	std::unordered_map<ConsoleCommandType, std::shared_ptr<TCLAP::SwitchArg> > commands_;
+	std::map<ConsoleCommandType, std::shared_ptr<TCLAP::SwitchArg> > commands_;
 	std::vector<std::shared_ptr<TCLAP::SwitchArg>> task_commands_;
 
 	const std::string path_to_exec_file_;

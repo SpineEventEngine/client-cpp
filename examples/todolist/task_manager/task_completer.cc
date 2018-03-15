@@ -62,6 +62,7 @@ void TaskCompleter::initialize_commands()
 		resources::tasks_menu::FINISH_TASK_COMMAND,
 		resources::tasks_menu::FINSH_TASK_INFO
 	);
+
 	console_view_->add_simple_command(
 		ConsoleCommandType::CANCEL_TASK,
 		resources::tasks_menu::CANCEL_SHORTCUT,
@@ -83,23 +84,25 @@ bool TaskCompleter::process_command(bool & assignment_result)
 	switch (console_view_->get_active_task())
 	{
 		case ConsoleCommandType::FINISH_TASK:
+		{
 			finish_task();
 			assignment_result = false;
 			return false;
-			break;
+		}
 		case ConsoleCommandType::CANCEL_TASK:
+		{
 			cancel_task();
 			assignment_result = false;
 			return assignment_result;
-			break;
+		}
 		case ConsoleCommandType::BACK_TO_PREVIOUS_MENU:
+		{
 			assignment_result = true;
 			return false;
+		}
 		default:
 			return true;
 	}
-
-	return true;
 }
 
 void TaskCompleter::finish_task()

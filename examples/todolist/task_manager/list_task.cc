@@ -20,8 +20,6 @@
 
 #include "list_task.h"
 #include "console_view/console_writer.h"
-#include "todolist/model.pb.h"
-#include "console_view/console_view_impl.h"
 #include "command_handler/command_handler.h"
 #include "resources/resources.h"
 
@@ -113,17 +111,22 @@ bool ListTask::process_command()
 	switch (console_view_->get_active_task())
 	{
 		case ConsoleCommandType::DRAFT_TASKS:
-			load_task_list(ConsoleCommandType::DRAFT_TASKS);
-			break;
+        {
+            load_task_list(ConsoleCommandType::DRAFT_TASKS);
+            break;
+        }
 		case ConsoleCommandType::COMPLETED_TASKS:
-			load_task_list(ConsoleCommandType::COMPLETED_TASKS);
-			break;
+        {
+            load_task_list(ConsoleCommandType::COMPLETED_TASKS);
+            break;
+        }
 		case ConsoleCommandType::ALL_TASKS:
-			load_task_list(ConsoleCommandType::ALL_TASKS);
-			break;
+        {
+            load_task_list(ConsoleCommandType::ALL_TASKS);
+            break;
+        }
 		case ConsoleCommandType::BACK_TO_PREVIOUS_MENU:
 			return false;
-			break;
 		default:
 			return true;
 	}

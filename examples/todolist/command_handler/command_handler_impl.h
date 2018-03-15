@@ -39,7 +39,7 @@ namespace spine {
 namespace examples {
 namespace todolist {
 
-	using namespace client;
+using namespace client;
 
 class CommandHandlerImpl: public CommandHandler
 {
@@ -51,11 +51,12 @@ public:
 
 	TaskListView const & get_completed_tasks();
 	TaskListView const & get_draft_tasks();
+
 	std::vector<TaskLabel *> get_labels();
 
 private:
-	template <typename T, typename = enable_param_if_protobuf_message<T>>
-	T * get_tasks();
+	template <typename T>
+    T * get_tasks();
 
 private:
 	std::unique_ptr<core::UserId> make_user_id(const std::string & value);

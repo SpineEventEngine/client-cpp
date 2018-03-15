@@ -78,11 +78,15 @@ bool TaskManager::process_command()
 	switch (console_view_->get_active_task())
 	{
 		case ConsoleCommandType::CREATE_TASK:
+		{
 			add_task();
 			break;
+		}
 		case ConsoleCommandType::LIST_TASK:
+		{
 			list_tasks();
 			break;
+		}
 		case ConsoleCommandType::QUIT_PROGRAM:
 			return false;
 		default:
@@ -94,7 +98,8 @@ bool TaskManager::process_command()
 
 void TaskManager::add_task() {
 	auto create_task_command = std::make_unique<CreateTask>(console_view_, command_handler_);
-	try {
+	try
+	{
 		create_task_command->run_task_creation();
 	}
 	catch (std::exception & _exception)

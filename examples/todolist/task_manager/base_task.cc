@@ -88,13 +88,13 @@ std::string BaseTask::label_color_to_string(LabelColor label_color)
 	switch (label_color)
 	{
 		case LabelColor::BLUE:
-			return std::string("blue");
+			return std::string("BLUE");
 		case LabelColor::RED:
-			return std::string("red");
+			return std::string("RED");
 		case LabelColor::GRAY:
-			return std::string("gray");
+			return std::string("GRAY");
 		case LabelColor::GREEN:
-			return std::string("green");
+			return std::string("GREEN");
 		default:
 			assert(false);
 	}

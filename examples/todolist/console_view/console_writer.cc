@@ -130,6 +130,7 @@ void ConsoleWriter::print_label_info(
 		<< resources::task_info::COLOR
 		<< resources::command_line::WHITE_SPACE_DELIMETER
 		<< resources::command_line::COLON
+		<< resources::command_line::WHITE_SPACE_DELIMETER
 		<< label_color
 		<< resources::command_line::RIGHT_BRACKET
 		<< std::endl;
