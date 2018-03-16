@@ -20,104 +20,24 @@
 
 #include "task_manager.h"
 #include "create_task.h"
-#include "list_task.h"
-#include "console_view/console_writer.h"
-#include "console_view/console_view_impl.h"
 #include "command_handler/command_handler_impl.h"
 #include "resources/resources.h"
+#include "main_task.h"
 
 namespace spine {
 namespace examples {
 namespace todolist {
 
 TaskManager::TaskManager(const std::string & path_to_exec_file)
-    :	console_view_(new ConsoleViewImpl(path_to_exec_file))
-    ,	command_handler_( new CommandHandlerImpl(resources::server_info::CHANNEL))
+    :   console_view_(new ConsoleViewImpl(path_to_exec_file))
+    ,   command_handler_(new CommandHandlerImpl(resources::server_info::CHANNEL))
 {
 }
 
 void TaskManager::Start()
 {
-    console_view_->ActivateConsole([&]() {
-        std::cout << resources::messages::MAIN_MENU << std::endl;
-        std::cout << resources::command_line::LINE_SEPARATOR << std::endl;
-
-        InitializeCommands();
-        return ProcessCommand();
-    });
-}
-
-void TaskManager::InitializeCommands()
-{
-    console_view_->AddSimpleCommand(
-            ConsoleCommandType::CREATE_TASK,
-            resources::tasks_menu::CREATE_TASK_SHORTCUT,
-            resources::tasks_menu::CREATE_TASK_COMMAND,
-            resources::tasks_menu::CREATE_TASK_INFO
-    );
-
-    console_view_->AddSimpleCommand(
-            ConsoleCommandType::LIST_TASK,
-            resources::tasks_menu::LIST_TASK_SHORTCUT,
-            resources::tasks_menu::LIST_TASK_COMMAND,
-            resources::tasks_menu::LIST_TASK_INFO
-    );
-
-    console_view_->AddSimpleCommand(
-            ConsoleCommandType::QUIT_PROGRAM,
-            resources::tasks_menu::QUIT_TASK_SHORTCUT,
-            resources::tasks_menu::QUIT_TASK_COMMAND,
-            resources::tasks_menu::QUIT_TASK_INFO
-    );
-}
-
-bool TaskManager::ProcessCommand()
-{
-    console_view_->RunCommandInput();
-    switch (console_view_->GetActiveTask())
-    {
-        case ConsoleCommandType::CREATE_TASK:
-        {
-            AddTask();
-            break;
-        }
-        case ConsoleCommandType::LIST_TASK:
-        {
-            ListTasks();
-            break;
-        }
-        case ConsoleCommandType::QUIT_PROGRAM:
-            return false;
-        default:
-            ConsoleWriter::PrintUndefinedActionMessage();
-    }
-
-    return true;
-}
-
-void TaskManager::AddTask() {
-    auto create_task_command = std::make_unique<CreateTask>(console_view_, command_handler_);
-    try
-    {
-        create_task_command->RunTaskCreation();
-    }
-    catch (std::exception & _exception)
-    {
-        std::cout << _exception.what() << std::endl;
-    }
-}
-
-void TaskManager::ListTasks() const {
-
-    auto list_task_command = std::make_unique<ListTask>(console_view_, command_handler_);
-    try
-    {
-        list_task_command->LoadTaskMenu();
-    }
-    catch (std::exception & _exception)
-    {
-        std::cout << _exception.what() << std::endl;
-    }
+    auto main_task = std::make_unique<MainTask>(console_view_, command_handler_);
+    main_task->StartMenu();
 }
 
 } // namespace todolist

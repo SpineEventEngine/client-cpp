@@ -20,8 +20,6 @@
 
 #include "task_manager.h"
 #include "task_completer.h"
-#include "console_view/console_writer.h"
-#include "console_view/console_view_impl.h"
 #include "command_handler/command_handler_impl.h"
 #include "resources/resources.h"
 

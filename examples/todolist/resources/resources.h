@@ -77,7 +77,11 @@ namespace tasks_menu {
 
     static const char * CREATE_TASK_SHORTCUT = "c";
     static const char * CREATE_TASK_COMMAND = "create_task";
-    static const char * CREATE_TASK_INFO = "Create a task";
+    static const char * CREATE_TASK_INFO = "Create a basic task";
+
+    static const char * START_WIZARD_TASK_CREATION_SHORTCUT = "s";
+    static const char * START_WIZARD_TASK_CREATION_COMMAND = "create_wizard_task";
+    static const char * START_WIZARD_TASK_CREATION_INFO = "Start wizard task creation";
 
     static const char * LIST_TASK_SHORTCUT = "l";
     static const char * LIST_TASK_COMMAND = "list_tasks";
@@ -175,6 +179,8 @@ namespace messages {
 
     static const char * NO_SPECIFIED_SHORTCUT = "There is no action with specified shortcut or argument is invalid.\n";
     static const char * SELECT_AN_ACTION = "Select an action (?)";
+
+    static const char * TASK_CREATED_MESSAGE = "Task successfully created.\n";
 
 } // namespace messages
 } // namespace resources

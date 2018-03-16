@@ -102,7 +102,8 @@ set(todolist_source_files
         task_manager/create_task_label.cc
         console_view/console_view_impl.cc
         console_view/console_writer.cc
-        )
+        task_manager/main_task.cc
+        task_manager/create_simple_task.cc)
 
 add_executable(todolist ${todolist_source_files})
 

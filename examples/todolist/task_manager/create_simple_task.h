@@ -18,61 +18,35 @@
 * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef TODOLIST_CREATE_TASK_LABEL_H
-#define TODOLIST_CREATE_TASK_LABEL_H
+#ifndef TODOLIST_CREATE_SIMPLE_TASK_H
+#define TODOLIST_CREATE_SIMPLE_TASK_H
 
 #include <memory>
 #include <string>
 
-#include "base_task.h"
-
 #include "todolist/model.pb.h"
 #include "todolist/c/commands.pb.h"
+#include "base_task.h"
 
 namespace spine {
 namespace examples {
 namespace todolist {
 
-class ConsoleView;
 class CommandHandler;
 
-class CreateTaskLabel : public BaseTask
+class CreateSimpleTask : public BaseTask
 {
 public:
-    CreateTaskLabel(
+    CreateSimpleTask(
         std::shared_ptr<ConsoleView> console_view,
-        std::shared_ptr<CommandHandler> command_handler,
-        TaskCreationId * wizard_id);
+        std::shared_ptr<CommandHandler> command_handler);
 
-    MenuResult AddTaskLabels();
-
-private:
-    void InitializeCommands();
-
-    void AssignNewLabel(AddLabels *add_labels_command);
-    void AssignExistingLabel(AddLabels *add_labels_command);
-    void RemoveTaskLabel(AddLabels *add_labels_command);
-    void PrintAssignedLabels();
-    void CancelTask();
-
-    void UpdateNewLabels(AddLabels *add_labels_command);
-    void UpdateExistingLabels(AddLabels *add_labels_command);
-    void RemoveLabelFromList(AddLabels *add_labels_command, int label_number);
-
-    bool NoAssignedLabels();
-
-    MenuResult ProcessCommand(AddLabels *add_labels_command);
-    MenuResult FinishLabelAssignment(AddLabels *add_labels_command);
-
-private:
-    std::vector<LabelDetails * > new_labels_;
-    std::vector<TaskLabel * > existing_labels_;
-
-    TaskCreationId * wizard_id_;
+public:
+    void RunSimpleTaskCreation();
 };
 
 } // namespace todolist
 } // namespace examples
 } // namespace spine
 
-#endif // TODOLIST_CREATE_TASK_LABEL_H
+#endif //TODOLIST_CREATE_SIMPLE_TASK_H

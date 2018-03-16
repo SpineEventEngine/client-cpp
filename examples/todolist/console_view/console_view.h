@@ -33,6 +33,7 @@ namespace todolist {
 enum ConsoleCommandType
 {
     CREATE_TASK,
+    START_WIZARD_TASK_CREATION,
     LIST_TASK,
     VIEW_TASK,
     ADD_DESCRIPTION,

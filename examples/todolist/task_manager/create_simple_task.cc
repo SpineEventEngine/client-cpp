@@ -18,34 +18,44 @@
 * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef TODOLIST_TASK_MANAGER_H
-#define TODOLIST_TASK_MANAGER_H
-
-#include <string>
-#include <memory>
+#include <command_handler/command_handler.h>
+#include <console_view/console_view.h>
+#include "create_task.h"
+#include "create_simple_task.h"
 
 namespace spine {
 namespace examples {
 namespace todolist {
 
-class ConsoleView;
-class CommandHandler;
-
-class TaskManager
+CreateSimpleTask::CreateSimpleTask(
+    std::shared_ptr<ConsoleView> console_view,
+    std::shared_ptr<CommandHandler> command_handler
+)
+    : BaseTask(console_view, command_handler)
 {
-public:
-    TaskManager(const std::string & path_to_exec_file);
+}
 
-public:
-    void Start();
+void CreateSimpleTask::RunSimpleTaskCreation()
+{
+    std::cout << "Please enter the task description\n";
+    std::string description;
+    std::getline(std::cin, description);
 
-private:
-    std::shared_ptr<ConsoleView> console_view_;
-    std::shared_ptr<CommandHandler> command_handler_;
-};
+    std::string task_identifier = BaseTask::GenerateUniqueId();
+    TaskId * task_id = TaskId::default_instance().New();
+    task_id->set_value(task_identifier);
+
+    TaskDescription * task_description = TaskDescription::default_instance().New();
+    task_description->set_value(description);
+
+    CreateBasicTask task;
+
+    task.set_allocated_id(task_id);
+    task.set_allocated_description(task_description);
+
+    command_handler_->PostCommand(task);
+}
 
 } // namespace todolist
 } // namespace examples
 } // namespace spine
-
-#endif // TODOLIST_TASK_MANAGER_H
