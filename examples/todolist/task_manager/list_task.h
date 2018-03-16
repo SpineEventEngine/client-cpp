@@ -47,8 +47,10 @@ public:
 public:
     void LoadTaskMenu();
 
+protected:
+    void InitializeCommands() override;
+
 private:
-    void InitializeCommands();
     void LoadTaskList(ConsoleCommandType command_type);
     void LoadTasks(ConsoleCommandType command_type);
 

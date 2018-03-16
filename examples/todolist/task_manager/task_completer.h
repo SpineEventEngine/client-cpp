@@ -46,15 +46,16 @@ public:
 
     MenuResult RunCompleteMenu();
 
+protected:
+    void InitializeCommands() override ;
+
 private:
-    void InitializeCommands();
     void FinishTask();
     void CancelTask();
 
     MenuResult ProcessCommand();
 
 private:
-
     TaskCreationId * wizard_id_;
 };
 

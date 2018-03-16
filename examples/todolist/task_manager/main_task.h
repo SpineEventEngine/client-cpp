@@ -42,12 +42,14 @@ public:
 public:
     void StartMenu();
 
+protected:
+    void InitializeCommands() override;
+
 private:
     void AddBasicTask();
     void StartWizardTaskCreation();
     void ListTasks() const;
 
-    void InitializeCommands();
     bool ProcessCommand();
 };
 

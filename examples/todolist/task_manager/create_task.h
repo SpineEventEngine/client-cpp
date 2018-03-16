@@ -46,6 +46,9 @@ public:
 public:
     void RunTaskCreation();
 
+protected:
+    void InitializeCommands() override;
+
 private:
     void StartTaskCreationProcess();
     void AddDescription();
@@ -54,8 +57,6 @@ private:
 
     void UpdateDescription(const std::string &previous_description);
     void UpdatePriority(TaskPriority task_priority);
-
-    void InitializeCommands();
 
     MenuResult ProcessCommand();
     MenuResult MoveToNextStage();

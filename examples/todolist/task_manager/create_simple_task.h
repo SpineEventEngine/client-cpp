@@ -43,6 +43,9 @@ public:
 
 public:
     void RunSimpleTaskCreation();
+
+protected:
+    void InitializeCommands() override {}
 };
 
 } // namespace todolist

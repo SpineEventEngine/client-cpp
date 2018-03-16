@@ -46,9 +46,10 @@ public:
 
     MenuResult AddTaskLabels();
 
-private:
-    void InitializeCommands();
+protected:
+    void InitializeCommands() override;
 
+private:
     void AssignNewLabel(AddLabels *add_labels_command);
     void AssignExistingLabel(AddLabels *add_labels_command);
     void RemoveTaskLabel(AddLabels *add_labels_command);

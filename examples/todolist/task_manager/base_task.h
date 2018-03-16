@@ -57,6 +57,8 @@ public:
     static std::string LabelColorToString(LabelColor label_color);
 
 protected:
+    virtual void InitializeCommands() = 0;
+
     bool ConvertMenuResultTooBool(MenuResult result) const;
 
 protected:
