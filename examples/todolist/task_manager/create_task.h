@@ -63,11 +63,12 @@ private:
     MenuResult AssignTaskLabel();
 
 private:
-    TaskCreationId * wizard_id_;
-    TaskId * task_id_;
-    TaskPriority task_priority_;
+    std::unique_ptr<TaskCreationId> wizard_id_;
+    std::unique_ptr<TaskId> task_id_;
 
+    TaskPriority task_priority_;
     std::string task_description_;
+
     bool task_details_is_already_set;
 };
 

@@ -43,8 +43,8 @@ CreateTaskLabel::CreateTaskLabel(
 
 MenuResult CreateTaskLabel::AddTaskLabels()
 {
-    AddLabels * add_labels_command = AddLabels::default_instance().New();
-    add_labels_command->set_allocated_id(wizard_id_);
+    AddLabels add_labels_command;
+    add_labels_command.set_allocated_id(wizard_id_);
     MenuResult menu_result = MenuResult ::UNKNOWN;
     console_view_->ActivateConsole([&]() {
         std::cout << resources::messages::TASK_LABEL_MENU << std::endl;
@@ -53,9 +53,11 @@ MenuResult CreateTaskLabel::AddTaskLabels()
         PrintAssignedLabels();
         InitializeCommands();
 
-        menu_result = ProcessCommand(add_labels_command);
+        menu_result = ProcessCommand(&add_labels_command);
         return ConvertMenuResultTooBool(menu_result);
     });
+
+    add_labels_command.release_id();
 
     return menu_result;
 }
@@ -144,6 +146,7 @@ void CreateTaskLabel::CancelTask()
     CancelTaskCreation cancel_task_creation;
     cancel_task_creation.set_allocated_id(wizard_id_);
     command_handler_->PostCommand(cancel_task_creation);
+    cancel_task_creation.release_id();
 }
 
 void CreateTaskLabel::AssignNewLabel(AddLabels *add_labels_command)

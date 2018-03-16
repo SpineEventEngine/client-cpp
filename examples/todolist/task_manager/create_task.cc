@@ -34,11 +34,11 @@ CreateTask::CreateTask(
 )
     : BaseTask(console_view, command_handler)
 {
-    wizard_id_ = TaskCreationId::default_instance().New();
+    wizard_id_.reset(TaskCreationId::default_instance().New());
     std::string task_id = GenerateUniqueId();
     wizard_id_->set_value(std::move(task_id));
 
-    task_id_ = TaskId::default_instance().New();
+    task_id_.reset(TaskId::default_instance().New());
     std::string unique_task_id = GenerateUniqueId();
     task_id_->set_value(unique_task_id);
 
@@ -61,11 +61,13 @@ void CreateTask::RunTaskCreation()
 
 void CreateTask::StartTaskCreationProcess()
 {
-    StartTaskCreation * start_task_creation = StartTaskCreation::default_instance().New();
-    start_task_creation->set_allocated_id(wizard_id_);
-    start_task_creation->set_allocated_task_id(task_id_);
+    StartTaskCreation start_task_creation;
+    start_task_creation.set_allocated_id(wizard_id_.get());
+    start_task_creation.set_allocated_task_id(task_id_.get());
 
-    command_handler_->PostCommand(*start_task_creation);
+    command_handler_->PostCommand(start_task_creation);
+    start_task_creation.release_id();
+    start_task_creation.release_task_id();
 }
 
 void CreateTask::InitializeCommands()
@@ -152,13 +154,14 @@ void CreateTask::UpdateDescription(const std::string &previous_description)
     if (!task_details_is_already_set)
         return;
 
-    UpdateTaskDescription * update_task_description = UpdateTaskDescription::default_instance().New();
+    UpdateTaskDescription update_task_description;
     change::StringChange * string_change = change::StringChange::default_instance().New();
     string_change->set_new_value(task_description_);
     string_change->set_previous_value(previous_description);
-    update_task_description->set_allocated_description_change(string_change);
-    update_task_description->set_allocated_id(task_id_);
-    command_handler_->PostCommand(*update_task_description);
+    update_task_description.set_allocated_description_change(string_change);
+    update_task_description.set_allocated_id(task_id_.get());
+    command_handler_->PostCommand(update_task_description);
+    update_task_description.release_id();
 }
 
 void CreateTask::AddPriority()
@@ -174,20 +177,22 @@ void CreateTask::UpdatePriority(TaskPriority previous_task_priority)
     if (!task_details_is_already_set)
         return;
 
-    UpdateTaskPriority *  update_task_priority = UpdateTaskPriority::default_instance().New();
+    UpdateTaskPriority update_task_priority;
     PriorityChange * priority_change = PriorityChange::default_instance().New();
     priority_change->set_new_value(task_priority_);
     priority_change->set_previous_value(previous_task_priority);
-    update_task_priority->set_allocated_priority_change(priority_change);
-    update_task_priority->set_allocated_id(task_id_);
-    command_handler_->PostCommand(*update_task_priority);
+    update_task_priority.set_allocated_priority_change(priority_change);
+    update_task_priority.set_allocated_id(task_id_.get());
+    command_handler_->PostCommand(update_task_priority);
+    update_task_priority.release_id();
 }
 
 void CreateTask::CancelTask()
 {
     CancelTaskCreation cancel_task_creation;
-    cancel_task_creation.set_allocated_id(wizard_id_);
+    cancel_task_creation.set_allocated_id(wizard_id_.get());
     command_handler_->PostCommand(cancel_task_creation);
+    cancel_task_creation.release_id();
 }
 
 MenuResult CreateTask::MoveToNextStage()
@@ -201,19 +206,20 @@ MenuResult CreateTask::MoveToNextStage()
     TaskDescription *task_description = TaskDescription::default_instance().New();
     task_description->set_value(task_description_);
 
-    SetTaskDetails * task_details = SetTaskDetails::default_instance().New();
-    task_details->set_allocated_id(wizard_id_);
-    task_details->set_priority(task_priority_);
-    task_details->set_allocated_description(task_description);
+    SetTaskDetails task_details;
+    task_details.set_allocated_id(wizard_id_.get());
+    task_details.set_priority(task_priority_);
+    task_details.set_allocated_description(task_description);
 
-    command_handler_->PostCommand(*task_details);
+    command_handler_->PostCommand(task_details);
+    task_details.release_id();
     task_details_is_already_set = true;
     return AssignTaskLabel();
 }
 
 MenuResult CreateTask::AssignTaskLabel()
 {
-    CreateTaskLabel create_task_label(console_view_, command_handler_, wizard_id_);
+    CreateTaskLabel create_task_label(console_view_, command_handler_, wizard_id_.get());
     return (create_task_label.AddTaskLabels() == MenuResult::BACK_TO_PREVIOUS_MENU) ?
            MenuResult::REPEAT_MENU : MenuResult::FINISH_MENU;
 }

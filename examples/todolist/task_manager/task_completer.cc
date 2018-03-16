@@ -105,6 +105,7 @@ void TaskCompleter::FinishTask()
     CompleteTaskCreation complete_task_creation;
     complete_task_creation.set_allocated_id(wizard_id_);
     command_handler_->PostCommand(complete_task_creation);
+    complete_task_creation.release_id();
 }
 
 void TaskCompleter::CancelTask()
@@ -112,6 +113,7 @@ void TaskCompleter::CancelTask()
     CancelTaskCreation cancel_task_creation;
     cancel_task_creation.set_allocated_id(wizard_id_);
     command_handler_->PostCommand(cancel_task_creation);
+    cancel_task_creation.release_id();
 }
 
 } // namespace todolist
