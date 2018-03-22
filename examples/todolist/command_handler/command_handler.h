@@ -37,12 +37,12 @@ class CommandHandler
 public:
     virtual ~CommandHandler() {}
 
-    virtual void PostCommand(google::protobuf::Message &client_task) = 0;
+    virtual void PostCommand(google::protobuf::Message & client_task) = 0;
 
-    virtual TaskListView const & GetCompletedTasks() = 0;
-    virtual TaskListView const & GetDraftTasks() = 0;
+    virtual const TaskListView & GetCompletedTasks() = 0;
+    virtual const TaskListView & GetDraftTasks() = 0;
 
-    virtual std::vector<TaskLabel *> GetLabels() = 0;
+    virtual std::vector<std::shared_ptr<TaskLabel>> GetLabels() = 0;
 };
 
 } // namespace todolist

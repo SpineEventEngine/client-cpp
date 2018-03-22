@@ -20,7 +20,6 @@
 
 #include "console_writer.h"
 #include "resources/resources.h"
-#include <iostream>
 
 namespace spine {
 namespace examples {
@@ -63,10 +62,10 @@ void ConsoleWriter::PrintSelectAnActionPrompt()
     std::cout << resources::messages::SELECT_AN_ACTION << std::endl;
 }
 
-void ConsoleWriter::PrintExistingTaskLabelInfo(
-    const std::string &index,
-    const std::string &title,
-    const std::string &color
+void ConsoleWriter::PrintTaskLabelInfoForMenu(
+    const std::string & index,
+    const std::string & title,
+    const std::string & color
 )
 {
     std::cout
@@ -78,8 +77,10 @@ void ConsoleWriter::PrintExistingTaskLabelInfo(
         << resources::command_line::WHITE_SPACE_DELIMETER
         << resources::command_line::LEFT_BRACKET
         << resources::task_info::TITLE
+        << resources::command_line::WHITE_SPACE_DELIMETER
         << resources::command_line::COLON
         << title
+        << resources::command_line::COMMA
         << resources::command_line::WHITE_SPACE_DELIMETER
         << resources::task_info::COLOR
         << resources::command_line::WHITE_SPACE_DELIMETER
@@ -92,13 +93,8 @@ void ConsoleWriter::PrintExistingTaskLabelInfo(
 
 void ConsoleWriter::PrintLabelRemovedFromTaskMessage(const std::string &label_number)
 {
-    std::cout
-        << resources::task_info::LABEL
-        << resources::command_line::WHITE_SPACE_DELIMETER
-        << resources::command_line::DASH
-        << resources::command_line::WHITE_SPACE_DELIMETER
-        << label_number
-        << resources::messages::REMOVED_FROM_TASK;
+    PrintLabelNumber(label_number);
+    std::cout << resources::messages::REMOVED_FROM_TASK;
 }
 
 void ConsoleWriter::PrintLabelNumber(const std::string &label_number)
@@ -109,21 +105,30 @@ void ConsoleWriter::PrintLabelNumber(const std::string &label_number)
         << resources::command_line::SHARP
         << resources::command_line::WHITE_SPACE_DELIMETER
         << label_number
+        << resources::command_line::WHITE_SPACE_DELIMETER
         << resources::command_line::COLON
-        << std::endl;
+        << resources::command_line::WHITE_SPACE_DELIMETER;
 }
 
-void ConsoleWriter::PrintLabelInfo(
-    const std::string &label_title,
-    const std::string &label_color
+void ConsoleWriter::PrintTaskLabelInfoForDescription(
+    const std::string & label_number,
+    const std::string & label_title,
+    const std::string & label_color
 )
 {
     std::cout
+        << resources::task_info::LABEL
+        << resources::command_line::WHITE_SPACE_DELIMETER
+        << resources::command_line::SHARP
+        << resources::command_line::WHITE_SPACE_DELIMETER
+        << label_number
+        << resources::command_line::WHITE_SPACE_DELIMETER
+        << resources::command_line::COLON
+        << resources::command_line::WHITE_SPACE_DELIMETER
         << resources::command_line::LEFT_BRACKET
         << resources::task_info::TITLE
         << resources::command_line::WHITE_SPACE_DELIMETER
         << resources::command_line::COLON
-        << resources::command_line::WHITE_SPACE_DELIMETER
         << label_title
         << resources::command_line::COMMA
         << resources::command_line::WHITE_SPACE_DELIMETER

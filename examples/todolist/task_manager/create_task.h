@@ -55,7 +55,7 @@ private:
     void AddPriority();
     void CancelTask();
 
-    void UpdateDescription(const std::string &previous_description);
+    void UpdateDescription(const std::string & previous_description);
     void UpdatePriority(TaskPriority task_priority);
 
     MenuResult ProcessCommand();

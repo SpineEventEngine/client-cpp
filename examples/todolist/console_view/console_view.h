@@ -54,17 +54,15 @@ enum ConsoleCommandType
     UNKNOWN
 };
 
-class ConsoleView
-{
+class ConsoleView {
 public:
-
-    virtual ~ConsoleView() {}
+    virtual ~ConsoleView() = default;
 
     virtual void AddSimpleCommand(
         ConsoleCommandType command_type,
-        std::string const &command_shortcut,
-        std::string const &command_name,
-        std::string const &command_description) = 0;
+        const std::string &command_shortcut,
+        const std::string &command_name,
+        const std::string &command_description) = 0;
 
     virtual void AddTaskViewCommand(std::shared_ptr<TCLAP::SwitchArg> command_args) = 0;
     virtual void RunCommandInput() = 0;

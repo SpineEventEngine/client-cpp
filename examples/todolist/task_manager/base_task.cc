@@ -58,7 +58,7 @@ TaskPriority BaseTask::GenerateTaskPriority()
         int task_priority;
         std::cin >> task_priority;
         std::cin.ignore();
-        if (TaskPriority::HIGH <= task_priority <= TaskPriority::LOW)
+        if (TaskPriority::HIGH <= task_priority && task_priority <= TaskPriority::LOW)
             return static_cast<TaskPriority>(task_priority);
         else
             std::cout << resources::messages::TASK_PRIORITY_VALUE_IS_INCORRECT;

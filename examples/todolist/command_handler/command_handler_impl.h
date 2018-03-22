@@ -41,18 +41,17 @@ namespace todolist {
 
 using namespace client;
 
-class CommandHandlerImpl: public CommandHandler
-{
+class CommandHandlerImpl: public CommandHandler {
 public:
     CommandHandlerImpl(const std::string & channel);
 
 public:
-    void PostCommand(Message &client_task);
+    void PostCommand(Message & client_task);
 
-    TaskListView const & GetCompletedTasks();
-    TaskListView const & GetDraftTasks();
+    const TaskListView & GetCompletedTasks();
+    const TaskListView & GetDraftTasks();
 
-    std::vector<TaskLabel *> GetLabels();
+    std::vector<std::shared_ptr<TaskLabel>> GetLabels();
 
 private:
     template <typename T>

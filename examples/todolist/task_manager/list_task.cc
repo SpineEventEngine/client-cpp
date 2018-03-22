@@ -42,22 +42,22 @@ void ListTask::LoadTasks(ConsoleCommandType command_type)
     {
         case ConsoleCommandType::DRAFT_TASKS:
         {
-            auto const & task_list_view = command_handler_->GetDraftTasks();
+            const auto & task_list_view = command_handler_->GetDraftTasks();
             task_items_.assign(task_list_view.items().begin(), task_list_view.items().end());
             break;
         }
         case ConsoleCommandType::COMPLETED_TASKS:
         {
-            auto const & task_list_view = command_handler_->GetCompletedTasks();
+            const auto & task_list_view = command_handler_->GetCompletedTasks();
             task_items_.assign(task_list_view.items().begin(), task_list_view.items().end());
             break;
         }
         case ConsoleCommandType::ALL_TASKS:
         {
-            auto const & completed_task_list_view = command_handler_->GetCompletedTasks();
-            auto const & draft_task_list_view = command_handler_->GetDraftTasks();
-            auto const & completed_items = completed_task_list_view.items();
-            auto const & draft_items = draft_task_list_view.items();
+            const auto & completed_task_list_view = command_handler_->GetCompletedTasks();
+            const auto & draft_task_list_view = command_handler_->GetDraftTasks();
+            const auto & completed_items = completed_task_list_view.items();
+            const auto & draft_items = draft_task_list_view.items();
 
             std::copy(completed_items.begin(), completed_items.end(), std::back_inserter(task_items_));
             std::copy(draft_items.begin(), draft_items.end(), std::back_inserter(task_items_));
@@ -148,10 +148,13 @@ void ListTask::LoadTaskList(ConsoleCommandType command_type)
         );
 
         console_view_->RunCommandInput();
-        if (console_view_->IsTaskSet()) {
+        if (console_view_->IsTaskSet())
+        {
             ShowTaskInfo(console_view_->GetActiveTaskIndex());
             return true;
-        } else if (console_view_->IsCommandSet(ConsoleCommandType::BACK_TO_PREVIOUS_MENU)) {
+        }
+        else if (console_view_->IsCommandSet(ConsoleCommandType::BACK_TO_PREVIOUS_MENU))
+        {
             return false;
         }
 

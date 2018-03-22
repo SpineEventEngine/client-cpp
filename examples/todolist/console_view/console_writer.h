@@ -36,7 +36,7 @@ public:
     static void PrintUndefinedActionMessage();
     static void PrintSelectAnActionPrompt();
 
-    static void PrintExistingTaskLabelInfo(
+    static void PrintTaskLabelInfoForMenu(
         const std::string &index,
         const std::string &title,
         const std::string &color);
@@ -45,7 +45,8 @@ public:
 
     static void PrintLabelNumber(const std::string &label_number);
 
-    static void PrintLabelInfo(
+    static void PrintTaskLabelInfoForDescription(
+        const std::string &index,
         const std::string &label_title,
         const std::string &label_color);
 };

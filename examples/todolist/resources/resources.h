@@ -181,6 +181,7 @@ namespace messages {
     static const char * SELECT_AN_ACTION = "Select an action (?)";
 
     static const char * TASK_CREATED_MESSAGE = "Task successfully created.\n";
+    static const char * LABEL_HAS_ALREADY_BEEN_SET_TO_THIS_TASK = "Label has been already set to this task.\n";
 
 } // namespace messages
 } // namespace resources

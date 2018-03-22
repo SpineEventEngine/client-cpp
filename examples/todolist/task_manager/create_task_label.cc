@@ -50,7 +50,7 @@ MenuResult CreateTaskLabel::AddTaskLabels()
         std::cout << resources::messages::TASK_LABEL_MENU << std::endl;
         std::cout << resources::command_line::LINE_SEPARATOR << std::endl;
 
-        PrintAssignedLabels();
+        PrintAssignedLabels(ConsoleWriter::PrintTaskLabelInfoForDescription);
         InitializeCommands();
 
         menu_result = ProcessCommand(&add_labels_command);
@@ -176,8 +176,8 @@ void CreateTaskLabel::AssignExistingLabel(AddLabels *add_labels_command)
 
     for (int i = 0; i < task_labels.size(); ++i)
     {
-        TaskLabel * label = task_labels[i];
-        ConsoleWriter::PrintExistingTaskLabelInfo(
+        std::shared_ptr<TaskLabel> label = task_labels[i];
+        ConsoleWriter::PrintTaskLabelInfoForMenu(
                 std::to_string(i + MIN_TASK_NUMBER),
                 label->title(),
                 LabelColorToString(label->color())
@@ -190,10 +190,20 @@ void CreateTaskLabel::AssignExistingLabel(AddLabels *add_labels_command)
         int label_number = 0;
         std::cin >> label_number;
         std::cin.ignore();
-        if (MIN_TASK_NUMBER < label_number < task_labels.size())
+        if (MIN_TASK_NUMBER <= label_number && label_number <= task_labels.size())
         {
             auto * existing_label = add_labels_command->add_existing_labels();
-            existing_label->set_value(task_labels[label_number - MIN_TASK_NUMBER]->id().value());
+            std::shared_ptr<TaskLabel> task_label = task_labels[label_number - MIN_TASK_NUMBER];
+            if(existing_labels_filter_.find(task_label) == existing_labels_filter_.end())
+            {
+                existing_label->set_value(task_label->id().value());
+                existing_labels_.push_back(task_label);
+                existing_labels_filter_.insert(task_label);
+            } else
+            {
+                std::cout << resources::messages::LABEL_HAS_ALREADY_BEEN_SET_TO_THIS_TASK;
+            }
+
             return;
         }
         else
@@ -211,7 +221,7 @@ void CreateTaskLabel::RemoveTaskLabel(AddLabels *add_labels_command)
         return;
     }
 
-    PrintAssignedLabels();
+    PrintAssignedLabels(ConsoleWriter::PrintTaskLabelInfoForMenu);
     unsigned long task_labels_count = existing_labels_.size() + new_labels_.size();
 
     while (true)
@@ -220,8 +230,9 @@ void CreateTaskLabel::RemoveTaskLabel(AddLabels *add_labels_command)
         int label_number;
         std::cin >> label_number;
         std::cin.ignore();
-        if (MIN_TASK_NUMBER < label_number < task_labels_count)
+        if (MIN_TASK_NUMBER <= label_number && label_number <= task_labels_count)
         {
+            --label_number;
             RemoveLabelFromList(add_labels_command, label_number);
             return;
         }
@@ -234,21 +245,21 @@ void CreateTaskLabel::RemoveTaskLabel(AddLabels *add_labels_command)
 
 void CreateTaskLabel::RemoveLabelFromList(AddLabels *add_labels_command, int label_number)
 {
-    if (label_number <= new_labels_.size())
+    if (label_number < new_labels_.size())
     {
-        --label_number;
         new_labels_.erase(new_labels_.begin() + label_number);
         UpdateNewLabels(add_labels_command);
     }
     else
     {
         label_number -= new_labels_.size();
-        --label_number;
-        existing_labels_.erase(existing_labels_.begin() + label_number);
+        auto current_iterator = existing_labels_.begin() + label_number;
+        existing_labels_filter_.erase(* current_iterator);
+        existing_labels_.erase(current_iterator);
         UpdateExistingLabels(add_labels_command);
     }
 
-    ConsoleWriter::PrintLabelRemovedFromTaskMessage(std::to_string(label_number));
+    ConsoleWriter::PrintLabelRemovedFromTaskMessage(std::to_string(++label_number));
 }
 
 void CreateTaskLabel::UpdateNewLabels(AddLabels *add_labels_command)
@@ -265,7 +276,7 @@ void CreateTaskLabel::UpdateNewLabels(AddLabels *add_labels_command)
 void CreateTaskLabel::UpdateExistingLabels(AddLabels *add_labels_command)
 {
     add_labels_command->clear_existing_labels();
-    std::for_each(existing_labels_.begin(), existing_labels_.end(), [&](TaskLabel * task_label)
+    std::for_each(existing_labels_.begin(), existing_labels_.end(), [&](std::shared_ptr<TaskLabel> task_label)
     {
         LabelId * updated_task_label = add_labels_command->add_existing_labels();
         updated_task_label->set_value(task_label->id().value());
@@ -281,7 +292,7 @@ MenuResult CreateTaskLabel::FinishLabelAssignment(AddLabels *add_labels_command)
            MenuResult::REPEAT_MENU : MenuResult::FINISH_MENU;
 }
 
-void CreateTaskLabel::PrintAssignedLabels()
+void CreateTaskLabel::PrintAssignedLabels(PrintCallback callback)
 {
     std::cout << resources::messages::ASSIGNED_LABELS;
     if (NoAssignedLabels())
@@ -289,26 +300,24 @@ void CreateTaskLabel::PrintAssignedLabels()
         std::cout << resources::messages::NO_ASSIGNED_LABELS << std::endl;
         return;
     }
-
+    unsigned int label_index = 1;
     for (int i = 0; i < new_labels_.size(); ++i)
     {
         LabelDetails * label_detail = new_labels_[i];
-
-        ConsoleWriter::PrintLabelNumber(std::to_string(i + MIN_TASK_NUMBER));
-        ConsoleWriter::PrintLabelInfo(
-                label_detail->title(),
-                LabelColorToString(label_detail->color())
+        callback(
+            std::to_string(label_index + i),
+            label_detail->title(),
+            LabelColorToString(label_detail->color())
         );
     }
 
     for (int i = 0; i < existing_labels_.size(); ++i)
     {
-        TaskLabel * task_label = existing_labels_[i];
-        ConsoleWriter::PrintLabelNumber(std::to_string(i + MIN_TASK_NUMBER));
-        ConsoleWriter::PrintLabelInfo(
-                task_label->title(),
-                LabelColorToString(task_label->color())
-        );
+        std::shared_ptr<TaskLabel> task_label = existing_labels_[i];
+        callback(
+            std::to_string(label_index + i),
+            task_label->title(),
+            LabelColorToString(task_label->color()));
     }
 }
 

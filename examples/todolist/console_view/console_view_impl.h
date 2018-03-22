@@ -43,9 +43,9 @@ public:
 public:
     void AddSimpleCommand(
         ConsoleCommandType command_type,
-        std::string const &command_shortcut,
-        std::string const &command_name,
-        std::string const &command_description) override final;
+        const std::string & command_shortcut,
+        const std::string & command_name,
+        const std::string & command_description) override final;
 
     void AddTaskViewCommand(std::shared_ptr<TCLAP::SwitchArg> command_args) override final;
     void RunCommandInput() override final;

@@ -29,7 +29,7 @@ namespace todolist {
 
 constexpr int INVALID_TASK_NUMBER = -1;
 
-ConsoleViewImpl::ConsoleViewImpl(std::string const & path_to_exec_file)
+ConsoleViewImpl::ConsoleViewImpl(const std::string & path_to_exec_file)
     :   command_handler_(
             new TCLAP::CmdLine(
                 resources::command_line::COMMAND_DESCRIPTION_MESSAGE,
@@ -44,11 +44,12 @@ ConsoleViewImpl::ConsoleViewImpl(std::string const & path_to_exec_file)
 }
 
 void ConsoleViewImpl::AddSimpleCommand(
-        ConsoleCommandType command_type,
-        std::string const &command_shortcut,
-        std::string const &command_name,
-        std::string const &command_description)
+    ConsoleCommandType command_type,
+    const std::string & command_shortcut,
+    const std::string & command_name,
+    const std::string & command_description)
 {
+
     std::cout
         <<  resources::command_line::LEFT_BRACE +
             command_shortcut +

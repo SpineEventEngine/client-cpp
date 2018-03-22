@@ -77,8 +77,7 @@ T * CommandHandlerImpl::GetTasks()
     }
 
     T * task_list_view = T::default_instance().New();
-    if (response.messages_size() > 0)
-    {
+    if (response.messages_size() > 0) {
         const Any& any = response.messages(0);
         any.UnpackTo(task_list_view);
     }
@@ -86,7 +85,7 @@ T * CommandHandlerImpl::GetTasks()
     return task_list_view;
 }
 
-std::vector<TaskLabel *> CommandHandlerImpl::GetLabels()
+std::vector<std::shared_ptr<TaskLabel>> CommandHandlerImpl::GetLabels()
 {
     ActorRequestFactory factory = ActorRequestFactory::create(parameters_);
     QueryPtr query = factory.query_factory()->all<TaskLabel>();
@@ -99,13 +98,12 @@ std::vector<TaskLabel *> CommandHandlerImpl::GetLabels()
         throw std::runtime_error(resources::server_info::INVALID_SERVER_RESPONSE);
     }
 
-    std::vector<TaskLabel *> label_tasks;
-    TaskLabel * task_label = TaskLabel::default_instance().New();
+    std::vector<std::shared_ptr<TaskLabel>> label_tasks;
     int messages_count = response.messages_size();
-    for (int i = 0; i < messages_count; ++i)
-    {
+    for (int i = 0; i < messages_count; ++i) {
+        std::shared_ptr<TaskLabel> task_label(TaskLabel::default_instance().New());
         const Any& any = response.messages(i);
-        any.UnpackTo(task_label);
+        any.UnpackTo(task_label.get());
         label_tasks.push_back(task_label);
     }
 

@@ -36,6 +36,14 @@ namespace todolist {
 class ConsoleView;
 class CommandHandler;
 
+struct TaskLabelComparator
+{
+    bool operator() (std::shared_ptr<TaskLabel> left_label, std::shared_ptr<TaskLabel> right_label)
+    {
+        return left_label->id().value() > right_label->id().value();
+    }
+};
+
 class CreateTaskLabel : public BaseTask
 {
 public:
@@ -53,8 +61,12 @@ private:
     void AssignNewLabel(AddLabels *add_labels_command);
     void AssignExistingLabel(AddLabels *add_labels_command);
     void RemoveTaskLabel(AddLabels *add_labels_command);
-    void PrintAssignedLabels();
     void CancelTask();
+
+    typedef std::function<void(const std::string &, const std::string &, const std::string &)>
+    PrintCallback;
+
+    void PrintAssignedLabels(PrintCallback callback);
 
     void UpdateNewLabels(AddLabels *add_labels_command);
     void UpdateExistingLabels(AddLabels *add_labels_command);
@@ -66,8 +78,11 @@ private:
     MenuResult FinishLabelAssignment(AddLabels *add_labels_command);
 
 private:
+
     std::vector<LabelDetails * > new_labels_;
-    std::vector<TaskLabel * > existing_labels_;
+
+    std::vector<std::shared_ptr<TaskLabel>> existing_labels_;
+    std::set<std::shared_ptr<TaskLabel>, TaskLabelComparator > existing_labels_filter_;
 
     TaskCreationId * wizard_id_;
 };
