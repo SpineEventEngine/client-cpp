@@ -35,8 +35,7 @@ install:
   - cmake --version
 
 before_script:
-  - cd ${TRAVIS_BUILD_DIR}
-  - mkdir dependencies && cd dependencies && mkdir spine
+  - cd ${TRAVIS_BUILD_DIR}/dependencies && mkdir spine
   - git clone https://github.com/SpineEventEngine/client-cpp.git
   - cd client-cpp && git checkout dependencies
   - mv dependencies/grpc ../ && cd ..
