@@ -35,15 +35,11 @@ install:
   - cmake --version
 
 before_script:
-  - cd ${TRAVIS_BUILD_DIR}/dependencies && mkdir spine
-  - git clone https://github.com/SpineEventEngine/client-cpp.git
-  - cd client-cpp && git checkout dependencies
+  - cd ${TRAVIS_BUILD_DIR}/dependencies
+  - git clone -b dependencies --depth=1 https://github.com/SpineEventEngine/client-cpp.git
+  - cd client-cpp
   - mv dependencies/grpc ../ && cd ..
-  - sudo rm -r client-cpp
-  - wget http://maven.teamdev.com/repository/spine-snapshots/io/spine/spine-client/0.10.15-SNAPSHOT/spine-client-0.10.15-20171225.084237-2-proto.jar
-  - mv spine-client-0.10.15-20171225.084237-2-proto.jar spine/spine-client-0.10.15-20171225.084237-2-proto.jar
-  - cd spine && mv spine-client-0.10.15-20171225.084237-2-proto.jar spine.jar && unzip spine.jar && rm spine.jar
-  - cd ../..
+  - sudo rm -r client-cpp && cd ..
   - mkdir _build && cd _build && cmake -DENABLE_CODE_COVERAGE=ON ..
 script:
   - cmake --build .
