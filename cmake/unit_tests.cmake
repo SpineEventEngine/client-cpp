@@ -42,10 +42,16 @@ endif()
 
 add_executable(runTests ${TEST_SRCS} ${test_generated_files})
 
-add_subdirectory(${GTEST_DEPENDENCIES_DIR} EXCLUDE_FROM_ALL)
-
-target_link_libraries(runTests gtest_main ${CPP_SPINE_LIBRARY_NAME}
+if(BUILD_DEPENDENCIES)
+    add_subdirectory(${GTEST_DEPENDENCIES_DIR} EXCLUDE_FROM_ALL)
+    target_link_libraries(runTests gtest_main ${CPP_SPINE_LIBRARY_NAME}
+        libprotobuf.a
+	${Poco_FOUNDATION_LIB}
+	)
+else()
+    target_link_libraries(runTests gtest gtest_main pthread ${CPP_SPINE_LIBRARY_NAME}
         libprotobuf.a
         ${Poco_FOUNDATION_LIB}
         )
+endif()
 add_dependencies(runTests ${CPP_SPINE_LIBRARY_NAME})
