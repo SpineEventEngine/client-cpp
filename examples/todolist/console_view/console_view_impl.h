@@ -34,7 +34,7 @@ namespace spine {
 namespace examples {
 namespace todolist {
 
-
+//TODO general. const std::string& <- put & to type, not variable names. you have different styles accross source code
 class ConsoleViewImpl: public ConsoleView
 {
 public:

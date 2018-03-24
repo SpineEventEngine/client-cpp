@@ -42,6 +42,8 @@ void CreateSimpleTask::RunSimpleTaskCreation()
     std::getline(std::cin, description);
 
     std::string task_identifier = BaseTask::GenerateUniqueId();
+    //TODO wrap all raw pointers into a smart pointer. Release it if you pass it into
+    // a protobuf message with set_allocated_***
     TaskId * task_id = TaskId::default_instance().New();
     task_id->set_value(task_identifier);
 

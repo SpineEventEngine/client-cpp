@@ -26,6 +26,7 @@ namespace examples {
 namespace todolist {
 namespace resources {
 
+//TODO: check Google's constants naming
 namespace tasks_menu {
     static const char * DESCRIPTION_SHORTCUT = "d";
     static const char * DESCRIPTION_COMMAND = "Description";

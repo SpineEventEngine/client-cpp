@@ -29,6 +29,7 @@ namespace spine {
 namespace examples {
 namespace todolist {
 
+//TODO don't need a class if everything is public and static.
 class ConsoleWriter
 {
 public:
