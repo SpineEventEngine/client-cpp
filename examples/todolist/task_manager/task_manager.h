@@ -31,6 +31,7 @@ namespace todolist {
 class ConsoleView;
 class CommandHandler;
 
+//TODO your manager manages nothing. it just runs the menu. name it accordingly.
 class TaskManager
 {
 public:

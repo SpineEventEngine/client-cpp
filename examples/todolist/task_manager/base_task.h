@@ -43,11 +43,16 @@ enum class MenuResult {
     UNKNOWN
 };
 
-class BaseTask
+class BaseTask //TODO BaseTask -> Task. Or SpineTask, or TODoTask
 {
 public:
+    //TODO task knows too much about the UI. Try to design this as MVC, with a good separation for M,V,and C
+    //TODO your tasks are actions, but do much with the ui. you need to make task creation as a separate process, sending commands
+    // a separate process. UI update a separate process.
+    //You should have a model classes for a task, and a processor in it or a separate, that would do some actions.
+    // You can use protobuf classes for a model
     BaseTask(
-        std::shared_ptr<ConsoleView> console_view,
+        std::shared_ptr<ConsoleView> console_view, //TODO const std::shared_ptr<T>&
         std::shared_ptr<CommandHandler> command_handler);
 
     static TaskPriority GenerateTaskPriority();

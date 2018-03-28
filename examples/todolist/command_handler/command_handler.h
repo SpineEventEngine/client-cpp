@@ -32,6 +32,8 @@ namespace spine {
 namespace examples {
 namespace todolist {
 
+//TODO do you need an interface here?
+// put al transport/spine communication classes together. Commands and Queries should be together.
 class CommandHandler
 {
 public:
