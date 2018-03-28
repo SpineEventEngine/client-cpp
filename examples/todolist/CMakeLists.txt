@@ -26,6 +26,21 @@ find_program(PROTOC_EXE protoc)
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 set(Protobuf_USE_STATIC_LIBS ON)
 
+set(DEPENDENCIES_DIR            ${CMAKE_SOURCE_DIR}/dependencies)
+set(DEPENDENCIES_BUILD_DIR ${DEPENDENCIES_DIR}/_build)
+    
+if(NOT EXISTS ${DEPENDENCIES_DIR})
+    file(MAKE_DIRECTORY ${DEPENDENCIES_DIR})
+    file(MAKE_DIRECTORY ${DEPENDENCIES_BUILD_DIR})
+    configure_file(cmake/dependencies.cmake.in ${DEPENDENCIES_DIR}/CMakeLists.txt)
+    execute_process(COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" ..
+            RESULT_VARIABLE result
+            WORKING_DIRECTORY ${DEPENDENCIES_BUILD_DIR})
+    execute_process(COMMAND ${CMAKE_COMMAND} --build .
+            RESULT_VARIABLE result
+            WORKING_DIRECTORY ${DEPENDENCIES_BUILD_DIR})
+endif()
+
 include_directories(${CPP_SPINE_LIB_INCLUDE_DIR})
 include_directories(${CPP_SPINE_GENERATED_INCLUDE_DIR})
 
@@ -43,7 +58,7 @@ else()
         find_library(Poco_FOUNDATION_LIB NAMES PocoFoundation PocoFoundationd)
 endif()
 
-include_directories(third_party/tclap-1.2.1/include)
+include_directories(third_party/tclap/tclap-1.2.1/include)
 
 set(todolist_proto_files
         todolist/values.proto
@@ -64,7 +79,7 @@ set(Protobuf_IMPORT_DIRS ${Protobuf_IMPORT_DIRS} ${CMAKE_BINARY_DIR}/../../../de
 set(GENERATED_DIR ${CMAKE_CURRENT_BINARY_DIR}/generated)
 file(MAKE_DIRECTORY ${GENERATED_DIR})
 
-set(PROTO_DIR ${CMAKE_HOME_DIRECTORY}/model)
+set(PROTO_DIR ${CMAKE_HOME_DIRECTORY}/dependencies/model/todolist-model/model/src/main/proto/)
 
 macro(compile_proto_file filename)
     get_filename_component(dirname ${filename} PATH)
@@ -105,7 +120,18 @@ set(todolist_source_files
         task_manager/main_task.cc
         task_manager/create_simple_task.cc)
 
-add_executable(todolist ${todolist_source_files})
+add_executable(${PROJECT_NAME} ${todolist_source_files})
+
+set(TCLAP_LIBRARY_DIR ${CMAKE_SOURCE_DIR}/third_party/tclap)
+
+if(NOT EXISTS ${TCLAP_LIBRARY_DIR})
+    file(MAKE_DIRECTORY ${TCLAP_LIBRARY_DIR})
+    set(LOAD_THIRD_PARTY LOAD_THIRD_PARTY)
+    add_custom_target(
+        LOAD_THIRD_PARTY tar -xvzf ${CMAKE_SOURCE_DIR}/third_party/tclap-1.2.1.tar.gz -C ${TCLAP_LIBRARY_DIR}
+    )
+    add_dependencies(${PROJECT_NAME} ${LOAD_THIRD_PARTY})
+endif()
 
 target_link_libraries(todolist
         ${CPP_SPINE_LIBRARY_NAME}
