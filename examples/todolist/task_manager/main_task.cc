@@ -33,14 +33,14 @@ MainTask::MainTask(
     std::shared_ptr<ConsoleView> console_view,
     std::shared_ptr<CommandHandler> command_handler
 )
-    : BaseTask(console_view, command_handler)
+    : TodoTask(console_view, command_handler)
 {
 }
 
 void MainTask::StartMenu() {
     console_view_->ActivateConsole([&]() {
-        std::cout << resources::messages::MAIN_MENU << std::endl;
-        std::cout << resources::command_line::LINE_SEPARATOR << std::endl;
+        std::cout << resources::messages::kMainMenu << std::endl;
+        std::cout << resources::command_line::kLineSeparator << std::endl;
 
         InitializeCommands();
         return ProcessCommand();
@@ -49,31 +49,31 @@ void MainTask::StartMenu() {
 
 void MainTask::InitializeCommands() {
     console_view_->AddSimpleCommand(
-            ConsoleCommandType::CREATE_TASK,
-            resources::tasks_menu::CREATE_TASK_SHORTCUT,
-            resources::tasks_menu::CREATE_TASK_COMMAND,
-            resources::tasks_menu::CREATE_TASK_INFO
+        ConsoleCommandType::CREATE_TASK,
+        resources::tasks_menu::kCreateTaskShortcut,
+        resources::tasks_menu::kCreateTaskCommand,
+        resources::tasks_menu::kCreateTaskInfo
     );
 
     console_view_->AddSimpleCommand(
-            ConsoleCommandType::START_WIZARD_TASK_CREATION,
-            resources::tasks_menu::START_WIZARD_TASK_CREATION_SHORTCUT,
-            resources::tasks_menu::START_WIZARD_TASK_CREATION_COMMAND,
-            resources::tasks_menu::START_WIZARD_TASK_CREATION_INFO
+        ConsoleCommandType::START_WIZARD_TASK_CREATION,
+        resources::tasks_menu::kStartWizardTaskCreationShortcut,
+        resources::tasks_menu::kStartWizardTaskCreationCommand,
+        resources::tasks_menu::kStartWizardTaskCreationInfo
     );
 
     console_view_->AddSimpleCommand(
-            ConsoleCommandType::LIST_TASK,
-            resources::tasks_menu::LIST_TASK_SHORTCUT,
-            resources::tasks_menu::LIST_TASK_COMMAND,
-            resources::tasks_menu::LIST_TASK_INFO
+        ConsoleCommandType::LIST_TASK,
+        resources::tasks_menu::kListTasksShortcut,
+        resources::tasks_menu::kListTasksCommand,
+        resources::tasks_menu::kListTasksInfo
     );
 
     console_view_->AddSimpleCommand(
-            ConsoleCommandType::QUIT_PROGRAM,
-            resources::tasks_menu::QUIT_TASK_SHORTCUT,
-            resources::tasks_menu::QUIT_TASK_COMMAND,
-            resources::tasks_menu::QUIT_TASK_INFO
+        ConsoleCommandType::QUIT_PROGRAM,
+        resources::tasks_menu::kQuitTaskShortcut,
+        resources::tasks_menu::kQuitTaskCommand,
+        resources::tasks_menu::kQuitTaskInfo
     );
 }
 
@@ -98,7 +98,7 @@ bool MainTask::ProcessCommand() {
         case ConsoleCommandType::QUIT_PROGRAM:
             return false;
         default:
-            ConsoleWriter::PrintUndefinedActionMessage();
+            console::PrintUndefinedActionMessage();
     }
 
     return true;
@@ -110,11 +110,11 @@ void MainTask::AddBasicTask()
     try
     {
         create_task_command->RunSimpleTaskCreation();
-        std::cout << resources::messages::TASK_CREATED_MESSAGE;
+        std::cout << resources::messages::kTaskCreatedMessage;
     }
-    catch (std::exception &_exception)
+    catch (std::exception& exception)
     {
-        std::cout << _exception.what() << std::endl;
+        std::cout << exception.what() << std::endl;
     }
 }
 
@@ -123,11 +123,11 @@ void MainTask::StartWizardTaskCreation() {
     try
     {
         create_task_command->RunTaskCreation();
-        std::cout << resources::messages::TASK_CREATED_MESSAGE;
+        std::cout << resources::messages::kTaskCreatedMessage;
     }
-    catch (std::exception &_exception)
+    catch (std::exception& exception)
     {
-        std::cout << _exception.what() << std::endl;
+        std::cout << exception.what() << std::endl;
     }
 }
 
@@ -138,9 +138,9 @@ void MainTask::ListTasks() const {
     {
         list_task_command->LoadTaskMenu();
     }
-    catch (std::exception &_exception)
+    catch (std::exception& exception)
     {
-        std::cout << _exception.what() << std::endl;
+        std::cout << exception.what() << std::endl;
     }
 }
 

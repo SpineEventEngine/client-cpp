@@ -23,7 +23,7 @@
 
 #include <string>
 #include <memory>
-#include "base_task.h"
+#include "todo_task.h"
 
 namespace spine {
 namespace examples {
@@ -32,7 +32,7 @@ namespace todolist {
 class ConsoleView;
 class CommandHandler;
 
-class MainTask : public BaseTask
+class MainTask : public TodoTask
 {
 public:
     MainTask(

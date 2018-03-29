@@ -18,7 +18,7 @@
 * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include "task_manager.h"
+#include "task_runner.h"
 #include "create_task_label.h"
 #include "task_completer.h"
 #include "console_view/console_writer.h"
@@ -34,9 +34,9 @@ constexpr int MIN_TASK_NUMBER = 1;
 CreateTaskLabel::CreateTaskLabel(
     std::shared_ptr<ConsoleView> console_view,
     std::shared_ptr<CommandHandler> command_handler,
-    TaskCreationId * wizard_id
+    std::shared_ptr<TaskCreationId> wizard_id
 )
-    : BaseTask(console_view, command_handler)
+    : TodoTask(console_view, command_handler)
     , wizard_id_(wizard_id)
 {
 }
@@ -44,13 +44,13 @@ CreateTaskLabel::CreateTaskLabel(
 MenuResult CreateTaskLabel::AddTaskLabels()
 {
     AddLabels add_labels_command;
-    add_labels_command.set_allocated_id(wizard_id_);
+    add_labels_command.set_allocated_id(wizard_id_.get());
     MenuResult menu_result = MenuResult ::UNKNOWN;
     console_view_->ActivateConsole([&]() {
-        std::cout << resources::messages::TASK_LABEL_MENU << std::endl;
-        std::cout << resources::command_line::LINE_SEPARATOR << std::endl;
+        std::cout << resources::messages::kTaskLabelMenu << std::endl;
+        std::cout << resources::command_line::kLineSeparator << std::endl;
 
-        PrintAssignedLabels(ConsoleWriter::PrintTaskLabelInfoForDescription);
+        PrintAssignedLabels(console::PrintTaskLabelInfoForDescription);
         InitializeCommands();
 
         menu_result = ProcessCommand(&add_labels_command);
@@ -65,41 +65,41 @@ MenuResult CreateTaskLabel::AddTaskLabels()
 void CreateTaskLabel::InitializeCommands()
 {
     console_view_->AddSimpleCommand(
-            ConsoleCommandType::ASSIGN_NEW_LABEL,
-            resources::tasks_menu::NEW_LABEL_SHORTCUT,
-            resources::tasks_menu::NEW_LABEL_COMMAND,
-            resources::tasks_menu::NEW_LABEL_INFO
+        ConsoleCommandType::ASSIGN_NEW_LABEL,
+        resources::tasks_menu::kNewLabelShortcut,
+        resources::tasks_menu::kNewLabelCommand,
+        resources::tasks_menu::kNewLabelInfo
     );
     console_view_->AddSimpleCommand(
-            ConsoleCommandType::ASSIGN_EXISTING_LABEL,
-            resources::tasks_menu::EXISTING_LABEL_SHORTCUT,
-            resources::tasks_menu::EXISTING_LABEL_COMMAND,
-            resources::tasks_menu::EXISTING_LABEL_INFO
+        ConsoleCommandType::ASSIGN_EXISTING_LABEL,
+        resources::tasks_menu::kExistingLabelShortcut,
+        resources::tasks_menu::kExistingLabelCommand,
+        resources::tasks_menu::kExistingLabelInfo
     );
     console_view_->AddSimpleCommand(
-            ConsoleCommandType::REMOVE_LABEL,
-            resources::tasks_menu::REMOVE_LABEL_SHORTCUT,
-            resources::tasks_menu::REMOVE_LABEL_COMMAND,
-            resources::tasks_menu::REMOVE_LABEL_INFO
+        ConsoleCommandType::REMOVE_LABEL,
+        resources::tasks_menu::kRemoveLabelShortcut,
+        resources::tasks_menu::kRemoveLabelCommand,
+        resources::tasks_menu::kRemoveLabelInfo
     );
     console_view_->AddSimpleCommand(
-            ConsoleCommandType::NEXT_STAGE,
-            resources::tasks_menu::NEXT_STAGE_SHORTCUT,
-            resources::tasks_menu::NEXT_STAGE_COMMAND,
-            resources::tasks_menu::NEXT_STAGE_INFO
+        ConsoleCommandType::NEXT_STAGE,
+        resources::tasks_menu::kNextStageShortcut,
+        resources::tasks_menu::kNextStageCommand,
+        resources::tasks_menu::kNextStageInfo
     );
     console_view_->AddSimpleCommand(
-            ConsoleCommandType::CANCEL_TASK,
-            resources::tasks_menu::CANCEL_SHORTCUT,
-            resources::tasks_menu::CANCEL_COMMAND,
-            resources::tasks_menu::CANCEL_INFO
+        ConsoleCommandType::CANCEL_TASK,
+        resources::tasks_menu::kCancelShortcut,
+        resources::tasks_menu::kCancelCommand,
+        resources::tasks_menu::kCancelInfo
     );
 
     console_view_->AddSimpleCommand(
-            ConsoleCommandType::BACK_TO_PREVIOUS_MENU,
-            resources::tasks_menu::BACK_SHORTCUT,
-            resources::tasks_menu::BACK_COMMAND,
-            resources::tasks_menu::BACK_INFO
+        ConsoleCommandType::BACK_TO_PREVIOUS_MENU,
+        resources::tasks_menu::kBackShortcut,
+        resources::tasks_menu::kBackCommand,
+        resources::tasks_menu::kBackInfo
     );
 }
 
@@ -144,14 +144,14 @@ MenuResult CreateTaskLabel::ProcessCommand(AddLabels *add_labels_command)
 void CreateTaskLabel::CancelTask()
 {
     CancelTaskCreation cancel_task_creation;
-    cancel_task_creation.set_allocated_id(wizard_id_);
+    cancel_task_creation.set_allocated_id(wizard_id_.get());
     command_handler_->PostCommand(cancel_task_creation);
     cancel_task_creation.release_id();
 }
 
 void CreateTaskLabel::AssignNewLabel(AddLabels *add_labels_command)
 {
-    std::cout << resources::messages::PLEASE_ENTER_THE_TASK_LABEL << std::endl;
+    std::cout << resources::messages::kPleaseEnterTheTaskLabel << std::endl;
     std::string label_title;
     std::getline(std::cin, label_title);
     LabelDetails * label_details = add_labels_command->add_new_labels();
@@ -167,17 +167,17 @@ void CreateTaskLabel::AssignNewLabel(AddLabels *add_labels_command)
 void CreateTaskLabel::AssignExistingLabel(AddLabels *add_labels_command)
 {
     auto task_labels = command_handler_->GetLabels();
-    std::cout << resources::messages::EXISTING_LABELS;
+    std::cout << resources::messages::kExistingLabels;
     if (task_labels.empty())
     {
-        std::cout << resources::messages::NO_EXISTING_LABELS;
+        std::cout << resources::messages::kNoExistingLabels;
         return;
     }
 
     for (int i = 0; i < task_labels.size(); ++i)
     {
         std::shared_ptr<TaskLabel> label = task_labels[i];
-        ConsoleWriter::PrintTaskLabelInfoForMenu(
+        console::PrintTaskLabelInfoForMenu(
                 std::to_string(i + MIN_TASK_NUMBER),
                 label->title(),
                 LabelColorToString(label->color())
@@ -186,7 +186,7 @@ void CreateTaskLabel::AssignExistingLabel(AddLabels *add_labels_command)
 
     while (true)
     {
-        std::cout << resources::messages::PLEASE_CHOOSE_THE_LABEL_NUMBER;
+        std::cout << resources::messages::kPleaseChooseTheLabelNumber;
         int label_number = 0;
         std::cin >> label_number;
         std::cin.ignore();
@@ -201,14 +201,14 @@ void CreateTaskLabel::AssignExistingLabel(AddLabels *add_labels_command)
                 existing_labels_filter_.insert(task_label);
             } else
             {
-                std::cout << resources::messages::LABEL_HAS_ALREADY_BEEN_SET_TO_THIS_TASK;
+                std::cout << resources::messages::kLabelHasAlreadyBeenSetToThisTask;
             }
 
             return;
         }
         else
         {
-            std::cout << resources::messages::LABEL_NUMBER_IS_INCORRECT;
+            std::cout << resources::messages::kLabelNumberIsIncorrect;
         }
     }
 }
@@ -217,16 +217,16 @@ void CreateTaskLabel::RemoveTaskLabel(AddLabels *add_labels_command)
 {
     if (NoAssignedLabels())
     {
-        std::cout << resources::messages::NO_LABELS_ON_THIS_TASK << std::endl;
+        std::cout << resources::messages::kNoLabelsOnThisTask << std::endl;
         return;
     }
 
-    PrintAssignedLabels(ConsoleWriter::PrintTaskLabelInfoForMenu);
+    PrintAssignedLabels(console::PrintTaskLabelInfoForMenu);
     unsigned long task_labels_count = existing_labels_.size() + new_labels_.size();
 
     while (true)
     {
-        std::cout << resources::messages::PLEASE_SELECT_NUMBER_YOU_WANT_TO_REMOVE;
+        std::cout << resources::messages::kPleaseSelectNumberYouWantToRemove;
         int label_number;
         std::cin >> label_number;
         std::cin.ignore();
@@ -238,7 +238,7 @@ void CreateTaskLabel::RemoveTaskLabel(AddLabels *add_labels_command)
         }
         else
         {
-            std::cout << resources::messages::LABEL_NUMBER_IS_INCORRECT << std::endl;
+            std::cout << resources::messages::kLabelNumberIsIncorrect << std::endl;
         }
     }
 }
@@ -259,7 +259,7 @@ void CreateTaskLabel::RemoveLabelFromList(AddLabels *add_labels_command, int lab
         UpdateExistingLabels(add_labels_command);
     }
 
-    ConsoleWriter::PrintLabelRemovedFromTaskMessage(std::to_string(++label_number));
+    console::PrintLabelRemovedFromTaskMessage(std::to_string(++label_number));
 }
 
 void CreateTaskLabel::UpdateNewLabels(AddLabels *add_labels_command)
@@ -294,18 +294,19 @@ MenuResult CreateTaskLabel::FinishLabelAssignment(AddLabels *add_labels_command)
 
 void CreateTaskLabel::PrintAssignedLabels(PrintCallback callback)
 {
-    std::cout << resources::messages::ASSIGNED_LABELS;
+    std::cout << resources::messages::kAssignedLabels;
     if (NoAssignedLabels())
     {
-        std::cout << resources::messages::NO_ASSIGNED_LABELS << std::endl;
+        std::cout << resources::messages::kNoAssignedLabels << std::endl;
         return;
     }
-    unsigned int label_index = 1;
-    for (int i = 0; i < new_labels_.size(); ++i)
+    unsigned int label_index = 0;
+    for (int i = 0; i < new_labels_.size();++i)
     {
+        ++label_index;
         LabelDetails * label_detail = new_labels_[i];
         callback(
-            std::to_string(label_index + i),
+            std::to_string(label_index),
             label_detail->title(),
             LabelColorToString(label_detail->color())
         );
@@ -313,9 +314,10 @@ void CreateTaskLabel::PrintAssignedLabels(PrintCallback callback)
 
     for (int i = 0; i < existing_labels_.size(); ++i)
     {
+        ++label_index;
         std::shared_ptr<TaskLabel> task_label = existing_labels_[i];
         callback(
-            std::to_string(label_index + i),
+            std::to_string(label_index),
             task_label->title(),
             LabelColorToString(task_label->color()));
     }

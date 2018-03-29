@@ -30,8 +30,7 @@ namespace spine {
 namespace examples {
 namespace todolist {
 
-//TODO lets use string typed enums
-enum ConsoleCommandType
+enum class ConsoleCommandType
 {
     CREATE_TASK,
     START_WIZARD_TASK_CREATION,
@@ -55,15 +54,15 @@ enum ConsoleCommandType
     UNKNOWN
 };
 
-class ConsoleView { //TODO do you actually use this as an interface?
+class ConsoleView {
 public:
     virtual ~ConsoleView() = default;
 
     virtual void AddSimpleCommand(
-        ConsoleCommandType command_type, //TODO const?
-        const std::string &command_shortcut,
-        const std::string &command_name,
-        const std::string &command_description) = 0;
+        const ConsoleCommandType command_type,
+        const std::string& command_shortcut,
+        const std::string& command_name,
+        const std::string& command_description) = 0;
 
     virtual void AddTaskViewCommand(std::shared_ptr<TCLAP::SwitchArg> command_args) = 0;
     virtual void RunCommandInput() = 0;

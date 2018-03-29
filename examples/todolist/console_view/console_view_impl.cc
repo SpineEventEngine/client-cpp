@@ -29,12 +29,12 @@ namespace todolist {
 
 constexpr int INVALID_TASK_NUMBER = -1;
 
-ConsoleViewImpl::ConsoleViewImpl(const std::string & path_to_exec_file)
+ConsoleViewImpl::ConsoleViewImpl(const std::string& path_to_exec_file)
     :   command_handler_(
             new TCLAP::CmdLine(
-                resources::command_line::COMMAND_DESCRIPTION_MESSAGE,
-                resources::command_line::WHITE_SPACE_DELIMETER,
-                resources::command_line::COMMAND_LINE_VERSION,
+                resources::command_line::kCommandDescriptionMessage,
+                resources::command_line::kWhiteSpaceDelimiter,
+                resources::command_line::kCommandLineVersion,
                 false
             )
         )
@@ -44,16 +44,16 @@ ConsoleViewImpl::ConsoleViewImpl(const std::string & path_to_exec_file)
 }
 
 void ConsoleViewImpl::AddSimpleCommand(
-    ConsoleCommandType command_type,
-    const std::string & command_shortcut,
-    const std::string & command_name,
-    const std::string & command_description)
+    const ConsoleCommandType command_type,
+    const std::string& command_shortcut,
+    const std::string& command_name,
+    const std::string& command_description)
 {
 
     std::cout
-        <<  resources::command_line::LEFT_BRACE +
+        <<  resources::command_line::kLeftBrace +
             command_shortcut +
-            resources::command_line::RIGHT_BRACE
+            resources::command_line::kRightBrace
         << command_description
         << std::endl;
 
@@ -84,10 +84,10 @@ void ConsoleViewImpl::ResetTasks()
 
 void ConsoleViewImpl::RunCommandInput()
 {
-    ConsoleWriter::PrintSelectAnActionPrompt();
+    console::PrintSelectAnActionPrompt();
     std::string line;
     std::getline(std::cin, line);
-    std::string command = resources::command_line::DASH + line;
+    std::string command = resources::command_line::kDash + line;
     std::istringstream iss(command);
     std::vector<std::string> inputStrings;
     inputStrings.push_back(path_to_exec_file_);
@@ -112,7 +112,7 @@ void ConsoleViewImpl::ActivateConsole(std::function<bool()> callback)
         }
         catch (const TCLAP::ArgException &e)
         {
-            ConsoleWriter::PrintUndefinedActionMessage();
+            console::PrintUndefinedActionMessage();
         }
     }
 }

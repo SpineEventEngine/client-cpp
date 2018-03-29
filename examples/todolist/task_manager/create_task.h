@@ -27,7 +27,7 @@
 #include "todolist/model.pb.h"
 #include "todolist/c/commands.pb.h"
 
-#include "base_task.h"
+#include "todo_task.h"
 
 namespace spine {
 namespace examples {
@@ -36,7 +36,7 @@ namespace todolist {
 class ConsoleView;
 class CommandHandler;
 
-class CreateTask : public BaseTask
+class CreateTask : public TodoTask
 {
 public:
     CreateTask(
@@ -55,7 +55,7 @@ private:
     void AddPriority();
     void CancelTask();
 
-    void UpdateDescription(const std::string & previous_description);
+    void UpdateDescription(const std::string& previous_description);
     void UpdatePriority(TaskPriority task_priority);
 
     MenuResult ProcessCommand();
@@ -63,7 +63,7 @@ private:
     MenuResult AssignTaskLabel();
 
 private:
-    std::unique_ptr<TaskCreationId> wizard_id_;
+    std::shared_ptr<TaskCreationId> wizard_id_;
     std::unique_ptr<TaskId> task_id_;
 
     TaskPriority task_priority_;

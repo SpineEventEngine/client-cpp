@@ -107,11 +107,11 @@ include_directories(${CMAKE_BINARY_DIR}/../)
 
 set(todolist_source_files
         ${todolist_generated_files}
-        todolist.cc
+        src/todolist.cc
         command_handler/command_handler_impl.cc
-        task_manager/task_manager.cc
+        task_manager/task_runner.cc
         task_manager/task_completer.cc
-        task_manager/base_task.cc
+        task_manager/todo_task.cc
         task_manager/list_task.cc
         task_manager/create_task.cc
         task_manager/create_task_label.cc

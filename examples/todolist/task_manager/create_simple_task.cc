@@ -31,7 +31,7 @@ CreateSimpleTask::CreateSimpleTask(
     std::shared_ptr<ConsoleView> console_view,
     std::shared_ptr<CommandHandler> command_handler
 )
-    : BaseTask(console_view, command_handler)
+    : TodoTask(console_view, command_handler)
 {
 }
 
@@ -41,19 +41,17 @@ void CreateSimpleTask::RunSimpleTaskCreation()
     std::string description;
     std::getline(std::cin, description);
 
-    std::string task_identifier = BaseTask::GenerateUniqueId();
-    //TODO wrap all raw pointers into a smart pointer. Release it if you pass it into
-    // a protobuf message with set_allocated_***
-    TaskId * task_id = TaskId::default_instance().New();
+    std::string task_identifier = TodoTask::GenerateUniqueId();
+    std::unique_ptr<TaskId> task_id(TaskId::default_instance().New());
     task_id->set_value(task_identifier);
 
-    TaskDescription * task_description = TaskDescription::default_instance().New();
+    std::unique_ptr<TaskDescription> task_description(TaskDescription::default_instance().New());
     task_description->set_value(description);
 
     CreateBasicTask task;
 
-    task.set_allocated_id(task_id);
-    task.set_allocated_description(task_description);
+    task.set_allocated_id(task_id.release());
+    task.set_allocated_description(task_description.release());
 
     command_handler_->PostCommand(task);
 }

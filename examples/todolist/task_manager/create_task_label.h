@@ -24,7 +24,7 @@
 #include <memory>
 #include <string>
 
-#include "base_task.h"
+#include "todo_task.h"
 
 #include "todolist/model.pb.h"
 #include "todolist/c/commands.pb.h"
@@ -44,13 +44,13 @@ struct TaskLabelComparator
     }
 };
 
-class CreateTaskLabel : public BaseTask
+class CreateTaskLabel : public TodoTask
 {
 public:
     CreateTaskLabel(
         std::shared_ptr<ConsoleView> console_view,
         std::shared_ptr<CommandHandler> command_handler,
-        TaskCreationId * wizard_id);
+        std::shared_ptr<TaskCreationId> wizard_id);
 
     MenuResult AddTaskLabels();
 
@@ -63,7 +63,7 @@ private:
     void RemoveTaskLabel(AddLabels *add_labels_command);
     void CancelTask();
 
-    typedef std::function<void(const std::string &, const std::string &, const std::string &)>
+    typedef std::function<void(const std::string&, const std::string&, const std::string&)>
     PrintCallback;
 
     void PrintAssignedLabels(PrintCallback callback);
@@ -79,12 +79,12 @@ private:
 
 private:
 
-    std::vector<LabelDetails * > new_labels_;
+    std::vector<LabelDetails *> new_labels_;
 
     std::vector<std::shared_ptr<TaskLabel>> existing_labels_;
     std::set<std::shared_ptr<TaskLabel>, TaskLabelComparator > existing_labels_filter_;
 
-    TaskCreationId * wizard_id_;
+    std::shared_ptr<TaskCreationId> wizard_id_;
 };
 
 } // namespace todolist

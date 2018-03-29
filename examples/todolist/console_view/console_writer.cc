@@ -24,123 +24,125 @@
 namespace spine {
 namespace examples {
 namespace todolist {
+namespace console {
 
-void ConsoleWriter::PrintTaskDescription(TaskItem &task_item)
+void PrintTaskDescription(const TaskItem& task_item)
 {
-    std::cout << resources::task_info::TASK_DETAILS;
-    std::cout << resources::command_line::LINE_SEPARATOR << std::endl;
+    std::cout << resources::task_info::kTaskDetails;
+    std::cout << resources::command_line::kLineSeparator << std::endl;
 
     std::cout
-            << resources::task_info::TASK_DESCRIPTION
-            << resources::command_line::COLON
-            << resources::command_line::WHITE_SPACE_DELIMETER
+            << resources::task_info::kTaskDescription
+            << resources::command_line::kColon
+            << resources::command_line::kWhiteSpaceDelimiter
             << task_item.description().value()
             << std::endl;
 
     std::cout
-            << resources::task_info::TASK_PRIORITY
-            << resources::command_line::COLON
-            << resources::command_line::WHITE_SPACE_DELIMETER
+            << resources::task_info::kTaskPriority
+            << resources::command_line::kColon
+            << resources::command_line::kWhiteSpaceDelimiter
             << TaskPriority_Name(task_item.priority())
             << std::endl;
 
     std::cout
-            << resources::task_info::TASK_DUE_DATE
-            << resources::command_line::COLON
-            << resources::command_line::WHITE_SPACE_DELIMETER
-            << resources::task_info::DEFAULT
+            << resources::task_info::kTaskDueDate
+            << resources::command_line::kColon
+            << resources::command_line::kWhiteSpaceDelimiter
+            << resources::task_info::kDefault
             << std::endl;
 }
 
-void ConsoleWriter::PrintUndefinedActionMessage()
+void PrintUndefinedActionMessage()
 {
-    std::cout << resources::messages::NO_SPECIFIED_SHORTCUT;
+    std::cout << resources::messages::kNoSpecifiedShortcut;
 }
 
-void ConsoleWriter::PrintSelectAnActionPrompt()
+void PrintSelectAnActionPrompt()
 {
-    std::cout << resources::messages::SELECT_AN_ACTION << std::endl;
+    std::cout << resources::messages::kSelectAnAction << std::endl;
 }
 
-void ConsoleWriter::PrintTaskLabelInfoForMenu(
-    const std::string & index,
-    const std::string & title,
-    const std::string & color
+void PrintTaskLabelInfoForMenu(
+    const std::string& index,
+    const std::string& title,
+    const std::string& color
 )
 {
     std::cout
-        << resources::command_line::LEFT_BRACE
+        << resources::command_line::kLeftBrace
         << index
-        << resources::command_line::RIGHT_BRACE
-        << resources::command_line::WHITE_SPACE_DELIMETER
-        << resources::command_line::DASH
-        << resources::command_line::WHITE_SPACE_DELIMETER
-        << resources::command_line::LEFT_BRACKET
-        << resources::task_info::TITLE
-        << resources::command_line::WHITE_SPACE_DELIMETER
-        << resources::command_line::COLON
+        << resources::command_line::kRightBrace
+        << resources::command_line::kWhiteSpaceDelimiter
+        << resources::command_line::kDash
+        << resources::command_line::kWhiteSpaceDelimiter
+        << resources::command_line::kLeftBracket
+        << resources::task_info::kTitle
+        << resources::command_line::kWhiteSpaceDelimiter
+        << resources::command_line::kColon
         << title
-        << resources::command_line::COMMA
-        << resources::command_line::WHITE_SPACE_DELIMETER
-        << resources::task_info::COLOR
-        << resources::command_line::WHITE_SPACE_DELIMETER
-        << resources::command_line::COLON
-        << resources::command_line::WHITE_SPACE_DELIMETER
+        << resources::command_line::kComma
+        << resources::command_line::kWhiteSpaceDelimiter
+        << resources::task_info::kColor
+        << resources::command_line::kWhiteSpaceDelimiter
+        << resources::command_line::kColon
+        << resources::command_line::kWhiteSpaceDelimiter
         << color
-        << resources::command_line::RIGHT_BRACKET
+        << resources::command_line::kRightBracket
         << std::endl;
 }
 
-void ConsoleWriter::PrintLabelRemovedFromTaskMessage(const std::string &label_number)
+void PrintLabelRemovedFromTaskMessage(const std::string& label_number)
 {
     PrintLabelNumber(label_number);
-    std::cout << resources::messages::REMOVED_FROM_TASK;
+    std::cout << resources::messages::kRemoveFromTask;
 }
 
-void ConsoleWriter::PrintLabelNumber(const std::string &label_number)
+void PrintLabelNumber(const std::string& label_number)
 {
     std::cout
-        << resources::task_info::LABEL
-        << resources::command_line::WHITE_SPACE_DELIMETER
-        << resources::command_line::SHARP
-        << resources::command_line::WHITE_SPACE_DELIMETER
+        << resources::task_info::kLabel
+        << resources::command_line::kWhiteSpaceDelimiter
+        << resources::command_line::kSharp
+        << resources::command_line::kWhiteSpaceDelimiter
         << label_number
-        << resources::command_line::WHITE_SPACE_DELIMETER
-        << resources::command_line::COLON
-        << resources::command_line::WHITE_SPACE_DELIMETER;
+        << resources::command_line::kWhiteSpaceDelimiter
+        << resources::command_line::kColon
+        << resources::command_line::kWhiteSpaceDelimiter;
 }
 
-void ConsoleWriter::PrintTaskLabelInfoForDescription(
-    const std::string & label_number,
-    const std::string & label_title,
-    const std::string & label_color
+void PrintTaskLabelInfoForDescription(
+    const std::string& label_number,
+    const std::string& label_title,
+    const std::string& label_color
 )
 {
     std::cout
-        << resources::task_info::LABEL
-        << resources::command_line::WHITE_SPACE_DELIMETER
-        << resources::command_line::SHARP
-        << resources::command_line::WHITE_SPACE_DELIMETER
+        << resources::task_info::kLabel
+        << resources::command_line::kWhiteSpaceDelimiter
+        << resources::command_line::kSharp
+        << resources::command_line::kWhiteSpaceDelimiter
         << label_number
-        << resources::command_line::WHITE_SPACE_DELIMETER
-        << resources::command_line::COLON
-        << resources::command_line::WHITE_SPACE_DELIMETER
-        << resources::command_line::LEFT_BRACKET
-        << resources::task_info::TITLE
-        << resources::command_line::WHITE_SPACE_DELIMETER
-        << resources::command_line::COLON
+        << resources::command_line::kWhiteSpaceDelimiter
+        << resources::command_line::kColon
+        << resources::command_line::kWhiteSpaceDelimiter
+        << resources::command_line::kLeftBracket
+        << resources::task_info::kTitle
+        << resources::command_line::kWhiteSpaceDelimiter
+        << resources::command_line::kColon
         << label_title
-        << resources::command_line::COMMA
-        << resources::command_line::WHITE_SPACE_DELIMETER
-        << resources::task_info::COLOR
-        << resources::command_line::WHITE_SPACE_DELIMETER
-        << resources::command_line::COLON
-        << resources::command_line::WHITE_SPACE_DELIMETER
+        << resources::command_line::kComma
+        << resources::command_line::kWhiteSpaceDelimiter
+        << resources::task_info::kColor
+        << resources::command_line::kWhiteSpaceDelimiter
+        << resources::command_line::kColon
+        << resources::command_line::kWhiteSpaceDelimiter
         << label_color
-        << resources::command_line::RIGHT_BRACKET
+        << resources::command_line::kRightBracket
         << std::endl;
 }
 
+} // namespace console
 } // namespace todolist
 } // namespace examples
 } // namespace spine

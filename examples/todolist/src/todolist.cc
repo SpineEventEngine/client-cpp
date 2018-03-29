@@ -18,35 +18,14 @@
 * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef TODOLIST_TASK_MANAGER_H
-#define TODOLIST_TASK_MANAGER_H
+#include "task_manager/task_runner.h"
 
-#include <string>
-#include <memory>
+using namespace spine::examples::todolist;
 
-namespace spine {
-namespace examples {
-namespace todolist {
-
-class ConsoleView;
-class CommandHandler;
-
-//TODO your manager manages nothing. it just runs the menu. name it accordingly.
-class TaskManager
+int main(int argc, char** argv)
 {
-public:
-    TaskManager(const std::string & path_to_exec_file);
+    TaskRunner taskRunner(argv[0]);
+    taskRunner.Start();
 
-public:
-    void Start();
-
-private:
-    std::shared_ptr<ConsoleView> console_view_;
-    std::shared_ptr<CommandHandler> command_handler_;
-};
-
-} // namespace todolist
-} // namespace examples
-} // namespace spine
-
-#endif // TODOLIST_TASK_MANAGER_H
+    return 0;
+}

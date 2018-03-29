@@ -31,7 +31,7 @@ ListTask::ListTask(
     std::shared_ptr<ConsoleView> console_view,
     std::shared_ptr<CommandHandler> command_handler
 )
-    : BaseTask(console_view, command_handler)
+    : TodoTask(console_view, command_handler)
 {
 }
 
@@ -42,22 +42,22 @@ void ListTask::LoadTasks(ConsoleCommandType command_type)
     {
         case ConsoleCommandType::DRAFT_TASKS:
         {
-            const auto & task_list_view = command_handler_->GetDraftTasks();
+            const auto& task_list_view = command_handler_->GetDraftTasks();
             task_items_.assign(task_list_view.items().begin(), task_list_view.items().end());
             break;
         }
         case ConsoleCommandType::COMPLETED_TASKS:
         {
-            const auto & task_list_view = command_handler_->GetCompletedTasks();
+            const auto& task_list_view = command_handler_->GetCompletedTasks();
             task_items_.assign(task_list_view.items().begin(), task_list_view.items().end());
             break;
         }
         case ConsoleCommandType::ALL_TASKS:
         {
-            const auto & completed_task_list_view = command_handler_->GetCompletedTasks();
-            const auto & draft_task_list_view = command_handler_->GetDraftTasks();
-            const auto & completed_items = completed_task_list_view.items();
-            const auto & draft_items = draft_task_list_view.items();
+            const auto& completed_task_list_view = command_handler_->GetCompletedTasks();
+            const auto& draft_task_list_view = command_handler_->GetDraftTasks();
+            const auto& completed_items = completed_task_list_view.items();
+            const auto& draft_items = draft_task_list_view.items();
 
             std::copy(completed_items.begin(), completed_items.end(), std::back_inserter(task_items_));
             std::copy(draft_items.begin(), draft_items.end(), std::back_inserter(task_items_));
@@ -81,28 +81,28 @@ void ListTask::LoadTaskMenu()
 void ListTask::InitializeCommands()
 {
     console_view_->AddSimpleCommand(
-            ConsoleCommandType::DRAFT_TASKS,
-            resources::tasks_menu::DRAFT_TASK_SHORTCUT,
-            resources::tasks_menu::DRAFT_TASK_COMMAND,
-            resources::tasks_menu::DRAFT_TASK_INFO
+        ConsoleCommandType::DRAFT_TASKS,
+        resources::tasks_menu::kDraftTasksShortcut,
+        resources::tasks_menu::kDraftTasksCommand,
+        resources::tasks_menu::kDraftTasksInfo
     );
     console_view_->AddSimpleCommand(
-            ConsoleCommandType::COMPLETED_TASKS,
-            resources::tasks_menu::COMPLETED_TASK_SHORTCUT,
-            resources::tasks_menu::COMPLETED_TASK_COMMAND,
-            resources::tasks_menu::COMPLETED_TASK_INFO
+        ConsoleCommandType::COMPLETED_TASKS,
+        resources::tasks_menu::kCompletedTasksShortcut,
+        resources::tasks_menu::kCompletedTasksCommand,
+        resources::tasks_menu::kCompletedTasksInfo
     );
     console_view_->AddSimpleCommand(
-            ConsoleCommandType::ALL_TASKS,
-            resources::tasks_menu::ALL_TASKS_SHORTCUT,
-            resources::tasks_menu::ALL_TASKS_COMMAND,
-            resources::tasks_menu::ALL_TASKS_INFO
+        ConsoleCommandType::ALL_TASKS,
+        resources::tasks_menu::kAllTasksShortcut,
+        resources::tasks_menu::kAllTasksCommand,
+        resources::tasks_menu::kAllTasksInfo
     );
     console_view_->AddSimpleCommand(
-            ConsoleCommandType::BACK_TO_PREVIOUS_MENU,
-            resources::tasks_menu::BACK_SHORTCUT,
-            resources::tasks_menu::BACK_COMMAND,
-            resources::tasks_menu::BACK_INFO
+        ConsoleCommandType::BACK_TO_PREVIOUS_MENU,
+        resources::tasks_menu::kBackShortcut,
+        resources::tasks_menu::kBackCommand,
+        resources::tasks_menu::kBackInfo
     );
 }
 
@@ -142,9 +142,9 @@ void ListTask::LoadTaskList(ConsoleCommandType command_type)
 
         console_view_->AddSimpleCommand(
                 ConsoleCommandType::BACK_TO_PREVIOUS_MENU,
-                resources::tasks_menu::BACK_SHORTCUT,
-                resources::tasks_menu::BACK_COMMAND,
-                resources::tasks_menu::BACK_INFO
+                resources::tasks_menu::kBackShortcut,
+                resources::tasks_menu::kBackCommand,
+                resources::tasks_menu::kBackInfo
         );
 
         console_view_->RunCommandInput();
@@ -158,19 +158,19 @@ void ListTask::LoadTaskList(ConsoleCommandType command_type)
             return false;
         }
 
-        ConsoleWriter::PrintUndefinedActionMessage();
+        console::PrintUndefinedActionMessage();
         return true;
     });
 }
 
 void ListTask::PrintTaskList()
 {
-    std::cout << resources::messages::MY_TASKS_LIST << std::endl;
-    std::cout << resources::command_line::LINE_SEPARATOR << std::endl;
+    std::cout << resources::messages::kMyTasksList << std::endl;
+    std::cout << resources::command_line::kLineSeparator << std::endl;
 
     if (task_items_.empty())
     {
-        std::cout << resources::messages::NO_TASKS;
+        std::cout << resources::messages::kNoTasks;
         return;
     }
 
@@ -178,17 +178,17 @@ void ListTask::PrintTaskList()
     {
         std::string taskIndex = std::to_string(index + 1);
         std::cout
-                << resources::command_line::LEFT_BRACE
+                << resources::command_line::kLeftBrace
                 << std::to_string(index + 1)
-                << resources::command_line::RIGHT_BRACE
+                << resources::command_line::kRightBrace
                 << task_items_[index].description().value()
                 << std::endl;
 
         auto task_view_command
             = std::make_shared<TCLAP::SwitchArg>(
                     taskIndex,
-                    resources::tasks_menu::TASK_NUMBER_COMMAND + taskIndex,
-                    resources::tasks_menu::TASK_NUBMER_INFO + taskIndex,
+                    resources::tasks_menu::kTaskNumberCommand + taskIndex,
+                    resources::tasks_menu::kTaskNumberInfo + taskIndex,
                     false
                 );
 
@@ -199,21 +199,21 @@ void ListTask::PrintTaskList()
 void ListTask::ShowTaskInfo(int active_task_number)
 {
     auto & taskItem = task_items_[active_task_number];
-    ConsoleWriter::PrintTaskDescription(taskItem);
+    console::PrintTaskDescription(taskItem);
 
     console_view_->ActivateConsole([&]() {
         console_view_->AddSimpleCommand(
-                ConsoleCommandType::BACK_TO_PREVIOUS_MENU,
-                resources::tasks_menu::BACK_SHORTCUT,
-                resources::tasks_menu::BACK_COMMAND,
-                resources::tasks_menu::BACK_INFO
+            ConsoleCommandType::BACK_TO_PREVIOUS_MENU,
+            resources::tasks_menu::kBackShortcut,
+            resources::tasks_menu::kBackCommand,
+            resources::tasks_menu::kBackInfo
         );
 
         console_view_->RunCommandInput();
         if (console_view_->IsCommandSet(ConsoleCommandType::BACK_TO_PREVIOUS_MENU))
             return false;
 
-        ConsoleWriter::PrintUndefinedActionMessage();
+        console::PrintUndefinedActionMessage();
         return true;
     });
 }

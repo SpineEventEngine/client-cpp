@@ -43,13 +43,13 @@ using namespace client;
 
 class CommandHandlerImpl: public CommandHandler {
 public:
-    CommandHandlerImpl(const std::string & channel);
+    CommandHandlerImpl(const std::string& channel);
 
 public:
-    void PostCommand(Message & client_task);
+    void PostCommand(Message& client_task);
 
-    const TaskListView & GetCompletedTasks();
-    const TaskListView & GetDraftTasks();
+    const TaskListView& GetCompletedTasks();
+    const TaskListView& GetDraftTasks();
 
     std::vector<std::shared_ptr<TaskLabel>> GetLabels();
 
@@ -58,8 +58,8 @@ private:
     T * GetTasks();
 
 private:
-    std::unique_ptr<core::UserId> MakeUserId(const std::string & value);
-    std::unique_ptr<time::ZoneOffset> MakeZoneOffset(const std::string & zone_id, int amount);
+    std::unique_ptr<core::UserId> MakeUserId(const std::string& value);
+    std::unique_ptr<time::ZoneOffset> MakeZoneOffset(const std::string& zone_id, int amount);
 
 private:
     std::shared_ptr<grpc::Channel> channel_;

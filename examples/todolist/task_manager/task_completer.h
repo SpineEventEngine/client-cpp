@@ -24,7 +24,7 @@
 #include <memory>
 #include <string>
 
-#include "base_task.h"
+#include "todo_task.h"
 
 #include "todolist/model.pb.h"
 #include "todolist/c/commands.pb.h"
@@ -36,13 +36,13 @@ namespace todolist {
 class ConsoleView;
 class CommandHandler;
 
-class TaskCompleter : BaseTask
+class TaskCompleter : public TodoTask
 {
 public:
     TaskCompleter(
         std::shared_ptr<ConsoleView> console_view,
         std::shared_ptr<CommandHandler> command_handler,
-        TaskCreationId * wizard_id);
+        std::shared_ptr<TaskCreationId> wizard_id);
 
     MenuResult RunCompleteMenu();
 
@@ -56,7 +56,7 @@ private:
     MenuResult ProcessCommand();
 
 private:
-    TaskCreationId * wizard_id_;
+    std::shared_ptr<TaskCreationId> wizard_id_;
 };
 
 } // namespace todolist

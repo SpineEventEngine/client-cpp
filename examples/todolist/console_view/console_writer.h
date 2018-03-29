@@ -28,30 +28,26 @@
 namespace spine {
 namespace examples {
 namespace todolist {
+namespace console {
 
-//TODO don't need a class if everything is public and static.
-class ConsoleWriter
-{
-public:
-    static void PrintTaskDescription(TaskItem &task_item);
-    static void PrintUndefinedActionMessage();
-    static void PrintSelectAnActionPrompt();
+void PrintTaskDescription(const TaskItem &task_item);
+void PrintUndefinedActionMessage();
+void PrintSelectAnActionPrompt();
 
-    static void PrintTaskLabelInfoForMenu(
-        const std::string &index,
-        const std::string &title,
-        const std::string &color);
+void PrintLabelRemovedFromTaskMessage(const std::string &label_number);
+void PrintLabelNumber(const std::string &label_number);
 
-    static void PrintLabelRemovedFromTaskMessage(const std::string &label_number);
+void PrintTaskLabelInfoForMenu(
+    const std::string &index,
+    const std::string &title,
+    const std::string &color);
 
-    static void PrintLabelNumber(const std::string &label_number);
+void PrintTaskLabelInfoForDescription(
+    const std::string &index,
+    const std::string &label_title,
+    const std::string &label_color);
 
-    static void PrintTaskLabelInfoForDescription(
-        const std::string &index,
-        const std::string &label_title,
-        const std::string &label_color);
-};
-
+} // namespace console
 } // namespace todolist
 } // namespace examples
 } // namespace spine

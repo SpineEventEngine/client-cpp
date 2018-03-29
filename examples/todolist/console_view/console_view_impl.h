@@ -34,18 +34,17 @@ namespace spine {
 namespace examples {
 namespace todolist {
 
-//TODO general. const std::string& <- put & to type, not variable names. you have different styles accross source code
 class ConsoleViewImpl: public ConsoleView
 {
 public:
-    ConsoleViewImpl(std::string const & path_to_exec_file);
+    ConsoleViewImpl(std::string const& path_to_exec_file);
 
 public:
     void AddSimpleCommand(
-        ConsoleCommandType command_type,
-        const std::string & command_shortcut,
-        const std::string & command_name,
-        const std::string & command_description) override final;
+        const ConsoleCommandType command_type,
+        const std::string& command_shortcut,
+        const std::string& command_name,
+        const std::string& command_description) override final;
 
     void AddTaskViewCommand(std::shared_ptr<TCLAP::SwitchArg> command_args) override final;
     void RunCommandInput() override final;

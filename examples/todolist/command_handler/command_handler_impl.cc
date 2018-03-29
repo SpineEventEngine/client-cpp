@@ -28,36 +28,36 @@ namespace todolist {
 
 constexpr int AMOUNT_SECONDS = 0;
 
-CommandHandlerImpl::CommandHandlerImpl(const std::string & channel)
+CommandHandlerImpl::CommandHandlerImpl(const std::string& channel)
 {
     channel_ = ::grpc::CreateChannel(channel, grpc::InsecureChannelCredentials());
     auto tenant = std::unique_ptr<TenantId>(TenantId::default_instance().New());
 
     parameters_
         .set_tenant_id(tenant)
-        .set_actor(MakeUserId(resources::server_info::USER_ID))
-        .set_zone_offset(MakeZoneOffset(resources::server_info::ZONE_ID, AMOUNT_SECONDS));
+        .set_actor(MakeUserId(resources::server_info::kUserId))
+        .set_zone_offset(MakeZoneOffset(resources::server_info::kZoneId, AMOUNT_SECONDS));
 
     command_factory_ = ActorRequestFactory::create(parameters_).command_factory();
     stub_ = CommandService::NewStub(channel_);
 }
 
-void CommandHandlerImpl::PostCommand(Message &client_task)
+void CommandHandlerImpl::PostCommand(Message& client_task)
 {
     CommandPtr command = command_factory_->create(client_task);
     core::Ack response;
     grpc::ClientContext client_context;
     if (!stub_->Post(&client_context, *command, &response).ok()) {
-        throw std::runtime_error(resources::server_info::INVALID_SERVER_STATUS);
+        throw std::runtime_error(resources::server_info::kInvalidServerStatus);
     }
 }
 
-TaskListView const &CommandHandlerImpl::GetCompletedTasks()
+TaskListView const& CommandHandlerImpl::GetCompletedTasks()
 {
     return GetTasks<MyListView>()->my_list();
 }
 
-TaskListView const & CommandHandlerImpl::GetDraftTasks()
+TaskListView const& CommandHandlerImpl::GetDraftTasks()
 {
     return GetTasks<DraftTasksView>()->draft_tasks();
 }
@@ -73,7 +73,7 @@ T * CommandHandlerImpl::GetTasks()
     grpc::ClientContext client_context;
 
     if (!query_service->Read(&client_context, *query, &response).ok()) {
-        throw std::runtime_error(resources::server_info::INVALID_SERVER_RESPONSE);
+        throw std::runtime_error(resources::server_info::kInvalidServerResponse);
     }
 
     T * task_list_view = T::default_instance().New();
@@ -95,7 +95,7 @@ std::vector<std::shared_ptr<TaskLabel>> CommandHandlerImpl::GetLabels()
     grpc::ClientContext client_context;
 
     if (!query_service->Read(&client_context, *query, &response).ok()) {
-        throw std::runtime_error(resources::server_info::INVALID_SERVER_RESPONSE);
+        throw std::runtime_error(resources::server_info::kInvalidServerResponse);
     }
 
     std::vector<std::shared_ptr<TaskLabel>> label_tasks;
@@ -111,7 +111,7 @@ std::vector<std::shared_ptr<TaskLabel>> CommandHandlerImpl::GetLabels()
 }
 
 std::unique_ptr<core::UserId>
-CommandHandlerImpl::MakeUserId(const std::string & value)
+CommandHandlerImpl::MakeUserId(const std::string& value)
 {
     auto actor = std::make_unique<core::UserId>();
     actor->set_value(value);
@@ -119,7 +119,7 @@ CommandHandlerImpl::MakeUserId(const std::string & value)
 }
 
 std::unique_ptr<time::ZoneOffset>
-CommandHandlerImpl::MakeZoneOffset(const std::string &zone_id, int amount)
+CommandHandlerImpl::MakeZoneOffset(const std::string& zone_id, int amount)
 {
     time::ZoneId* zone_id_ptr = time::ZoneId::default_instance().New();
     zone_id_ptr->set_value(zone_id);

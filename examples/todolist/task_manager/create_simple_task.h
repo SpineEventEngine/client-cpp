@@ -26,7 +26,7 @@
 
 #include "todolist/model.pb.h"
 #include "todolist/c/commands.pb.h"
-#include "base_task.h"
+#include "todo_task.h"
 
 namespace spine {
 namespace examples {
@@ -34,7 +34,7 @@ namespace todolist {
 
 class CommandHandler;
 
-class CreateSimpleTask : public BaseTask
+class CreateSimpleTask : public TodoTask
 {
 public:
     CreateSimpleTask(

@@ -25,7 +25,7 @@
 #include "todolist/attributes.pb.h"
 #include "tclap/CmdLine.h"
 
-#include "base_task.h"
+#include "todo_task.h"
 
 #include <memory>
 #include <functional>
@@ -37,7 +37,7 @@ namespace todolist {
 class ConsoleView;
 class CommandHandler;
 
-class ListTask : public BaseTask
+class ListTask : public TodoTask
 {
 public:
     ListTask(
