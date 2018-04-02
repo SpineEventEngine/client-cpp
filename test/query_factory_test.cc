@@ -24,6 +24,10 @@
 #include "common_factory_test.h"
 #include "unit_tests.pb.h"
 #include "unit_tests_no_prefix.pb.h"
+#include <spine/client/query.pb.h>
+
+#include <google/protobuf/util/field_comparator.h>
+#include <google/protobuf/util/message_differencer.h>
 
 using namespace spine::client;
 using namespace spine::core;
@@ -44,6 +48,55 @@ TEST_F(QueryFactoryShould, CreateKnownSpineType)
     ASSERT_FALSE(query->id().value().empty());
     ASSERT_TRUE(query->has_target());
     ASSERT_EQ(query->target().type(), "type.spine.io/spine.time.ZoneId");
+    ASSERT_TRUE(query->target().include_all());
+    ASSERT_FALSE(query->target().has_filters());
+    ASSERT_FALSE(query->target().has_filters());
+}
+
+TEST_F(QueryFactoryShould, CreateKnownSpineTypeWithMask)
+{
+    std::vector<std::string> masks {"some", "random", "paths"};
+    QueryPtr query = query_factory_->all_with_mask<ZoneId>(masks);
+
+    std::string type = query->target().type();
+    ASSERT_TRUE(query);
+    ASSERT_TRUE(query->has_id());
+    ASSERT_FALSE(query->id().value().empty());
+    ASSERT_TRUE(query->has_target());
+    ASSERT_EQ(query->target().type(), "type.spine.io/spine.time.ZoneId");
+    ASSERT_FALSE(query->target().include_all());
+    ASSERT_TRUE(query->target().has_filters());
+    ASSERT_FALSE(query->target().filters().has_id_filter());
+    query->target().filters().filter().
+}
+
+TEST_F(QueryFactoryShould, QueryKnownSpineById)
+{
+    QueryPtr query = query_factory_->by_ids<ZoneId>();
+
+    std::string type = query->target().type();
+    ASSERT_TRUE(query);
+    ASSERT_TRUE(query->has_id());
+    ASSERT_FALSE(query->id().value().empty());
+    ASSERT_TRUE(query->has_target());
+    ASSERT_EQ(query->target().type(), "type.spine.io/spine.time.ZoneId");
+    ASSERT_FALSE(query->target().include_all());
+    ASSERT_FALSE(query->target().has_filters());
+}
+
+TEST_F(QueryFactoryShould, QueryKnownSpineByIdWithMask)
+{
+    QueryPtr query = query_factory_->by_ids_with_masks<ZoneId>();
+
+    std::string type = query->target().type();
+    ASSERT_TRUE(query);
+    ASSERT_TRUE(query->has_id());
+    ASSERT_FALSE(query->id().value().empty());
+    ASSERT_TRUE(query->has_target());
+    ASSERT_EQ(query->target().type(), "type.spine.io/spine.time.ZoneId");
+    ASSERT_FALSE(query->target().include_all());
+    ASSERT_FALSE(query->target().has_filters());
+
 }
 
 TEST_F(QueryFactoryShould, CreateMessageWithPrefix)
@@ -69,3 +122,6 @@ TEST_F(QueryFactoryShould, CreateMessageWithoutPrefix)
     ASSERT_TRUE(query->has_target());
     ASSERT_EQ(query->target().type(), "spine.test.TestMessageNoPrefix");
 }
+
+
+
