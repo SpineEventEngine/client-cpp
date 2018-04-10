@@ -36,6 +36,21 @@ using namespace spine::test;
 
 class QueryFactoryShould : public CommonFactoryTest
 {
+public:
+    std::vector<std::unique_ptr<ProjectId>> make_project_ids()
+    {
+        std::vector<std::unique_ptr<ProjectId>> project_ids = {
+                std::make_unique<ProjectId>(),
+                std::make_unique<ProjectId>(),
+                std::make_unique<ProjectId>() };
+
+        int i = 1;
+        for (auto& project_id : project_ids)
+        {
+            project_id->set_value(i++);
+        }
+        return project_ids;
+    }
 };
 
 TEST_F(QueryFactoryShould, CreateKnownSpineType)
@@ -67,12 +82,14 @@ TEST_F(QueryFactoryShould, CreateKnownSpineTypeWithMask)
     ASSERT_FALSE(query->target().include_all());
     ASSERT_TRUE(query->target().has_filters());
     ASSERT_FALSE(query->target().filters().has_id_filter());
-    query->target().filters().filter().
+    //query->target().filters().filter().
 }
 
 TEST_F(QueryFactoryShould, QueryKnownSpineById)
 {
-    QueryPtr query = query_factory_->by_ids<ZoneId>();
+    std::vector<std::unique_ptr<ProjectId>> project_ids = make_project_ids();
+    
+    QueryPtr query = query_factory_->by_ids<CreateProject>( project_ids );
 
     std::string type = query->target().type();
     ASSERT_TRUE(query);
