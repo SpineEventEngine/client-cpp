@@ -51,7 +51,7 @@ protected:
         ZoneId* zone_id = ZoneId::default_instance().New();
         zone_id->set_value(ZONE_ID);
         zone_offset->set_allocated_id(zone_id);
-        zone_offset->set_amountseconds(42);
+        zone_offset->set_amount_seconds(42);
 
         params.set_actor(actor)
                 .set_tenant_id(tenant_id)

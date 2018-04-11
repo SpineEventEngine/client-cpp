@@ -5,7 +5,7 @@ include(ExternalProject)
 set(CMAKE_BINARY_DIR ${CMAKE_BINARY_DIR})
 
 ExternalProject_Add(spine_proto_dependency
-        URL http://maven.teamdev.com/repository/spine-snapshots/io/spine/spine-client/0.10.15-SNAPSHOT/spine-client-0.10.15-20171225.084237-2-proto.jar
+        URL http://maven.teamdev.com/repository/spine-snapshots/io/spine/spine-client/0.10.34-SNAPSHOT/spine-client-0.10.34-20180326.072420-2-proto.jar
         CONFIGURE_COMMAND ""
         BUILD_COMMAND ""
         INSTALL_COMMAND ""
