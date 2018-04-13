@@ -88,8 +88,8 @@ TEST_F(QueryFactoryShould, CreateKnownSpineTypeWithMask)
 TEST_F(QueryFactoryShould, QueryKnownSpineById)
 {
     std::vector<std::unique_ptr<ProjectId>> project_ids = make_project_ids();
-    
-    QueryPtr query = query_factory_->by_ids<CreateProject>( project_ids );
+
+    QueryPtr query = query_factory_->by_ids<CreateProject>(project_ids);
 
     std::string type = query->target().type();
     ASSERT_TRUE(query);
@@ -98,23 +98,25 @@ TEST_F(QueryFactoryShould, QueryKnownSpineById)
     ASSERT_TRUE(query->has_target());
     ASSERT_EQ(query->target().type(), "type.spine.io/spine.time.ZoneId");
     ASSERT_FALSE(query->target().include_all());
-    ASSERT_FALSE(query->target().has_filters());
+    ASSERT_TRUE(query->target().has_filters());
+    ASSERT_TRUE(query->target().filters().has_id_filter());
+    ASSERT_EQ(query->target().filters().id_filter().ids_size(), project_ids.size());
 }
 
-TEST_F(QueryFactoryShould, QueryKnownSpineByIdWithMask)
-{
-    QueryPtr query = query_factory_->by_ids_with_masks<ZoneId>();
-
-    std::string type = query->target().type();
-    ASSERT_TRUE(query);
-    ASSERT_TRUE(query->has_id());
-    ASSERT_FALSE(query->id().value().empty());
-    ASSERT_TRUE(query->has_target());
-    ASSERT_EQ(query->target().type(), "type.spine.io/spine.time.ZoneId");
-    ASSERT_FALSE(query->target().include_all());
-    ASSERT_FALSE(query->target().has_filters());
-
-}
+//TEST_F(QueryFactoryShould, QueryKnownSpineByIdWithMask)
+//{
+//    QueryPtr query = query_factory_->by_ids_with_masks<ZoneId>();
+//
+//    std::string type = query->target().type();
+//    ASSERT_TRUE(query);
+//    ASSERT_TRUE(query->has_id());
+//    ASSERT_FALSE(query->id().value().empty());
+//    ASSERT_TRUE(query->has_target());
+//    ASSERT_EQ(query->target().type(), "type.spine.io/spine.time.ZoneId");
+//    ASSERT_FALSE(query->target().include_all());
+//    ASSERT_FALSE(query->target().has_filters());
+//
+//}
 
 TEST_F(QueryFactoryShould, CreateMessageWithPrefix)
 {
