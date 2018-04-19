@@ -19,22 +19,13 @@
  */
 
 #include "spine/util/target_utils.h"
-#include "spine/util/any_utils.h"
+
 
 namespace spine {
 namespace client {
 
-std::unique_ptr<Target> compose_target(const std::string& prefix, const std::string& type,
-                                                     const std::vector<std::unique_ptr<google::protobuf::Message>>& ids)
-{
-    std::unique_ptr<Target> target = std::move(compose_target(prefix, type));
-    if( !ids.empty() )
-    {
-        target->set_include_all(false);
-        target->set_allocated_filters(make_entity_filters(ids).release());
-    }
-    return target;
-}
+
+
 
 std::unique_ptr<Target> compose_target(const std::string& prefix, const std::string& type)
 {
@@ -51,21 +42,7 @@ std::unique_ptr<Target> compose_target(const std::string& prefix, const std::str
     return target;
 }
 
-std::unique_ptr<EntityFilters> make_entity_filters(const std::vector<std::unique_ptr<google::protobuf::Message>>& ids)
-{
-    std::unique_ptr<EntityIdFilter> entity_id_filter { EntityIdFilter::default_instance().New() };
-    for (auto &message : ids)
-    {
-        std::unique_ptr<google::protobuf::Any> any = to_any(*message);
-        std::unique_ptr<EntityId> entity_id { EntityId::default_instance().New() };
-        entity_id->set_allocated_id(any.release());
-        entity_id_filter->mutable_ids()->AddAllocated(entity_id.release());
-    }
-    std::unique_ptr<EntityFilters> entity_filters { EntityFilters::default_instance().New() };
-    entity_filters->set_allocated_id_filter(entity_id_filter.release());
 
-    return entity_filters;
-}
 
 }
 }

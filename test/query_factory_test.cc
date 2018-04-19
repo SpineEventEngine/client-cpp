@@ -39,10 +39,11 @@ class QueryFactoryShould : public CommonFactoryTest
 public:
     std::vector<std::unique_ptr<ProjectId>> make_project_ids()
     {
-        std::vector<std::unique_ptr<ProjectId>> project_ids = {
-                std::make_unique<ProjectId>(),
-                std::make_unique<ProjectId>(),
-                std::make_unique<ProjectId>() };
+        std::vector<std::unique_ptr<ProjectId>> project_ids;
+        project_ids.emplace_back(std::make_unique<ProjectId>());
+        project_ids.emplace_back(std::make_unique<ProjectId>());
+        project_ids.emplace_back(std::make_unique<ProjectId>());
+
 
         int i = 1;
         for (auto& project_id : project_ids)

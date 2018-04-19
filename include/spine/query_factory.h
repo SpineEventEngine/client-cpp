@@ -28,6 +28,7 @@
 
 #include "spine/types.h"
 #include "spine/util/message_utils.hpp"
+#include "spine/util/target_utils.h"
 
 namespace google {
 namespace protobuf {
@@ -113,8 +114,14 @@ private:
     QueryPtr make_query(const std::string& prefix, const std::string& type);
     QueryPtr make_query(const std::string& prefix, const std::string& type,
                         const std::vector<std::string>& masks);
+
+    template <typename T, typename = enable_param_if_protobuf_message<T>>
     QueryPtr make_query(const std::string& prefix, const std::string& type,
-                                                    const std::vector<std::unique_ptr<google::protobuf::Message>>& ids);
+                                                    const std::vector<std::unique_ptr<T>>& ids)
+    {
+        std::unique_ptr<Target> target = compose_target(prefix, type, ids);
+        return for_query(std::move(target));
+    }
     QueryPtr make_query(const std::string& prefix, const std::string& type,
                                       const std::vector<std::string>& masks,
                                       const std::vector<std::unique_ptr<google::protobuf::Message>>& ids);

@@ -66,13 +66,6 @@ QueryPtr QueryFactory::make_query(const std::string& prefix, const std::string& 
 }
 
 QueryPtr QueryFactory::make_query(const std::string& prefix, const std::string& type,
-                                                const std::vector<std::unique_ptr<google::protobuf::Message>>& ids)
-{
-    std::unique_ptr<Target> target = compose_target(prefix, type, ids);
-    return for_query(std::move(target));
-}
-
-QueryPtr QueryFactory::make_query(const std::string& prefix, const std::string& type,
                                   const std::vector<std::string>& masks)
 {
     std::unique_ptr<Target> target = compose_target(prefix, type);
