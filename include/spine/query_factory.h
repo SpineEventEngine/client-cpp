@@ -75,6 +75,24 @@ public:
                 T::descriptor()->full_name()
         );
     };
+
+    /**
+     * Creates a \b Query to read all entity states with the \b FieldMask
+     * applied to each of the results.
+     *
+     * Allows to set property paths for a \b FieldMask, applied to each of the query
+     * results. This processing is performed according to the
+     * [FieldMask specs](https://goo.gl/tW5wIU).
+     *
+     * In case the \b paths array contains entries inapplicable to the resulting entity
+     * (e.g. a \b path references a missing field), such invalid paths
+     * are silently ignored.
+     *
+     * @tparam T Protobuf Message type of a target entity.
+     * @param masks   the property paths for the \b FieldMask applied
+     *                    to each of results.
+     * @return an instance of \b Query formed according to the passed parameters.
+     */
     template <typename T, typename = enable_param_if_protobuf_message<T>>
     QueryPtr all_with_mask(const std::vector<std::string> masks)
     {
@@ -85,6 +103,21 @@ public:
         );
     };
 
+    /**
+     * Creates a \b Query to read certain entity states by IDs.
+     *
+     * Allows to specify a set of identifiers to be used during the \b Query processing.
+     * The processing results will contain only the entities, which IDs are present among
+     * the \b ids.
+     *
+     * Unlike \b by_ids_with_masks(), the \b Query processing
+     * will not change the resulting entities.
+     *
+     * @tparam T Protobuf Message type of a target entity.
+     * @tparam I Protobuf Message type of the entity IDs.
+     * @param ids         the entity IDs of interest.
+     * @return an instance of  Query formed according to the passed parameters.
+     */
     template <typename T, typename = enable_param_if_protobuf_message<T>,
                 typename I, typename = enable_param_if_protobuf_message<I>
     >
@@ -97,6 +130,29 @@ public:
         );
     };
 
+    /**
+     * Creates a \b Query to read certain entity states by IDs with the \b FieldMask
+     * applied to each of the results.
+     *
+     * Allows to specify a set of identifiers to be used during the \b Query processing.
+     * The processing results will contain only the entities, which IDs are present among
+     * the \b ids.
+     *
+     * Allows to set property paths for a \b FieldMask, applied to each of the query
+     * results. This processing is performed according to the
+     * [FieldMask specs](https://goo.gl/tW5wIU).
+     *
+     * In case the \b paths array contains entries inapplicable to the resulting entity
+     * (e.g. a \b path references a missing field),
+     * such invalid paths are silently ignored.
+     *
+     * @tparam T Protobuf Message type of a target entity.
+     * @tparam I Protobuf Message type of the entity IDs.
+     * @param ids         the entity IDs of interest.
+     * @param masks   the property paths for the \b FieldMask applied
+     *                    to each of results.
+     * @return an instance of \b Query formed according to the passed parameters.
+     */
     template <typename T, typename = enable_param_if_protobuf_message<T>,
             typename I, typename = enable_param_if_protobuf_message<I>
     >
