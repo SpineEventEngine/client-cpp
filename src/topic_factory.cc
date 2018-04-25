@@ -18,6 +18,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include <google/protobuf/field_mask.pb.h>
 #include <spine/core/actor_context.pb.h>
 
 #include "spine/topic_factory.h"
@@ -34,7 +35,6 @@ TopicFactory::TopicFactory(std::unique_ptr<core::ActorContext> &&actor_context)
     actor_context_ = std::move(actor_context);
 }
 
-
 TopicPtr TopicFactory::from_target(std::unique_ptr<Target>&& target)
 {
     std::unique_ptr<TopicId> topic_id = std::unique_ptr<TopicId> {TopicId::default_instance().New() };
@@ -44,6 +44,7 @@ TopicPtr TopicFactory::from_target(std::unique_ptr<Target>&& target)
     topic->set_allocated_id(topic_id.release());
     topic->set_allocated_target(target.release());
     topic->set_allocated_context(clone(actor_context_));
+    topic->set_allocated_field_mask(clone(google::protobuf::FieldMask::default_instance()));
 
     return std::unique_ptr<Topic>{topic};
 }
@@ -52,6 +53,5 @@ TopicPtr TopicFactory::make_topic(const std::string& prefix, const std::string& 
 {
     return from_target(std::move(compose_target(prefix, type)));
 }
-
 
 }}

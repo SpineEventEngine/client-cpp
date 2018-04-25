@@ -69,6 +69,14 @@ public:
                         T::descriptor()->full_name()
                 );
     };
+
+    /**
+     * Creates a \b Topic for the entity states with the given IDs.
+     *
+     * @tparam T Protobuf Message type of a target entity.
+     * @param ids the IDs of interest
+     * @return the instance of assembled according to the parameters.
+     */
     template <typename T, typename = enable_param_if_protobuf_message<T>,
               typename I, typename = enable_param_if_protobuf_message<I>>
     TopicPtr some(const std::vector<std::unique_ptr<I>>& ids)
