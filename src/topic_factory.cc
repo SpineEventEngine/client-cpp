@@ -35,13 +35,13 @@ TopicFactory::TopicFactory(std::unique_ptr<core::ActorContext> &&actor_context)
 }
 
 
-TopicPtr TopicFactory::for_target(std::unique_ptr<Target>&& target)
+TopicPtr TopicFactory::from_target(std::unique_ptr<Target>&& target)
 {
-    TopicId* topic_id = TopicId::default_instance().New();
+    std::unique_ptr<TopicId> topic_id = std::unique_ptr<TopicId> {TopicId::default_instance().New() };
     topic_id->set_value(uuid_generator_.createRandom().toString());
 
     Topic* topic = Topic::default_instance().New();
-    topic->set_allocated_id(topic_id);
+    topic->set_allocated_id(topic_id.release());
     topic->set_allocated_target(target.release());
     topic->set_allocated_context(clone(actor_context_));
 
@@ -50,7 +50,7 @@ TopicPtr TopicFactory::for_target(std::unique_ptr<Target>&& target)
 
 TopicPtr TopicFactory::make_topic(const std::string& prefix, const std::string& type)
 {
-    return for_target(std::move(compose_target(prefix, type)));
+    return from_target(std::move(compose_target(prefix, type)));
 }
 
 

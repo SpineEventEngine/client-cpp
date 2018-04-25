@@ -86,9 +86,9 @@ private:
     TopicPtr make_topic(const std::string& prefix, const std::string& type,
                         const std::vector<std::unique_ptr<T>>& ids)
     {
-        return for_target(std::move(compose_target(prefix, type, ids)));
+        return from_target(std::move(compose_target(prefix, type, ids)));
     }
-    TopicPtr for_target(std::unique_ptr<Target> &&);
+    TopicPtr from_target(std::unique_ptr<Target>&&);
 
 private:
     std::unique_ptr<core::ActorContext> actor_context_;
