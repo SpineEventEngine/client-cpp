@@ -46,6 +46,7 @@ QueryPtr QueryFactory::for_query(std::unique_ptr<Target>&& target)
     query->set_allocated_id(create_query_id());
     query->set_allocated_context(clone(actor_context_));
     query->set_allocated_target(target.release());
+    query->set_allocated_field_mask(clone(FieldMask::default_instance()));
 
     return query;
 }
@@ -69,14 +70,6 @@ QueryPtr QueryFactory::make_query(const std::string& prefix, const std::string& 
                                   const std::vector<std::string>& masks)
 {
     std::unique_ptr<Target> target = compose_target(prefix, type);
-    return for_query(std::move(target), std::move(make_field_mask(masks)));
-}
-
-QueryPtr QueryFactory::make_query(const std::string& prefix, const std::string& type,
-                                                const std::vector<std::string>& masks,
-                                                const std::vector<std::unique_ptr<google::protobuf::Message>>& ids)
-{
-    std::unique_ptr<Target> target = compose_target(prefix, type, ids);
     return for_query(std::move(target), std::move(make_field_mask(masks)));
 }
 

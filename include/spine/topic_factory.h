@@ -69,8 +69,9 @@ public:
                         T::descriptor()->full_name()
                 );
     };
-    template <typename T, typename = enable_param_if_protobuf_message<T>>
-    TopicPtr some(const std::vector<std::unique_ptr<google::protobuf::Message>>& ids)
+    template <typename T, typename = enable_param_if_protobuf_message<T>,
+              typename I, typename = enable_param_if_protobuf_message<I>>
+    TopicPtr some(const std::vector<std::unique_ptr<I>>& ids)
     {
         return make_topic(
                         T::descriptor()->file()->options().GetExtension(type_url_prefix),
@@ -81,8 +82,12 @@ public:
 
 private:
     TopicPtr make_topic(const std::string& prefix, const std::string& type);
+    template <typename T, typename = enable_param_if_protobuf_message<T>>
     TopicPtr make_topic(const std::string& prefix, const std::string& type,
-                        const std::vector<std::unique_ptr<google::protobuf::Message>>& ids);
+                        const std::vector<std::unique_ptr<T>>& ids)
+    {
+        return for_target(std::move(compose_target(prefix, type, ids)));
+    }
     TopicPtr for_target(std::unique_ptr<Target> &&);
 
 private:

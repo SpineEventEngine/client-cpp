@@ -24,16 +24,15 @@
 #include <memory>
 #include <vector>
 
-#include "spine/util/message_utils.hpp"
-#include "spine/util/any_utils.h"
-
 #include <spine/client/entities.pb.h>
 #include <spine/client/subscription.pb.h>
+
+#include "spine/util/message_utils.hpp"
+#include "spine/util/any_utils.h"
 
 namespace spine {
 namespace client {
 
-std::unique_ptr<Target> compose_target(const std::string& prefix, const std::string& type);
 
 template <typename T, typename = enable_param_if_protobuf_message<T>>
 std::unique_ptr<EntityFilters> make_entity_filters(const std::vector<std::unique_ptr<T>>& ids)
@@ -52,6 +51,10 @@ std::unique_ptr<EntityFilters> make_entity_filters(const std::vector<std::unique
     return entity_filters;
 }
 
+std::unique_ptr<Target> compose_target(const std::string& prefix, const std::string& type,
+                                       const std::vector<std::unique_ptr<google::protobuf::Message>>& ids);
+std::unique_ptr<Target> compose_target(const std::string& prefix, const std::string& type);
+
 template <typename T, typename = enable_param_if_protobuf_message<T>>
 std::unique_ptr<Target> compose_target(const std::string& prefix, const std::string& type,
                                        const std::vector<std::unique_ptr<T>>& ids)
@@ -64,7 +67,6 @@ std::unique_ptr<Target> compose_target(const std::string& prefix, const std::str
     }
     return target;
 }
-
 
 }
 }

@@ -19,11 +19,10 @@
  */
 
 #include "spine/util/target_utils.h"
-
+#include "spine/util/any_utils.h"
 
 namespace spine {
 namespace client {
-
 
 
 
@@ -38,11 +37,10 @@ std::unique_ptr<Target> compose_target(const std::string& prefix, const std::str
     }
     target->set_type(type_url);
     target->set_include_all(true);
+    target->set_allocated_filters(clone(EntityFilters::default_instance()));
 
     return target;
 }
-
-
 
 }
 }

@@ -86,7 +86,7 @@ public:
     };
 
     template <typename T, typename = enable_param_if_protobuf_message<T>,
-              typename I, typename = enable_param_if_protobuf_message<I>
+                typename I, typename = enable_param_if_protobuf_message<I>
     >
     QueryPtr by_ids(const std::vector<std::unique_ptr<I>>& ids)
     {
@@ -122,9 +122,16 @@ private:
         std::unique_ptr<Target> target = compose_target(prefix, type, ids);
         return for_query(std::move(target));
     }
+
+    template <typename T, typename = enable_param_if_protobuf_message<T>>
     QueryPtr make_query(const std::string& prefix, const std::string& type,
                                       const std::vector<std::string>& masks,
-                                      const std::vector<std::unique_ptr<google::protobuf::Message>>& ids);
+                                      const std::vector<std::unique_ptr<T>>& ids)
+    {
+        std::unique_ptr<Target> target = compose_target(prefix, type, ids);
+        return for_query(std::move(target), std::move(make_field_mask(masks)));
+    }
+
 
     std::unique_ptr<Query> for_query(std::unique_ptr<Target>&& target);
     std::unique_ptr<Query> for_query(std::unique_ptr<Target>&& target,

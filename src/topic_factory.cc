@@ -53,10 +53,5 @@ TopicPtr TopicFactory::make_topic(const std::string& prefix, const std::string& 
     return for_target(std::move(compose_target(prefix, type)));
 }
 
-TopicPtr TopicFactory::make_topic(const std::string& prefix, const std::string& type,
-                                  const std::vector<std::unique_ptr<google::protobuf::Message>>& ids)
-{
-    return for_target(std::move(compose_target(prefix, type, ids)));
-}
 
 }}
