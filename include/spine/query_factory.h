@@ -28,7 +28,7 @@
 
 #include "spine/types.h"
 #include "spine/util/message_utils.hpp"
-#include "spine/util/target_utils.h"
+#include "spine/util/target_utils.hpp"
 
 namespace google {
 namespace protobuf {

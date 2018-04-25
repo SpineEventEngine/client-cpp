@@ -23,7 +23,7 @@
 
 #include "spine/topic_factory.h"
 #include "spine/util/any_utils.h"
-#include "spine/util/target_utils.h"
+#include "spine/util/target_utils.hpp"
 
 using namespace spine::core;
 
