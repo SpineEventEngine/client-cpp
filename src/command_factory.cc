@@ -20,7 +20,7 @@
 
 #include "spine/command_factory.h"
 #include "spine/util/message_utils.hpp"
-#include "spine/util/any_utils.h"
+#include "spine/util/any_utils.hpp"
 
 #include <spine/core/actor_context.pb.h>
 

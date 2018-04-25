@@ -22,7 +22,7 @@
 #define SPINE_ANY_UTILS_H
 
 /**
- * @file any_utils.h
+ * @file any_utils.hpp
  *
  * Utility functions to operate with \b protobuf::Any and \b protobuf::Message.
  *
@@ -31,10 +31,13 @@
 
 #include <memory>
 
-#include "spine/util/message_utils.hpp"
-
 #include <google/protobuf/any.pb.h>
 #include <google/protobuf/message.h>
+#include <google/protobuf/descriptor.pb.h>
+
+#include <spine/options.pb.h>
+
+#include "spine/util/message_utils.hpp"
 
 namespace spine {
 namespace client {
@@ -49,7 +52,21 @@ namespace client {
  * @param message Protobuf message.
  * @return Protobuf Any packed from a message.
  */
-std::unique_ptr<::google::protobuf::Any> to_any(const ::google::protobuf::Message &message);
+inline std::unique_ptr<::google::protobuf::Any> to_any(const ::google::protobuf::Message &message)
+{
+    std::unique_ptr<::google::protobuf::Any> any { ::google::protobuf::Any::default_instance().New() };
+    std::string url_prefix = message.GetDescriptor()->file()->options().GetExtension(type_url_prefix);
+
+    if (!url_prefix.empty())
+    {
+        any->PackFrom(message, url_prefix);
+    }
+    else
+    {
+        any->PackFrom(message);
+    }
+    return any;
+}
 
 /**
  * Converts \b protobuf::Any to \b protobuf::Message.

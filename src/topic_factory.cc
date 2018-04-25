@@ -22,7 +22,7 @@
 #include <spine/core/actor_context.pb.h>
 
 #include "spine/topic_factory.h"
-#include "spine/util/any_utils.h"
+#include "spine/util/any_utils.hpp"
 #include "spine/util/target_utils.hpp"
 
 using namespace spine::core;

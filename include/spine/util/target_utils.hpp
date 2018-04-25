@@ -28,7 +28,7 @@
 #include <spine/client/subscription.pb.h>
 
 #include "spine/util/message_utils.hpp"
-#include "spine/util/any_utils.h"
+#include "spine/util/any_utils.hpp"
 
 namespace spine {
 namespace client {
