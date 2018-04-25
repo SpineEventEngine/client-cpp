@@ -21,6 +21,16 @@
 #ifndef SPINE_TARGET_UTILS_H
 #define SPINE_TARGET_UTILS_H
 
+/**
+ * @file target_utils.hpp
+ *
+ * Utility functions to operate with spine::client::Target.
+ * For internal use.
+ *
+ * @author Vladimir Moiseiev
+ */
+
+
 #include <memory>
 #include <vector>
 
