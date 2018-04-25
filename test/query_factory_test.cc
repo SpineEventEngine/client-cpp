@@ -52,45 +52,80 @@ public:
         }
         return project_ids;
     }
+    void check_filters_are_empty(const QueryPtr& query)
+    {
+        ASSERT_TRUE(query->target().has_filters());
+        ASSERT_TRUE(MessageDifferencer::Equals(query->target().filters(), EntityFilters::default_instance()));
+        ASSERT_FALSE(query->target().filters().has_id_filter());
+    }
+    void check_field_mask_is_empty(const QueryPtr& query)
+    {
+        ASSERT_TRUE(query->has_field_mask());
+        ASSERT_TRUE(MessageDifferencer::Equals(query->field_mask(), FieldMask::default_instance()));
+    }
+    void check_filters_are_equal(const QueryPtr& query, const std::vector<std::unique_ptr<ProjectId>>& ids)
+    {
+        ASSERT_TRUE(query->target().has_filters());
+        ASSERT_TRUE(query->target().filters().has_id_filter());
+
+        for (const EntityId &id_filter : query->target().filters().id_filter().ids())
+        {
+            ASSERT_TRUE(id_filter.has_id());
+            ASSERT_EQ(id_filter.id().type_url(), "type.test.spine.io/spine.test.ProjectId");
+            const std::unique_ptr<ProjectId>& entity_id = from_any<ProjectId>(id_filter.id());
+
+            ASSERT_TRUE(std::find_if(std::begin(ids), std::end(ids),
+                                     [&] ( const std::unique_ptr<ProjectId>& val) -> bool
+                                     {
+                                         return MessageDifferencer::Equals(*val, *entity_id);
+                                     }
+            )
+                        != std::end(ids) );
+        }
+    }
+    void check_field_mask_is_equal(const QueryPtr& query, const std::vector<std::string>& masks)
+    {
+        ASSERT_TRUE(query->has_field_mask());
+        ASSERT_EQ(query->field_mask().paths_size(), masks.size());
+        ASSERT_TRUE(std::equal(std::begin(masks), std::end(masks),
+                               std::begin(query->field_mask().paths()), std::end(query->field_mask().paths())
+        ));
+    }
 };
 
 TEST_F(QueryFactoryShould, CreateKnownSpineType)
 {
     QueryPtr query = query_factory_->all<ZoneId>();
 
-    std::string type = query->target().type();
     ASSERT_TRUE(query);
     ASSERT_TRUE(query->has_id());
     ASSERT_FALSE(query->id().value().empty());
 
-    ASSERT_TRUE(query->has_field_mask());
-    ASSERT_TRUE(MessageDifferencer::Equals(query->field_mask(), FieldMask::default_instance()));
+    ASSERT_TRUE(query->has_target());
+    ASSERT_EQ(query->target().type(), "type.spine.io/spine.time.ZoneId");
+    ASSERT_FALSE(query->target().include_all());
+
+    check_field_mask_is_empty(query);
+    check_filters_are_empty(query);
+
+}
+
+TEST_F(QueryFactoryShould, CreateKnownSpineTypeWithMask)
+{
+    std::vector<std::string> masks {"some", "random", "paths"};
+    QueryPtr query = query_factory_->all_with_mask<ZoneId>(masks);
+
+    ASSERT_TRUE(query);
+    ASSERT_TRUE(query->has_id());
+    ASSERT_FALSE(query->id().value().empty());
 
     ASSERT_TRUE(query->has_target());
     ASSERT_EQ(query->target().type(), "type.spine.io/spine.time.ZoneId");
     ASSERT_FALSE(query->target().include_all());
-    ASSERT_TRUE(query->target().has_filters());
-    ASSERT_TRUE(MessageDifferencer::Equals(query->target().filters(), EntityFilters::default_instance()));
-    ASSERT_FALSE(query->target().filters().has_id_filter());
-    
-}
 
-//TEST_F(QueryFactoryShould, CreateKnownSpineTypeWithMask)
-//{
-//    std::vector<std::string> masks {"some", "random", "paths"};
-//    QueryPtr query = query_factory_->all_with_mask<ZoneId>(masks);
-//
-//    std::string type = query->target().type();
-//    ASSERT_TRUE(query);
-//    ASSERT_TRUE(query->has_id());
-//    ASSERT_FALSE(query->id().value().empty());
-//    ASSERT_TRUE(query->has_target());
-//    ASSERT_EQ(query->target().type(), "type.spine.io/spine.time.ZoneId");
-//    ASSERT_FALSE(query->target().include_all());
-//    ASSERT_TRUE(query->target().has_filters());
-//    ASSERT_FALSE(query->target().filters().has_id_filter());
-//    //query->target().filters().filter().
-//}
+    check_filters_are_empty(query);
+    check_field_mask_is_equal(query, masks);
+}
 
 TEST_F(QueryFactoryShould, QueryKnownSpineById)
 {
@@ -98,7 +133,6 @@ TEST_F(QueryFactoryShould, QueryKnownSpineById)
 
     QueryPtr query = query_factory_->by_ids<CreateProject>( project_ids );
 
-    std::string type = query->target().type();
     ASSERT_TRUE(query);
     ASSERT_TRUE(query->has_id());
     ASSERT_FALSE(query->id().value().empty());
@@ -110,65 +144,57 @@ TEST_F(QueryFactoryShould, QueryKnownSpineById)
     ASSERT_EQ(query->target().type(), "type.test.spine.io/spine.test.CreateProject");
     ASSERT_FALSE(query->target().include_all());
 
-    ASSERT_TRUE(query->target().has_filters());
-    ASSERT_TRUE(query->target().filters().has_id_filter());
-
-    for (const EntityId &id_filter : query->target().filters().id_filter().ids())
-    {
-        ASSERT_TRUE(id_filter.has_id());
-        ASSERT_EQ(id_filter.id().type_url(), "type.test.spine.io/spine.test.ProjectId");
-        const std::unique_ptr<ProjectId>& entity_id = from_any<ProjectId>(id_filter.id());
-
-        ASSERT_TRUE(std::find_if(std::begin(project_ids), std::end(project_ids),
-                                 [&] ( std::unique_ptr<ProjectId>& val) -> bool
-                                    {
-                                        return MessageDifferencer::Equals(*val, *entity_id);
-                                    }
-                                 )
-                    != std::end(project_ids) );
-    }
-
-
-
+    check_filters_are_equal(query, project_ids);
 }
 
-//TEST_F(QueryFactoryShould, QueryKnownSpineByIdWithMask)
-//{
-//    QueryPtr query = query_factory_->by_ids_with_masks<ZoneId>();
-//
-//    std::string type = query->target().type();
-//    ASSERT_TRUE(query);
-//    ASSERT_TRUE(query->has_id());
-//    ASSERT_FALSE(query->id().value().empty());
-//    ASSERT_TRUE(query->has_target());
-//    ASSERT_EQ(query->target().type(), "type.spine.io/spine.time.ZoneId");
-//    ASSERT_FALSE(query->target().include_all());
-//    ASSERT_FALSE(query->target().has_filters());
-//
-//}
+TEST_F(QueryFactoryShould, QueryKnownSpineByIdWithMask)
+{
+    std::vector<std::string> masks {"some", "random", "paths"};
+    std::vector<std::unique_ptr<ProjectId>> project_ids = make_project_ids();
+
+    QueryPtr query = query_factory_->by_ids_with_masks<CreateProject>( masks, project_ids );
+
+    ASSERT_TRUE(query);
+    ASSERT_TRUE(query->has_id());
+    ASSERT_FALSE(query->id().value().empty());
+
+    check_field_mask_is_equal(query, masks);
+
+    ASSERT_TRUE(query->has_target());
+    ASSERT_EQ(query->target().type(), "type.test.spine.io/spine.test.CreateProject");
+    ASSERT_FALSE(query->target().include_all());
+
+    check_filters_are_equal(query, project_ids);
+}
 
 TEST_F(QueryFactoryShould, CreateMessageWithPrefix)
 {
     QueryPtr query = query_factory_->all<TestMessage>();
 
-    std::string type = query->target().type();
     ASSERT_TRUE(query);
     ASSERT_TRUE(query->has_id());
     ASSERT_FALSE(query->id().value().empty());
     ASSERT_TRUE(query->has_target());
     ASSERT_EQ(query->target().type(), "type.test.spine.io/spine.test.TestMessage");
+    ASSERT_FALSE(query->target().include_all());
+
+    check_field_mask_is_empty(query);
+    check_filters_are_empty(query);
 }
 
 TEST_F(QueryFactoryShould, CreateMessageWithoutPrefix)
 {
     QueryPtr query = query_factory_->all<TestMessageNoPrefix>();
 
-    std::string type = query->target().type();
     ASSERT_TRUE(query);
     ASSERT_TRUE(query->has_id());
     ASSERT_FALSE(query->id().value().empty());
     ASSERT_TRUE(query->has_target());
     ASSERT_EQ(query->target().type(), "spine.test.TestMessageNoPrefix");
+    ASSERT_FALSE(query->target().include_all());
+
+    check_field_mask_is_empty(query);
+    check_filters_are_empty(query);
 }
 
 

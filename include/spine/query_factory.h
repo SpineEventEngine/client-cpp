@@ -97,9 +97,11 @@ public:
         );
     };
 
-    template <typename T, typename = enable_param_if_protobuf_message<T>>
+    template <typename T, typename = enable_param_if_protobuf_message<T>,
+            typename I, typename = enable_param_if_protobuf_message<I>
+    >
     QueryPtr by_ids_with_masks(const std::vector<std::string> masks,
-                               const std::vector<std::unique_ptr<google::protobuf::Message>>& ids)
+                               const std::vector<std::unique_ptr<I>>& ids)
     {
         return make_query(
                 T::descriptor()->file()->options().GetExtension(type_url_prefix),
