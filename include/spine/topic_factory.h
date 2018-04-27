@@ -65,9 +65,9 @@ public:
     TopicPtr all()
     {
         return make_topic(
-                        T::descriptor()->file()->options().GetExtension(type_url_prefix),
-                        T::descriptor()->full_name()
-                );
+                            T::descriptor()->file()->options().GetExtension(type_url_prefix),
+                            T::descriptor()->full_name()
+                         );
     };
 
     /**
@@ -82,10 +82,10 @@ public:
     TopicPtr some(const std::vector<std::unique_ptr<I>>& ids)
     {
         return make_topic(
-                        T::descriptor()->file()->options().GetExtension(type_url_prefix),
-                        T::descriptor()->full_name(),
-                        ids
-                );
+                            T::descriptor()->file()->options().GetExtension(type_url_prefix),
+                            T::descriptor()->full_name(),
+                            ids
+                         );
     };
 
 private:

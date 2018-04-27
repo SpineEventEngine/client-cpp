@@ -54,7 +54,6 @@ QueryPtr QueryFactory::for_query(std::unique_ptr<Target>&& target)
 QueryPtr QueryFactory::for_query(std::unique_ptr<Target>&& target, std::unique_ptr<FieldMask> && field_mask)
 {
     std::unique_ptr<Query> query = for_query(std::move(target));
-
     query->set_allocated_field_mask(field_mask.release());
 
     return query;

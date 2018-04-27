@@ -64,8 +64,8 @@ public:
     /**
      * Creates a \b Query to read all states of a certain entity.
      *
-     * @tparam T Protobuf Message type of a target entity.
-     * @return an instance of Query formed according to the passed parameters.
+     * @tparam T Protobuf Message type of a target entity
+     * @return an instance of Query formed according to the passed parameters
      */
     template <typename T, typename = enable_param_if_protobuf_message<T>>
     QueryPtr all()
@@ -88,13 +88,13 @@ public:
      * (e.g. a \b path references a missing field), such invalid paths
      * are silently ignored.
      *
-     * @tparam T Protobuf Message type of a target entity.
+     * @tparam T Protobuf Message type of a target entity
      * @param masks   the property paths for the \b FieldMask applied
-     *                    to each of results.
-     * @return an instance of \b Query formed according to the passed parameters.
+     *                    to each of results
+     * @return an instance of \b Query formed according to the passed parameters
      */
     template <typename T, typename = enable_param_if_protobuf_message<T>>
-    QueryPtr all_with_mask(const std::vector<std::string> masks)
+    QueryPtr all_with_mask(const std::vector<std::string>& masks)
     {
         return make_query(
                 T::descriptor()->file()->options().GetExtension(type_url_prefix),
@@ -113,14 +113,14 @@ public:
      * Unlike \b by_ids_with_masks(), the \b Query processing
      * will not change the resulting entities.
      *
-     * @tparam T Protobuf Message type of a target entity.
-     * @tparam I Protobuf Message type of the entity IDs.
-     * @param ids         the entity IDs of interest.
-     * @return an instance of  Query formed according to the passed parameters.
+     * @tparam T Protobuf Message type of a target entity
+     * @tparam I Protobuf Message type of the entity IDs
+     * @param ids         the entity IDs of interest
+     * @return an instance of  Query formed according to he passed parameters
      */
     template <typename T, typename = enable_param_if_protobuf_message<T>,
-                typename I, typename = enable_param_if_protobuf_message<I>
-    >
+              typename I, typename = enable_param_if_protobuf_message<I>
+              >
     QueryPtr by_ids(const std::vector<std::unique_ptr<I>>& ids)
     {
         return make_query(
@@ -146,17 +146,17 @@ public:
      * (e.g. a \b path references a missing field),
      * such invalid paths are silently ignored.
      *
-     * @tparam T Protobuf Message type of a target entity.
-     * @tparam I Protobuf Message type of the entity IDs.
-     * @param ids         the entity IDs of interest.
+     * @tparam T Protobuf Message type of a target entity
+     * @tparam I Protobuf Message type of the entity IDs
+     * @param ids         the entity IDs of interest
      * @param masks   the property paths for the \b FieldMask applied
-     *                    to each of results.
-     * @return an instance of \b Query formed according to the passed parameters.
+     *                    to each of results
+     * @return an instance of \b Query formed according to the passed parameters
      */
     template <typename T, typename = enable_param_if_protobuf_message<T>,
-            typename I, typename = enable_param_if_protobuf_message<I>
-    >
-    QueryPtr by_ids_with_masks(const std::vector<std::string> masks,
+              typename I, typename = enable_param_if_protobuf_message<I>
+              >
+    QueryPtr by_ids_with_masks(const std::vector<std::string>& masks,
                                const std::vector<std::unique_ptr<I>>& ids)
     {
         return make_query(
@@ -175,7 +175,7 @@ private:
 
     template <typename T, typename = enable_param_if_protobuf_message<T>>
     QueryPtr make_query(const std::string& prefix, const std::string& type,
-                                                    const std::vector<std::unique_ptr<T>>& ids)
+                        const std::vector<std::unique_ptr<T>>& ids)
     {
         std::unique_ptr<Target> target = compose_target(prefix, type, ids);
         return for_query(std::move(target));
@@ -183,8 +183,8 @@ private:
 
     template <typename T, typename = enable_param_if_protobuf_message<T>>
     QueryPtr make_query(const std::string& prefix, const std::string& type,
-                                      const std::vector<std::string>& masks,
-                                      const std::vector<std::unique_ptr<T>>& ids)
+                        const std::vector<std::string>& masks,
+                        const std::vector<std::unique_ptr<T>>& ids)
     {
         std::unique_ptr<Target> target = compose_target(prefix, type, ids);
         return for_query(std::move(target), std::move(make_field_mask(masks)));
@@ -193,7 +193,7 @@ private:
 
     std::unique_ptr<Query> for_query(std::unique_ptr<Target>&& target);
     std::unique_ptr<Query> for_query(std::unique_ptr<Target>&& target,
-                                                   std::unique_ptr<google::protobuf::FieldMask> && field_mask);
+                                     std::unique_ptr<google::protobuf::FieldMask> && field_mask);
 
     std::unique_ptr<google::protobuf::FieldMask> make_field_mask(const std::vector<std::string>& masks);
 private:

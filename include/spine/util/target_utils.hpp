@@ -48,7 +48,7 @@ template <typename T, typename = enable_param_if_protobuf_message<T>>
 std::unique_ptr<EntityFilters> make_entity_filters(const std::vector<std::unique_ptr<T>>& ids)
 {
     std::unique_ptr<EntityIdFilter> entity_id_filter { EntityIdFilter::default_instance().New() };
-    for (auto &message : ids)
+    for (auto& message : ids)
     {
         std::unique_ptr<google::protobuf::Any> any = to_any(*message);
         std::unique_ptr<EntityId> entity_id { EntityId::default_instance().New() };
