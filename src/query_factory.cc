@@ -21,10 +21,13 @@
 #include <sstream>
 
 #include "spine/query_factory.h"
+#include "spine/util/target_utils.hpp"
 
 #include <spine/core/actor_context.pb.h>
+#include <google/protobuf/field_mask.pb.h>
 
 using namespace spine::core;
+using namespace google::protobuf;
 
 namespace spine {
 namespace client {
@@ -36,23 +39,47 @@ QueryFactory::QueryFactory(std::unique_ptr<core::ActorContext>&& actor_context)
     actor_context_ = std::move(actor_context);
 }
 
-std::unique_ptr<Query> QueryFactory::all(const std::string& prefix, const std::string& type)
+QueryPtr QueryFactory::for_query(std::unique_ptr<Target>&& target)
 {
-    std::unique_ptr<Target> target { Target::default_instance().New() };
-    std::string type_url = type;
-    if( !prefix.empty() )
-    {
-        type_url.insert(0, prefix + "/");
-    }
-    target->set_type(type_url);
-
     std::unique_ptr<Query> query { Query::default_instance().New() };
 
     query->set_allocated_id(create_query_id());
     query->set_allocated_context(clone(actor_context_));
     query->set_allocated_target(target.release());
+    query->set_allocated_field_mask(clone(FieldMask::default_instance()));
 
     return query;
+}
+
+QueryPtr QueryFactory::for_query(std::unique_ptr<Target>&& target, std::unique_ptr<FieldMask> && field_mask)
+{
+    std::unique_ptr<Query> query = for_query(std::move(target));
+    query->set_allocated_field_mask(field_mask.release());
+
+    return query;
+}
+
+QueryPtr QueryFactory::make_query(const std::string& prefix, const std::string& type)
+{
+    std::unique_ptr<Target> target = compose_target(prefix, type);
+    return for_query(std::move(target));
+}
+
+QueryPtr QueryFactory::make_query(const std::string& prefix, const std::string& type,
+                                  const std::vector<std::string>& masks)
+{
+    std::unique_ptr<Target> target = compose_target(prefix, type);
+    return for_query(std::move(target), std::move(make_field_mask(masks)));
+}
+
+std::unique_ptr<FieldMask> QueryFactory::make_field_mask(const std::vector<std::string>& masks)
+{
+    std::unique_ptr<FieldMask> field_mask {FieldMask::default_instance().New() };
+
+    RepeatedPtrField< string> paths (masks.begin(), masks.end());
+    field_mask->mutable_paths()->Swap(&paths);
+
+    return field_mask;
 }
 
 QueryId *QueryFactory::create_query_id()

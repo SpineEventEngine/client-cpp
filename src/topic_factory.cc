@@ -18,9 +18,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "spine/topic_factory.h"
-
+#include <google/protobuf/field_mask.pb.h>
 #include <spine/core/actor_context.pb.h>
+
+#include "spine/topic_factory.h"
+#include "spine/util/any_utils.hpp"
+#include "spine/util/target_utils.hpp"
 
 using namespace spine::core;
 
@@ -32,31 +35,23 @@ TopicFactory::TopicFactory(std::unique_ptr<core::ActorContext> &&actor_context)
     actor_context_ = std::move(actor_context);
 }
 
-std::unique_ptr<Topic> TopicFactory::all(const std::string& prefix, const std::string& type)
+TopicPtr TopicFactory::from_target(std::unique_ptr<Target>&& target)
 {
-    std::unique_ptr<Target> target { Target::default_instance().New() };
-
-    std::string type_url = type;
-    if( !prefix.empty() )
-    {
-        type_url.insert(0, prefix + "/");
-    }
-    target->set_type(type_url);
-
-    return for_target(std::move(target));
-}
-
-std::unique_ptr<Topic> TopicFactory::for_target(std::unique_ptr<Target>&& target)
-{
-    TopicId* topic_id = TopicId::default_instance().New();
+    std::unique_ptr<TopicId> topic_id = std::unique_ptr<TopicId> {TopicId::default_instance().New() };
     topic_id->set_value(uuid_generator_.createRandom().toString());
 
     Topic* topic = Topic::default_instance().New();
-    topic->set_allocated_id(topic_id);
+    topic->set_allocated_id(topic_id.release());
     topic->set_allocated_target(target.release());
     topic->set_allocated_context(clone(actor_context_));
+    topic->set_allocated_field_mask(clone(google::protobuf::FieldMask::default_instance()));
 
     return std::unique_ptr<Topic>{topic};
+}
+
+TopicPtr TopicFactory::make_topic(const std::string& prefix, const std::string& type)
+{
+    return from_target(std::move(compose_target(prefix, type)));
 }
 
 }}

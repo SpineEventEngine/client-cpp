@@ -22,11 +22,18 @@
 #define SPINE_QUERYFACTORY_H
 
 #include <memory>
+#include <vector>
 #include <Poco/UUIDGenerator.h>
 #include <spine/client/query.pb.h>
 
 #include "spine/types.h"
 #include "spine/util/message_utils.hpp"
+#include "spine/util/target_utils.hpp"
+
+namespace google {
+namespace protobuf {
+    class FieldMask;
+}}
 
 namespace spine
 {
@@ -57,22 +64,138 @@ public:
     /**
      * Creates a \b Query to read all states of a certain entity.
      *
-     * @tparam T Protobuf Message type of a target entity.
-     * @return an instance of Query formed according to the passed parameters.
+     * @tparam T Protobuf Message type of a target entity
+     * @return an instance of Query formed according to the passed parameters
      */
     template <typename T, typename = enable_param_if_protobuf_message<T>>
     QueryPtr all()
     {
-        return all(
+        return make_query(
                 T::descriptor()->file()->options().GetExtension(type_url_prefix),
                 T::descriptor()->full_name()
         );
     };
 
+    /**
+     * Creates a \b Query to read all entity states with the \b FieldMask
+     * applied to each of the results.
+     *
+     * Allows to set property paths for a \b FieldMask, applied to each of the query
+     * results. This processing is performed according to the
+     * [FieldMask specs](https://goo.gl/tW5wIU).
+     *
+     * In case the \b paths array contains entries inapplicable to the resulting entity
+     * (e.g. a \b path references a missing field), such invalid paths
+     * are silently ignored.
+     *
+     * @tparam T Protobuf Message type of a target entity
+     * @param masks   the property paths for the \b FieldMask applied
+     *                    to each of results
+     * @return an instance of \b Query formed according to the passed parameters
+     */
+    template <typename T, typename = enable_param_if_protobuf_message<T>>
+    QueryPtr all_with_mask(const std::vector<std::string>& masks)
+    {
+        return make_query(
+                T::descriptor()->file()->options().GetExtension(type_url_prefix),
+                T::descriptor()->full_name(),
+                masks
+        );
+    };
+
+    /**
+     * Creates a \b Query to read certain entity states by IDs.
+     *
+     * Allows to specify a set of identifiers to be used during the \b Query processing.
+     * The processing results will contain only the entities, which IDs are present among
+     * the \b ids.
+     *
+     * Unlike \b by_ids_with_masks(), the \b Query processing
+     * will not change the resulting entities.
+     *
+     * @tparam T Protobuf Message type of a target entity
+     * @tparam I Protobuf Message type of the entity IDs
+     * @param ids         the entity IDs of interest
+     * @return an instance of  Query formed according to he passed parameters
+     */
+    template <typename T, typename = enable_param_if_protobuf_message<T>,
+              typename I, typename = enable_param_if_protobuf_message<I>
+              >
+    QueryPtr by_ids(const std::vector<std::unique_ptr<I>>& ids)
+    {
+        return make_query(
+                T::descriptor()->file()->options().GetExtension(type_url_prefix),
+                T::descriptor()->full_name(),
+                ids
+        );
+    };
+
+    /**
+     * Creates a \b Query to read certain entity states by IDs with the \b FieldMask
+     * applied to each of the results.
+     *
+     * Allows to specify a set of identifiers to be used during the \b Query processing.
+     * The processing results will contain only the entities, which IDs are present among
+     * the \b ids.
+     *
+     * Allows to set property paths for a \b FieldMask, applied to each of the query
+     * results. This processing is performed according to the
+     * [FieldMask specs](https://goo.gl/tW5wIU).
+     *
+     * In case the \b paths array contains entries inapplicable to the resulting entity
+     * (e.g. a \b path references a missing field),
+     * such invalid paths are silently ignored.
+     *
+     * @tparam T Protobuf Message type of a target entity
+     * @tparam I Protobuf Message type of the entity IDs
+     * @param ids         the entity IDs of interest
+     * @param masks   the property paths for the \b FieldMask applied
+     *                    to each of results
+     * @return an instance of \b Query formed according to the passed parameters
+     */
+    template <typename T, typename = enable_param_if_protobuf_message<T>,
+              typename I, typename = enable_param_if_protobuf_message<I>
+              >
+    QueryPtr by_ids_with_masks(const std::vector<std::string>& masks,
+                               const std::vector<std::unique_ptr<I>>& ids)
+    {
+        return make_query(
+                T::descriptor()->file()->options().GetExtension(type_url_prefix),
+                T::descriptor()->full_name(),
+                masks,
+                ids
+        );
+    };
+
 private:
     QueryId *create_query_id();
-    QueryPtr all(const std::string& prefix, const std::string& type);
+    QueryPtr make_query(const std::string& prefix, const std::string& type);
+    QueryPtr make_query(const std::string& prefix, const std::string& type,
+                        const std::vector<std::string>& masks);
 
+    template <typename T, typename = enable_param_if_protobuf_message<T>>
+    QueryPtr make_query(const std::string& prefix, const std::string& type,
+                        const std::vector<std::unique_ptr<T>>& ids)
+    {
+        std::unique_ptr<Target> target = compose_target(prefix, type, ids);
+        return for_query(std::move(target));
+    }
+
+    template <typename T, typename = enable_param_if_protobuf_message<T>>
+    QueryPtr make_query(const std::string& prefix, const std::string& type,
+                        const std::vector<std::string>& masks,
+                        const std::vector<std::unique_ptr<T>>& ids)
+    {
+        std::unique_ptr<Target> target = compose_target(prefix, type, ids);
+        return for_query(std::move(target), std::move(make_field_mask(masks)));
+    }
+
+
+    std::unique_ptr<Query> for_query(std::unique_ptr<Target>&& target);
+    std::unique_ptr<Query> for_query(std::unique_ptr<Target>&& target,
+                                     std::unique_ptr<google::protobuf::FieldMask> && field_mask);
+
+    std::unique_ptr<google::protobuf::FieldMask> make_field_mask(const std::vector<std::string>& masks);
 private:
     std::unique_ptr<core::ActorContext> actor_context_;
     Poco::UUIDGenerator uuid_generator_;

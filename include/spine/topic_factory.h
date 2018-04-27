@@ -22,6 +22,7 @@
 #define SPINE_TOPICFACTORY_H
 
 #include <string>
+#include <vector>
 #include <Poco/UUIDGenerator.h>
 
 #include "types.h"
@@ -63,15 +64,39 @@ public:
     template <typename T, typename = enable_param_if_protobuf_message<T>>
     TopicPtr all()
     {
-        return all(
-                T::descriptor()->file()->options().GetExtension(type_url_prefix),
-                T::descriptor()->full_name()
-        );
+        return make_topic(
+                            T::descriptor()->file()->options().GetExtension(type_url_prefix),
+                            T::descriptor()->full_name()
+                         );
+    };
+
+    /**
+     * Creates a \b Topic for the entity states with the given IDs.
+     *
+     * @tparam T Protobuf Message type of a target entity.
+     * @param ids the IDs of interest
+     * @return the instance of assembled according to the parameters.
+     */
+    template <typename T, typename = enable_param_if_protobuf_message<T>,
+              typename I, typename = enable_param_if_protobuf_message<I>>
+    TopicPtr some(const std::vector<std::unique_ptr<I>>& ids)
+    {
+        return make_topic(
+                            T::descriptor()->file()->options().GetExtension(type_url_prefix),
+                            T::descriptor()->full_name(),
+                            ids
+                         );
     };
 
 private:
-    TopicPtr all(const std::string& prefix, const std::string& type);
-    TopicPtr for_target(std::unique_ptr<Target> &&);
+    TopicPtr make_topic(const std::string& prefix, const std::string& type);
+    template <typename T, typename = enable_param_if_protobuf_message<T>>
+    TopicPtr make_topic(const std::string& prefix, const std::string& type,
+                        const std::vector<std::unique_ptr<T>>& ids)
+    {
+        return from_target(std::move(compose_target(prefix, type, ids)));
+    }
+    TopicPtr from_target(std::unique_ptr<Target>&&);
 
 private:
     std::unique_ptr<core::ActorContext> actor_context_;
