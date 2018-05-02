@@ -50,7 +50,7 @@ protected:
         ZoneId* zone_id = ZoneId::default_instance().New();
         zone_id->set_value(ZONE_ID);
         zone_offset_->set_allocated_id(zone_id);
-        zone_offset_->set_amountseconds(42);
+        zone_offset_->set_amount_seconds(42);
     }
     virtual void TearDown() override
     {
@@ -102,7 +102,7 @@ TEST_F(ActorRequestFactoryParamsShould, Copy)
     ASSERT_EQ(params_copy.actor()->value(),params.actor()->value());
     ASSERT_EQ(params_copy.tenant_id()->value(),params.tenant_id()->value());
     ASSERT_EQ(params_copy.zone_offset()->id().value(),params.zone_offset()->id().value());
-    ASSERT_EQ(params_copy.zone_offset()->amountseconds(),params.zone_offset()->amountseconds());
+    ASSERT_EQ(params_copy.zone_offset()->amount_seconds(),params.zone_offset()->amount_seconds());
 }
 
 TEST_F(ActorRequestFactoryParamsShould, CopyOnConstruct)
@@ -123,7 +123,7 @@ TEST_F(ActorRequestFactoryParamsShould, CopyOnConstruct)
     ASSERT_EQ(params_copy.actor()->value(),params.actor()->value());
     ASSERT_EQ(params_copy.tenant_id()->value(),params.tenant_id()->value());
     ASSERT_EQ(params_copy.zone_offset()->id().value(),params.zone_offset()->id().value());
-    ASSERT_EQ(params_copy.zone_offset()->amountseconds(),params.zone_offset()->amountseconds());
+    ASSERT_EQ(params_copy.zone_offset()->amount_seconds(),params.zone_offset()->amount_seconds());
 }
 
 TEST_F(ActorRequestFactoryParamsShould, Move)

@@ -20,7 +20,7 @@
 
 #include "spine/command_factory.h"
 #include "spine/util/message_utils.hpp"
-#include "spine/util/any_utils.h"
+#include "spine/util/any_utils.hpp"
 
 #include <spine/core/actor_context.pb.h>
 
@@ -62,7 +62,6 @@ std::unique_ptr<Command> CommandFactory::create(const Message& message, const in
     return std::unique_ptr<Command>{command};
 
 }
-
 
 Command* make_command(CommandContext* command_context, Any* any, CommandId* command_id)
 {

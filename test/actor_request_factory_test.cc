@@ -78,7 +78,7 @@ TEST_F(ActorRequestFactoryShould, HaveValidParams)
     ZoneId* zone_id = ZoneId::default_instance().New();
     zone_id->set_value(ZONE_ID);
     zone_offset->set_allocated_id(zone_id);
-    zone_offset->set_amountseconds(42);
+    zone_offset->set_amount_seconds(42);
 
     params.set_actor(actor)
             .set_tenant_id(tenant_id)
@@ -93,7 +93,7 @@ TEST_F(ActorRequestFactoryShould, HaveValidParams)
     ASSERT_EQ(params.actor()->value(),factory.actor()->value());
     ASSERT_EQ(params.tenant_id()->value(),factory.tenant_id()->value());
     ASSERT_EQ(params.zone_offset()->id().value(),factory.zone_offset()->id().value());
-    ASSERT_EQ(params.zone_offset()->amountseconds(),factory.zone_offset()->amountseconds());
+    ASSERT_EQ(params.zone_offset()->amount_seconds(), factory.zone_offset()->amount_seconds());
 }
 
 TEST_F(ActorRequestFactoryShould, SetDefaultZoneOffset)
@@ -118,5 +118,5 @@ TEST_F(ActorRequestFactoryShould, SetDefaultZoneOffset)
     ASSERT_EQ(params.tenant_id()->value(),factory.tenant_id()->value());
     ASSERT_TRUE(factory.zone_offset());
     ASSERT_EQ(ZoneOffset::default_instance().id().value(),factory.zone_offset()->id().value());
-    ASSERT_EQ(ZoneOffset::default_instance().amountseconds(),factory.zone_offset()->amountseconds());
+    ASSERT_EQ(ZoneOffset::default_instance().amount_seconds(),factory.zone_offset()->amount_seconds());
 }

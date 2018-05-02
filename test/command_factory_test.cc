@@ -23,7 +23,7 @@
 
 #include <boost/algorithm/string.hpp>
 
-#include "spine/util/any_utils.h"
+#include "spine/util/any_utils.hpp"
 #include "common_factory_test.h"
 #include "unit_tests.pb.h"
 #include "unit_tests_no_prefix.pb.h"
