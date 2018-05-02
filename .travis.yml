@@ -36,8 +36,8 @@ install:
 
 before_script:
   - cd ${TRAVIS_BUILD_DIR}/dependencies
-  - git clone -b dependencies --depth=1 https://github.com/SpineEventEngine/client-cpp.git
-  - cd client-cpp
+  - git clone --depth=1 https://github.com/SpineEventEngine/client-cpp-bin.git
+  - cd client-cpp-bin
   - mv dependencies/grpc ../ && cd ..
   - sudo rm -r client-cpp && cd ..
   - mkdir _build && cd _build && cmake -DENABLE_CODE_COVERAGE=ON ..
