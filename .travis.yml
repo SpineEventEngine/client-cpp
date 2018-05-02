@@ -39,7 +39,7 @@ before_script:
   - git clone --depth=1 https://github.com/SpineEventEngine/client-cpp-bin.git
   - cd client-cpp-bin
   - mv dependencies/grpc ../ && cd ..
-  - sudo rm -r client-cpp && cd ..
+  - sudo rm -r client-cpp-bin && cd ..
   - mkdir _build && cd _build && cmake -DENABLE_CODE_COVERAGE=ON ..
 script:
   - cmake --build .
