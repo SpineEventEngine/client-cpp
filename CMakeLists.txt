@@ -3,7 +3,7 @@ project(spine)
 
 option(BUILD_DEPENDENCIES "Try to download and build third party libraries" OFF)
 option(LOAD_SPINE_PROTO_FILES, "Try to download only spine proto dependencies", OFF)
-option(ENABLE_CODE_COVERAGE "Enable code coverage" OFF)
+option(ENABLE_CODE_COVERAGE "Enable code coverage", OFF)
 
 file (STRINGS "VERSION" VERSION)
 
