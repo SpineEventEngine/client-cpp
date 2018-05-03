@@ -40,7 +40,7 @@ before_script:
   - cd client-cpp-bin
   - mv dependencies/grpc ../ && cd ..
   - sudo rm -r client-cpp-bin && cd ..
-  - mkdir _build && cd _build && cmake -DENABLE_CODE_COVERAGE=ON ..
+  - mkdir _build && cd _build && cmake -DENABLE_CODE_COVERAGE=ON -DLOAD_SPINE_PROTO_FILES=ON ..
 script:
   - cmake --build .
   - ./runTests
