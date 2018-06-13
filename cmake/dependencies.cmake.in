@@ -3,39 +3,45 @@ cmake_minimum_required(VERSION 3.5.1)
 include(ExternalProject)
 
 set(CMAKE_BINARY_DIR ${CMAKE_BINARY_DIR})
+set(BUILD_DEPENDENCIES ${BUILD_DEPENDENCIES})
+set(LOAD_SPINE_PROTO_FILES ${LOAD_SPINE_PROTO_FILES})
 
-ExternalProject_Add(spine_proto_dependency
-        URL http://maven.teamdev.com/repository/spine-snapshots/io/spine/spine-client/0.10.34-SNAPSHOT/spine-client-0.10.34-20180326.072420-2-proto.jar
+if(BUILD_DEPENDENCIES OR LOAD_SPINE_PROTO_FILES)
+    ExternalProject_Add(spine_proto_dependency
+            URL http://maven.teamdev.com/repository/spine-snapshots/io/spine/spine-client/0.10.34-SNAPSHOT/spine-client-0.10.34-20180326.072420-2-proto.jar
+            CONFIGURE_COMMAND ""
+            BUILD_COMMAND ""
+            INSTALL_COMMAND ""
+            #EXCLUDE_FROM_ALL 1
+            SOURCE_DIR ${SPINE_DEPENDENCIES_DIR}
+            )
+endif()
+
+if(BUILD_DEPENDENCIES)
+    execute_process(COMMAND curl -L https://grpc.io/release OUTPUT_VARIABLE GRPC_TAG)
+
+    ExternalProject_Add(grpc_dependency
+        PREFIX ${GRPC_PREFIX_DIR}
+        SOURCE_DIR ${GRPC_DEPENDENCIES_DIR}
+        UPDATE_COMMAND ""
+        GIT_REPOSITORY "https://github.com/grpc/grpc.git"
+        GIT_TAG "${GRPC_TAG}"
+        GIT_SUBMODULES
+        GIT_SHALLOW 1
         CONFIGURE_COMMAND ""
-        BUILD_COMMAND ""
+        BUILD_COMMAND make
         INSTALL_COMMAND ""
         #EXCLUDE_FROM_ALL 1
-        SOURCE_DIR ${SPINE_DEPENDENCIES_DIR}
+        BUILD_IN_SOURCE 1
+        TLS_VERIFY false
         )
 
-execute_process(COMMAND curl -L https://grpc.io/release OUTPUT_VARIABLE GRPC_TAG)
-
-ExternalProject_Add(grpc_dependency
-     PREFIX ${GRPC_PREFIX_DIR}
-     SOURCE_DIR ${GRPC_DEPENDENCIES_DIR}
-     UPDATE_COMMAND ""
-     GIT_REPOSITORY "https://github.com/grpc/grpc.git"
-     GIT_TAG "${GRPC_TAG}"
-     GIT_SUBMODULES
-     GIT_SHALLOW 1
-     CONFIGURE_COMMAND ""
-     BUILD_COMMAND make
-     INSTALL_COMMAND ""
-     #EXCLUDE_FROM_ALL 1
-     BUILD_IN_SOURCE 1
-     TLS_VERIFY false
-     )
-
-#Protobuf
-ExternalProject_Add(gtest_dependency
+    #Protobuf
+    ExternalProject_Add(gtest_dependency
         DEPENDS grpc_dependency
         DOWNLOAD_COMMAND ""
         SOURCE_DIR ${GTEST_DEPENDENCIES_DIR}
         INSTALL_COMMAND ""
         BUILD_IN_SOURCE 1
         )
+endif()

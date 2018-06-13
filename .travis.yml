@@ -35,8 +35,12 @@ install:
   - cmake --version
 
 before_script:
-  - cd ${TRAVIS_BUILD_DIR}
-  - mkdir _build && cd _build && cmake -DBUILD_DEPENDENCIES=ON -DENABLE_CODE_COVERAGE=ON ..
+  - cd ${TRAVIS_BUILD_DIR}/dependencies
+  - git clone --depth=1 https://github.com/SpineEventEngine/client-cpp-bin.git
+  - cd client-cpp-bin
+  - mv dependencies/grpc ../ && cd ..
+  - sudo rm -r client-cpp-bin && cd ..
+  - mkdir _build && cd _build && cmake -DENABLE_CODE_COVERAGE=ON -DLOAD_SPINE_PROTO_FILES=ON ..
 script:
   - cmake --build .
   - ./runTests
