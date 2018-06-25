@@ -32,12 +32,6 @@
 #include <spine/client/subscription.pb.h>
 
 namespace spine {
-
-namespace core
-{
-    class ActorContext;
-}
-
 namespace client {
 
 /**

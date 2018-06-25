@@ -22,8 +22,6 @@
 #include "spine/util/message_utils.hpp"
 #include "spine/util/any_utils.hpp"
 
-#include <spine/core/actor_context.pb.h>
-
 using namespace spine;
 using namespace spine::core;
 using namespace spine::time;

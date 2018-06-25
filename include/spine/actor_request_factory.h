@@ -28,22 +28,8 @@
 
 namespace spine
 {
-
-namespace core
-{
-    class ActorContext;
-    class UserId;
-    class TenantId;
-}
-namespace time
-{
-    class ZoneOffset;
-}
 namespace client
 {
-
-class ActorRequestFactoryParams;
-
 /**
  * A factory for the various requests fired from the client-side by an actor.
  *

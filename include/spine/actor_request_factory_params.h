@@ -24,25 +24,13 @@
 #include <memory>
 #include <spine/time/time.pb.h>
 
-namespace spine {
+#include <spine/core/user_id.pb.h>
+#include <spine/core/tenant_id.pb.h>
+#include <spine/core/actor_context.pb.h>
 
-namespace core
-{
-    class ActorContext;
-    class UserId;
-    class TenantId;
-}
-namespace time
-{
-    class ZoneOffset;
-}
+namespace spine {
 namespace client
 {
-
-class CommandFactory;
-class TopicFactory;
-class QueryFactory;
-
 /**
  * An ActorRequestFactory parameters wrapper.
  *

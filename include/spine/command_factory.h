@@ -35,12 +35,6 @@ using namespace spine::core;
 
 namespace spine
 {
-namespace core
-{
-    class CommandContext;
-    class UserId;
-    class ActorContext;
-}
 namespace client
 {
 

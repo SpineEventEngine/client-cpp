@@ -30,19 +30,8 @@
 #include "spine/util/message_utils.hpp"
 #include "spine/util/target_utils.hpp"
 
-namespace google {
-namespace protobuf {
-    class FieldMask;
-}}
-
 namespace spine
 {
-
-namespace core
-{
-    class ActorContext;
-}
-
 namespace client
 {
 
