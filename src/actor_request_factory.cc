@@ -23,7 +23,6 @@
 #include "spine/topic_factory.h"
 #include "spine/command_factory.h"
 #include "spine/query_factory.h"
-#include "spine/util/message_utils.hpp"
 
 #include <google/protobuf/util/time_util.h>
 

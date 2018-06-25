@@ -21,10 +21,6 @@
 #include <sstream>
 
 #include "spine/query_factory.h"
-#include "spine/util/target_utils.hpp"
-
-#include <spine/core/actor_context.pb.h>
-#include <google/protobuf/field_mask.pb.h>
 
 using namespace spine::core;
 using namespace google::protobuf;
