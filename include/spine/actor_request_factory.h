@@ -22,8 +22,7 @@
 #define SPINE_ACTORREQUESTFACTORY_H
 
 #include <memory>
-#include <spine/time/zone.pb.h>
-
+#include <spine/time/time.pb.h>
 #include "types.h"
 #include "actor_request_factory_params.h"
 

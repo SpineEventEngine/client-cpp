@@ -44,7 +44,6 @@ class CommonFactoryTest : public ::testing::Test
 {
     const std::string USER_ID   { "user@example.com" };
     const std::string TENANT_ID { "example.com" };
-    const std::string ZONE_ID   { "UTC" };
 protected:
     virtual void SetUp() override
     {
@@ -55,9 +54,6 @@ protected:
         tenant_id->set_value(TENANT_ID);
 
         auto zone_offset = std::make_unique<ZoneOffset>();
-        ZoneId* zone_id = ZoneId::default_instance().New();
-        zone_id->set_value(ZONE_ID);
-        zone_offset->set_allocated_id(zone_id);
         zone_offset->set_amount_seconds(42);
 
         params_.set_actor(actor)
@@ -115,7 +111,6 @@ protected:
     {
         ASSERT_EQ(params_.actor()->value(), context.actor().value());
         ASSERT_EQ(params_.tenant_id()->value(), context.tenant_id().value());
-        ASSERT_EQ(params_.zone_offset()->id().value(), context.zone_offset().id().value());
         ASSERT_EQ(params_.zone_offset()->amount_seconds(), context.zone_offset().amount_seconds());
     }
 

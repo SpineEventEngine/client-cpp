@@ -25,7 +25,7 @@
 #include <google/protobuf/timestamp.pb.h>
 #include <spine/core/user_id.pb.h>
 #include <spine/core/tenant_id.pb.h>
-#include <spine/time/zone.pb.h>
+#include <spine/time/time.pb.h>
 
 using namespace spine::client;
 using namespace spine::core;
@@ -33,7 +33,6 @@ using namespace spine::time;
 
 static const char* const USER_ID = "user@example.com";
 static const char* const TENANT_ID = "example.com";
-static const char* const ZONE_ID = "UTC";
 
 class ActorRequestFactoryParamsShould : public ::testing::Test
 {
@@ -47,9 +46,6 @@ protected:
         tenant_id_->set_value(TENANT_ID);
 
         zone_offset_ = std::make_unique<ZoneOffset>();
-        ZoneId* zone_id = ZoneId::default_instance().New();
-        zone_id->set_value(ZONE_ID);
-        zone_offset_->set_allocated_id(zone_id);
         zone_offset_->set_amount_seconds(42);
     }
     virtual void TearDown() override
@@ -101,7 +97,6 @@ TEST_F(ActorRequestFactoryParamsShould, Copy)
 
     ASSERT_EQ(params_copy.actor()->value(),params.actor()->value());
     ASSERT_EQ(params_copy.tenant_id()->value(),params.tenant_id()->value());
-    ASSERT_EQ(params_copy.zone_offset()->id().value(),params.zone_offset()->id().value());
     ASSERT_EQ(params_copy.zone_offset()->amount_seconds(),params.zone_offset()->amount_seconds());
 }
 
@@ -122,7 +117,6 @@ TEST_F(ActorRequestFactoryParamsShould, CopyOnConstruct)
 
     ASSERT_EQ(params_copy.actor()->value(),params.actor()->value());
     ASSERT_EQ(params_copy.tenant_id()->value(),params.tenant_id()->value());
-    ASSERT_EQ(params_copy.zone_offset()->id().value(),params.zone_offset()->id().value());
     ASSERT_EQ(params_copy.zone_offset()->amount_seconds(),params.zone_offset()->amount_seconds());
 }
 

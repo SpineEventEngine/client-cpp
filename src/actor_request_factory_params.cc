@@ -23,7 +23,7 @@
 
 #include <spine/core/user_id.pb.h>
 #include <spine/core/tenant_id.pb.h>
-#include <spine/time/zone.pb.h>
+#include <spine/time/time.pb.h>
 
 namespace spine {
 namespace client {

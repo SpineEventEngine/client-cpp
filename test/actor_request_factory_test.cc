@@ -25,7 +25,7 @@
 #include <google/protobuf/timestamp.pb.h>
 #include <spine/core/user_id.pb.h>
 #include <spine/core/tenant_id.pb.h>
-#include <spine/time/zone.pb.h>
+#include <spine/time/time.pb.h>
 
 using namespace spine::client;
 using namespace spine::core;
@@ -63,7 +63,6 @@ TEST_F(ActorRequestFactoryShould, BeEmptyWithFactoryMethod)
 
 static const char* const USER_ID = "user@example.com";
 static const char* const TENANT_ID = "example.com";
-static const char* const ZONE_ID = "UTC";
 
 TEST_F(ActorRequestFactoryShould, HaveValidParams)
 {
@@ -75,9 +74,6 @@ TEST_F(ActorRequestFactoryShould, HaveValidParams)
     tenant_id->set_value(TENANT_ID);
 
     auto zone_offset = std::make_unique<ZoneOffset>();
-    ZoneId* zone_id = ZoneId::default_instance().New();
-    zone_id->set_value(ZONE_ID);
-    zone_offset->set_allocated_id(zone_id);
     zone_offset->set_amount_seconds(42);
 
     params.set_actor(actor)
@@ -92,7 +88,6 @@ TEST_F(ActorRequestFactoryShould, HaveValidParams)
 
     ASSERT_EQ(params.actor()->value(),factory.actor()->value());
     ASSERT_EQ(params.tenant_id()->value(),factory.tenant_id()->value());
-    ASSERT_EQ(params.zone_offset()->id().value(),factory.zone_offset()->id().value());
     ASSERT_EQ(params.zone_offset()->amount_seconds(), factory.zone_offset()->amount_seconds());
 }
 
@@ -117,6 +112,5 @@ TEST_F(ActorRequestFactoryShould, SetDefaultZoneOffset)
     ASSERT_EQ(params.actor()->value(),factory.actor()->value());
     ASSERT_EQ(params.tenant_id()->value(),factory.tenant_id()->value());
     ASSERT_TRUE(factory.zone_offset());
-    ASSERT_EQ(ZoneOffset::default_instance().id().value(),factory.zone_offset()->id().value());
     ASSERT_EQ(ZoneOffset::default_instance().amount_seconds(),factory.zone_offset()->amount_seconds());
 }
