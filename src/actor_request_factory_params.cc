@@ -24,6 +24,7 @@
 #include <spine/core/user_id.pb.h>
 #include <spine/core/tenant_id.pb.h>
 #include <spine/time/time.pb.h>
+#include <spine/actor_request_factory_params.h>
 
 namespace spine {
 namespace client {
@@ -49,6 +50,10 @@ void ActorRequestFactoryParams::set_params(const ActorRequestFactoryParams &that
     {
         tenant_id_.reset(clone(that.tenant_id()));
     }
+    if( that.zone_id() )
+    {
+        zone_id_.reset(clone(that.zone_id()));
+    }
     if( that.zone_offset() )
     {
         zone_offset_.reset(clone(that.zone_offset()));
@@ -65,6 +70,11 @@ const std::unique_ptr<spine::core::TenantId>& ActorRequestFactoryParams::tenant_
     return tenant_id_;
 }
 
+const std::unique_ptr<time::ZoneId>& ActorRequestFactoryParams::zone_id() const
+{
+    return zone_id_;
+}
+
 const std::unique_ptr<spine::time::ZoneOffset>& ActorRequestFactoryParams::zone_offset() const
 {
     return zone_offset_;
@@ -79,6 +89,12 @@ ActorRequestFactoryParams& ActorRequestFactoryParams::set_actor(const std::uniqu
 ActorRequestFactoryParams& ActorRequestFactoryParams::set_tenant_id(const std::unique_ptr<spine::core::TenantId>& tenant_id)
 {
     tenant_id_ = std::make_unique<spine::core::TenantId>(*tenant_id);
+    return *this;
+}
+
+ActorRequestFactoryParams& ActorRequestFactoryParams::set_zone_id(const std::unique_ptr<time::ZoneId>& zone_id)
+{
+    zone_id_ = std::make_unique<spine::time::ZoneId>(*zone_id);
     return *this;
 }
 

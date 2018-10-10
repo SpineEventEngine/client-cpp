@@ -84,6 +84,7 @@ public:
     const std::unique_ptr<core::UserId> &actor() const;
     const std::unique_ptr<core::TenantId> &tenant_id() const;
     const std::unique_ptr<time::ZoneOffset> &zone_offset() const;
+    const std::unique_ptr<time::ZoneId> &zone_id() const;
 
 private:
     ActorRequestFactory(const ActorRequestFactoryParams& params);

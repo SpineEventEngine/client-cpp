@@ -26,6 +26,7 @@
 #include "spine/util/message_utils.hpp"
 
 #include <google/protobuf/util/time_util.h>
+#include <spine/actor_request_factory.h>
 
 using namespace spine;
 using namespace spine::time;
@@ -36,11 +37,13 @@ namespace spine {
 namespace client {
 
 ActorContext* create_actor_context(UserId* actor,
+                                    ZoneId* zone_id,
                                     ZoneOffset* offset,
                                     TenantId* tenant_id,
                                     Timestamp* timestamp)
 {
     ActorContext *actor_context = ActorContext::default_instance().New();
+    actor_context->set_allocated_zone_id(zone_id);
     actor_context->set_allocated_timestamp(timestamp);
     actor_context->set_allocated_actor(actor);
     actor_context->set_allocated_zone_offset(offset);
@@ -54,6 +57,10 @@ ActorRequestFactory::ActorRequestFactory(const ActorRequestFactoryParams& params
     if (!params.zone_offset())
     {
         params_.set_zone_offset(std::make_unique<ZoneOffset>(ZoneOffset::default_instance()));
+    }
+    if (!params.zone_id())
+    {
+        params_.set_zone_id(std::make_unique<ZoneId>(ZoneId::default_instance()));
     }
 }
 
@@ -79,6 +86,7 @@ std::unique_ptr<ActorContext> ActorRequestFactory::actor_context() const
 
     std::unique_ptr<ActorContext> actor_context{
             create_actor_context(clone(params_.actor()),
+                                 clone(params_.zone_id()),
                                  clone(params_.zone_offset()),
                                  clone(params_.tenant_id()),
                                  timestamp_ptr)
@@ -97,5 +105,7 @@ const std::unique_ptr<UserId>& ActorRequestFactory::actor() const { return param
 const std::unique_ptr<TenantId>& ActorRequestFactory::tenant_id() const { return params_.tenant_id(); }
 
 const std::unique_ptr<ZoneOffset>& ActorRequestFactory::zone_offset() const { return params_.zone_offset(); }
+
+const std::unique_ptr<ZoneId>& ActorRequestFactory::zone_id() const { return params_.zone_id(); }
 
 }}

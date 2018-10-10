@@ -33,6 +33,7 @@ using namespace spine::time;
 
 static const char* const USER_ID = "user@example.com";
 static const char* const TENANT_ID = "example.com";
+static const char* const ZONE_ID = "UTC";
 
 class ActorRequestFactoryParamsShould : public ::testing::Test
 {
@@ -45,6 +46,9 @@ protected:
         tenant_id_ = std::make_unique<TenantId>();
         tenant_id_->set_value(TENANT_ID);
 
+        zone_id_ = std::make_unique<ZoneId>();
+        zone_id_->set_value(ZONE_ID);
+
         zone_offset_ = std::make_unique<ZoneOffset>();
         zone_offset_->set_amount_seconds(42);
     }
@@ -55,6 +59,7 @@ protected:
     std::unique_ptr<UserId> actor_;
     std::unique_ptr<TenantId> tenant_id_;
     std::unique_ptr<ZoneOffset> zone_offset_;
+    std::unique_ptr<ZoneId> zone_id_;
 };
 
 TEST_F(ActorRequestFactoryParamsShould, CreateWithEmptyValues)
@@ -63,6 +68,7 @@ TEST_F(ActorRequestFactoryParamsShould, CreateWithEmptyValues)
 
     ASSERT_FALSE(params.actor());
     ASSERT_FALSE(params.tenant_id());
+    ASSERT_FALSE(params.zone_id());
     ASSERT_FALSE(params.zone_offset());
 }
 
@@ -72,10 +78,12 @@ TEST_F(ActorRequestFactoryParamsShould, SetParams)
 
     params.set_actor(actor_)
             .set_tenant_id(tenant_id_)
+            .set_zone_id(zone_id_)
             .set_zone_offset(zone_offset_);
 
     ASSERT_TRUE(params.actor());
     ASSERT_TRUE(params.tenant_id());
+    ASSERT_TRUE(params.zone_id());
     ASSERT_TRUE(params.zone_offset());
 }
 
@@ -85,6 +93,7 @@ TEST_F(ActorRequestFactoryParamsShould, Copy)
 
     params.set_actor(actor_)
             .set_tenant_id(tenant_id_)
+            .set_zone_id(zone_id_)
             .set_zone_offset(zone_offset_);
 
 
@@ -93,10 +102,12 @@ TEST_F(ActorRequestFactoryParamsShould, Copy)
 
     ASSERT_TRUE(params_copy.actor());
     ASSERT_TRUE(params_copy.tenant_id());
+    ASSERT_TRUE(params_copy.zone_id());
     ASSERT_TRUE(params_copy.zone_offset());
 
     ASSERT_EQ(params_copy.actor()->value(),params.actor()->value());
     ASSERT_EQ(params_copy.tenant_id()->value(),params.tenant_id()->value());
+    ASSERT_EQ(params_copy.zone_id()->value(),params.zone_id()->value());
     ASSERT_EQ(params_copy.zone_offset()->amount_seconds(),params.zone_offset()->amount_seconds());
 }
 
@@ -106,6 +117,7 @@ TEST_F(ActorRequestFactoryParamsShould, CopyOnConstruct)
 
     params.set_actor(actor_)
             .set_tenant_id(tenant_id_)
+            .set_zone_id(zone_id_)
             .set_zone_offset(zone_offset_);
 
 
@@ -113,10 +125,12 @@ TEST_F(ActorRequestFactoryParamsShould, CopyOnConstruct)
 
     ASSERT_TRUE(params_copy.actor());
     ASSERT_TRUE(params_copy.tenant_id());
+    ASSERT_TRUE(params_copy.zone_id());
     ASSERT_TRUE(params_copy.zone_offset());
 
     ASSERT_EQ(params_copy.actor()->value(),params.actor()->value());
     ASSERT_EQ(params_copy.tenant_id()->value(),params.tenant_id()->value());
+    ASSERT_EQ(params_copy.zone_id()->value(),params.zone_id()->value());
     ASSERT_EQ(params_copy.zone_offset()->amount_seconds(),params.zone_offset()->amount_seconds());
 }
 
@@ -126,16 +140,19 @@ TEST_F(ActorRequestFactoryParamsShould, Move)
 
     params.set_actor(actor_)
             .set_tenant_id(tenant_id_)
+            .set_zone_id(zone_id_)
             .set_zone_offset(zone_offset_);
 
     ActorRequestFactoryParams params_copy { std::move(params) };
 
     ASSERT_TRUE(params_copy.actor());
     ASSERT_TRUE(params_copy.tenant_id());
+    ASSERT_TRUE(params_copy.zone_id());
     ASSERT_TRUE(params_copy.zone_offset());
 
     ASSERT_FALSE(params.actor());
     ASSERT_FALSE(params.tenant_id());
+    ASSERT_FALSE(params.zone_id());
     ASSERT_FALSE(params.zone_offset());
 }
 
@@ -145,6 +162,7 @@ TEST_F(ActorRequestFactoryParamsShould, MoveAssignment)
 
     params.set_actor(actor_)
             .set_tenant_id(tenant_id_)
+            .set_zone_id(zone_id_)
             .set_zone_offset(zone_offset_);
 
     ActorRequestFactoryParams params_copy;
@@ -152,9 +170,11 @@ TEST_F(ActorRequestFactoryParamsShould, MoveAssignment)
 
     ASSERT_TRUE(params_copy.actor());
     ASSERT_TRUE(params_copy.tenant_id());
+    ASSERT_TRUE(params_copy.zone_id());
     ASSERT_TRUE(params_copy.zone_offset());
 
     ASSERT_FALSE(params.actor());
     ASSERT_FALSE(params.tenant_id());
+    ASSERT_FALSE(params.zone_id());
     ASSERT_FALSE(params.zone_offset());
 }
