@@ -44,3 +44,4 @@ if(GTest_INCLUDE_DIRS)
 endif()
 
 find_library(Poco_FOUNDATION_LIB NAMES PocoFoundation PocoFoundationd)
+find_library(Boost_LIB NAMES boost_locale boost_locale-mt)

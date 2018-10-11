@@ -27,6 +27,8 @@
 #include <spine/core/tenant_id.pb.h>
 #include <spine/time/time.pb.h>
 
+#include <Poco/Timezone.h>
+
 using namespace spine::client;
 using namespace spine::core;
 using namespace spine::time;
@@ -121,7 +123,7 @@ TEST_F(ActorRequestFactoryShould, SetDefaultZoneOffsetAndId)
     ASSERT_EQ(params.actor()->value(),factory.actor()->value());
     ASSERT_EQ(params.tenant_id()->value(),factory.tenant_id()->value());
     ASSERT_TRUE(factory.zone_offset());
-    ASSERT_EQ(ZoneOffset::default_instance().amount_seconds(),factory.zone_offset()->amount_seconds());
+    ASSERT_EQ(Poco::Timezone::utcOffset(),factory.zone_offset()->amount_seconds());
     ASSERT_TRUE(factory.zone_id());
-    ASSERT_EQ(ZoneId::default_instance().value(),factory.zone_id()->value());
+    ASSERT_EQ(Poco::Timezone::name(),factory.zone_id()->value());
 }

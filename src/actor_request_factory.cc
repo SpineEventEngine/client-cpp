@@ -28,6 +28,8 @@
 #include <google/protobuf/util/time_util.h>
 #include <spine/actor_request_factory.h>
 
+#include <Poco/Timezone.h>
+
 using namespace spine;
 using namespace spine::time;
 using namespace google::protobuf;
@@ -56,11 +58,15 @@ ActorRequestFactory::ActorRequestFactory(const ActorRequestFactoryParams& params
 {
     if (!params.zone_offset())
     {
-        params_.set_zone_offset(std::make_unique<ZoneOffset>(ZoneOffset::default_instance()));
+        std::unique_ptr<ZoneOffset> zone_offset { ZoneOffset::default_instance().New() };
+        zone_offset->set_amount_seconds(Poco::Timezone::utcOffset());
+        params_.set_zone_offset(zone_offset);
     }
     if (!params.zone_id())
     {
-        params_.set_zone_id(std::make_unique<ZoneId>(ZoneId::default_instance()));
+        std::unique_ptr<ZoneId> zone_id { ZoneId::default_instance().New() };
+        zone_id->set_value(Poco::Timezone::name());
+        params_.set_zone_id(zone_id);
     }
 }
 
