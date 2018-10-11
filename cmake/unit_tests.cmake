@@ -47,6 +47,5 @@ add_subdirectory(${GTEST_DEPENDENCIES_DIR} EXCLUDE_FROM_ALL)
 target_link_libraries(runTests gtest_main ${CPP_SPINE_LIBRARY_NAME}
         libprotobuf.a
         ${Poco_FOUNDATION_LIB}
-        ${Boost_LIB}
         )
 add_dependencies(runTests ${CPP_SPINE_LIBRARY_NAME})
