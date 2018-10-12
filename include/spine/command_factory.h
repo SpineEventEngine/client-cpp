@@ -24,7 +24,7 @@
 #include <memory>
 #include <google/protobuf/message.h>
 #include <google/protobuf/timestamp.pb.h>
-#include <spine/time/zone.pb.h>
+#include <spine/time/time.pb.h>
 #include <Poco/UUIDGenerator.h>
 #include <spine/core/command.pb.h>
 

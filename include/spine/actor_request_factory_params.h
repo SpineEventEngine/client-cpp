@@ -22,6 +22,7 @@
 #define SPINE_ACTORREQUESTFACTORYPARAMS_H
 
 #include <memory>
+#include <spine/time/time.pb.h>
 
 namespace spine {
 
@@ -53,11 +54,13 @@ class ActorRequestFactoryParams
 public:
     const std::unique_ptr<core::UserId>& actor() const;
     const std::unique_ptr<core::TenantId>& tenant_id() const;
+    const std::unique_ptr<time::ZoneId>& zone_id() const;
     const std::unique_ptr<time::ZoneOffset>& zone_offset() const;
 
     ActorRequestFactoryParams& set_actor(const std::unique_ptr<core::UserId>& actor);
     ActorRequestFactoryParams& set_tenant_id(const std::unique_ptr<core::TenantId>& tenant_id);
     ActorRequestFactoryParams& set_zone_offset(const std::unique_ptr<time::ZoneOffset>& zone_offset);
+    ActorRequestFactoryParams& set_zone_id(const std::unique_ptr<time::ZoneId>& zone_id);
 
 public:
     ActorRequestFactoryParams() = default;
@@ -81,9 +84,13 @@ private:
      * This field is null in a single tenant application.
      */
     std::unique_ptr<spine::core::TenantId> tenant_id_;
+
+    /**
+     * The ID of the time zone in which the user works.
+     */
+    std::unique_ptr<spine::time::ZoneId> zone_id_;
     /**<
      * The time zone in which the user works.
-     * In case the zone offset is not defined, the current time zone offset value is set by default.
      */
     std::unique_ptr<spine::time::ZoneOffset> zone_offset_;
 };

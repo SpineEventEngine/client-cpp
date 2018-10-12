@@ -22,8 +22,7 @@
 #define SPINE_ACTORREQUESTFACTORY_H
 
 #include <memory>
-#include <spine/time/zone.pb.h>
-
+#include <spine/time/time.pb.h>
 #include "types.h"
 #include "actor_request_factory_params.h"
 
@@ -85,6 +84,7 @@ public:
     const std::unique_ptr<core::UserId> &actor() const;
     const std::unique_ptr<core::TenantId> &tenant_id() const;
     const std::unique_ptr<time::ZoneOffset> &zone_offset() const;
+    const std::unique_ptr<time::ZoneId> &zone_id() const;
 
 private:
     ActorRequestFactory(const ActorRequestFactoryParams& params);
