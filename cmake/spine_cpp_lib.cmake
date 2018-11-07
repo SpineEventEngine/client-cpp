@@ -4,7 +4,8 @@ set(SOURCE_LIB_FILES
         src/command_factory.cc
         src/topic_factory.cc
         src/query_factory.cc
-        src/actor_request_factory_params.cc)
+        src/actor_request_factory_params.cc
+        src/validator.cc)
 
 set(SOURCE_HEADER_FILES
         include/spine/util/any_utils.hpp
@@ -15,6 +16,7 @@ set(SOURCE_HEADER_FILES
         include/spine/command_factory.h
         include/spine/query_factory.h
         include/spine/topic_factory.h
+        include/spine/validator.h
         include/spine/types.h)
 
 
