@@ -31,7 +31,7 @@ set(GRPC_PREFIX_DIR             ${CMAKE_BINARY_DIR}/grpc_dependency)
 
 if(BUILD_DEPENDENCIES)
     set(DEPENDENCIES_BUILD_DIR ${DEPENDENCIES_DIR}/_build)
-    configure_file(cmake/dependencies.cmake.in ${DEPENDENCIES_DIR}/CMakeLists.txt)
+    configure_file(cmake/dependencies.cmake.in ${DEPENDENCIES_DIR}/CMakeLists.txt @ONLY)
     if(NOT EXISTS ${DEPENDENCIES_BUILD_DIR})
         file(MAKE_DIRECTORY ${DEPENDENCIES_BUILD_DIR})
     endif()
