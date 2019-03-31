@@ -83,7 +83,7 @@ protected:
     void check_filters_are_empty(const Target& target)
     {
         ASSERT_TRUE(target.has_filters());
-        ASSERT_TRUE(MessageDifferencer::Equals(target.filters(), EntityFilters::default_instance()));
+        ASSERT_TRUE(MessageDifferencer::Equals(target.filters(), TargetFilters::default_instance()));
         ASSERT_FALSE(target.filters().has_id_filter());
     }
     void check_filters_are_equal(const Target& target, const std::vector<std::unique_ptr<ProjectId>>& ids)
@@ -91,11 +91,10 @@ protected:
         ASSERT_TRUE(target.has_filters());
         ASSERT_TRUE(target.filters().has_id_filter());
 
-        for (const EntityId &id_filter : target.filters().id_filter().ids())
+        for (const Any &id_filter : target.filters().id_filter().ids())
         {
-            ASSERT_TRUE(id_filter.has_id());
-            ASSERT_EQ(id_filter.id().type_url(), "type.test.spine.io/spine.test.ProjectId");
-            const std::unique_ptr<ProjectId>& entity_id = from_any<ProjectId>(id_filter.id());
+            ASSERT_EQ(id_filter.type_url(), "type.test.spine.io/spine.test.ProjectId");
+            const std::unique_ptr<ProjectId>& entity_id = from_any<ProjectId>(id_filter);
 
             ASSERT_TRUE(std::find_if(std::begin(ids), std::end(ids),
                                      [&] ( const std::unique_ptr<ProjectId>& val) -> bool

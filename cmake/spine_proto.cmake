@@ -1,38 +1,37 @@
 
 set(spine_proto_files
-        spine/base/error.proto
-        spine/base/field_filter.proto
-        spine/base/field_path.proto
+        spine/ui/color.proto
+        spine/ui/language.proto
+        spine/validate/validation_error.proto
         spine/change/change.proto
         spine/change/value_mismatch.proto
-        spine/client/command_service.proto
-        spine/client/entities.proto
-        spine/client/query.proto
-        spine/client/query_service.proto
-        spine/client/subscription.proto
-        spine/client/subscription_service.proto
-        spine/core/ack.proto
-        spine/core/actor_context.proto
-        spine/core/bounded_context.proto
-        spine/core/command.proto
-        spine/core/enrichment.proto
-        spine/core/event.proto
+        spine/net/email_address.proto
+        spine/net/url.proto
+        spine/net/internet_domain.proto
         spine/core/response.proto
         spine/core/tenant_id.proto
         spine/core/user_id.proto
+        spine/core/actor_context.proto
+        spine/core/bounded_context.proto
+        spine/core/ack.proto
+        spine/core/event.proto
         spine/core/version.proto
-        spine/money/money.proto
-        spine/net/email_address.proto
-        spine/net/internet_domain.proto
-        spine/net/url.proto
-        spine/options.proto
-        spine/people/person_name.proto
-        spine/time/time.proto
+        spine/core/command.proto
+        spine/core/enrichment.proto
         spine/time/time_change.proto
-        spine/ui/color.proto
-        spine/ui/language.proto
-        spine/validate/constraint_violation.proto
-        spine/validate/validation_error.proto
+        spine/time/time.proto
+        spine/people/person_name.proto
+        spine/client/subscription.proto
+        spine/client/query_service.proto
+        spine/client/filters.proto
+        spine/client/query.proto
+        spine/client/entities.proto
+        spine/client/subscription_service.proto
+        spine/client/command_service.proto
+        spine/base/field_path.proto
+        spine/base/field_filter.proto
+        spine/base/error.proto
+        spine/options.proto
         )
 
 set(GENERATED_DIR ${CMAKE_BINARY_DIR}/generated)

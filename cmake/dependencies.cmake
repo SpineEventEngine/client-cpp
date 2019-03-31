@@ -2,9 +2,7 @@ include_directories(${GRPC_DEPENDENCIES_DIR}/include)
 include_directories(${PROTOBUF_DEPENDENCIES_DIR}/src)
 include_directories(${GTest_INCLUDE_DIRS}/include)
 
-set(CMAKE_PROGRAM_PATH ${CMAKE_PROGRAM_PATH} ${GRPC_DEPENDENCIES_DIR}/bins/opt)
 set(CMAKE_PROGRAM_PATH ${CMAKE_PROGRAM_PATH} ${PROTOBUF_DEPENDENCIES_DIR}/src/.libs)
-set(CMAKE_PROGRAM_PATH ${CMAKE_PROGRAM_PATH} ${GRPC_DEPENDENCIES_DIR}/bins/opt/protobuf)
 set(CMAKE_PROGRAM_PATH ${CMAKE_PROGRAM_PATH} ${GTEST_DEPENDENCIES_DIR})
 
 link_directories(${CMAKE_BINARY_DIR})
@@ -13,8 +11,8 @@ link_directories(${PROTOBUF_DEPENDENCIES_DIR}/src/.libs)
 link_directories(${GRPC_DEPENDENCIES_DIR}/libs/opt/protobuf)
 link_directories(${GTEST_DEPENDENCIES_DIR})
 
-find_program(GRPC_CPP_PLUGIN_EXE grpc_cpp_plugin)
-find_program(PROTOC_EXE protoc)
+find_program(GRPC_CPP_PLUGIN_EXE grpc_cpp_plugin HINTS ${GRPC_DEPENDENCIES_DIR}/bins/opt)
+find_program(PROTOC_EXE protoc HINTS ${GRPC_DEPENDENCIES_DIR}/bins/opt/protobuf)
 
 if(NOT GRPC_CPP_PLUGIN_EXE)
     set(GRPC_CPP_PLUGIN_EXE ${GRPC_DEPENDENCIES_DIR}/bins/opt/grpc_cpp_plugin)

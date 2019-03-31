@@ -45,20 +45,18 @@ namespace client {
 
 
 template <typename T, typename = enable_param_if_protobuf_message<T>>
-std::unique_ptr<EntityFilters> make_entity_filters(const std::vector<std::unique_ptr<T>>& ids)
+std::unique_ptr<TargetFilters> make_target_filters(const std::vector<std::unique_ptr<T>>& ids)
 {
-    std::unique_ptr<EntityIdFilter> entity_id_filter { EntityIdFilter::default_instance().New() };
+    std::unique_ptr<IdFilter> id_filter { IdFilter::default_instance().New() };
     for (auto& message : ids)
     {
         std::unique_ptr<google::protobuf::Any> any = to_any(*message);
-        std::unique_ptr<EntityId> entity_id { EntityId::default_instance().New() };
-        entity_id->set_allocated_id(any.release());
-        entity_id_filter->mutable_ids()->AddAllocated(entity_id.release());
+        id_filter->mutable_ids()->AddAllocated(any.release());
     }
-    std::unique_ptr<EntityFilters> entity_filters { EntityFilters::default_instance().New() };
-    entity_filters->set_allocated_id_filter(entity_id_filter.release());
+    std::unique_ptr<TargetFilters> target_filters { TargetFilters::default_instance().New() };
+    target_filters->set_allocated_id_filter(id_filter.release());
 
-    return entity_filters;
+    return target_filters;
 }
 
 inline std::unique_ptr<Target> compose_target(const std::string& prefix, const std::string& type)
@@ -72,7 +70,7 @@ inline std::unique_ptr<Target> compose_target(const std::string& prefix, const s
     }
     target->set_type(type_url);
     target->set_include_all(true);
-    target->set_allocated_filters(clone(EntityFilters::default_instance()));
+    target->set_allocated_filters(clone(TargetFilters::default_instance()));
 
     return target;
 }
@@ -85,7 +83,7 @@ std::unique_ptr<Target> compose_target(const std::string& prefix, const std::str
     if( !ids.empty() )
     {
         target->set_include_all(false);
-        target->set_allocated_filters(make_entity_filters(ids).release());
+        target->set_allocated_filters(make_target_filters(ids).release());
     }
     return target;
 }
