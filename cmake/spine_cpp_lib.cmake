@@ -4,6 +4,7 @@ set(SOURCE_LIB_FILES
         src/command_factory.cc
         src/topic_factory.cc
         src/query_factory.cc
+        src/query_builder.cc
         src/actor_request_factory_params.cc)
 
 set(SOURCE_HEADER_FILES
@@ -14,7 +15,9 @@ set(SOURCE_HEADER_FILES
         include/spine/actor_request_factory_params.h
         include/spine/command_factory.h
         include/spine/query_factory.h
+        include/spine/query_builder.h
         include/spine/topic_factory.h
+        include/spine/filters.h
         include/spine/types.h)
 
 
