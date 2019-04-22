@@ -23,6 +23,10 @@
 
 #include <memory>
 
+#include <spine/client/query.pb.h>
+#include <spine/client/subscription.pb.h>
+#include <spine/core/command.pb.h>
+
 /**
  * @file types.h
  *
@@ -38,8 +42,8 @@ namespace spine
         class TopicFactory;
         class QueryFactory;
         class ActorRequestFactory;
-        class Topic;
-        class Query;
+//        class Topic;
+//        class Query;
 
         using CommandFactoryPtr = std::unique_ptr<CommandFactory>;
         using TopicFactoryPtr = std::unique_ptr<TopicFactory>;
@@ -51,7 +55,7 @@ namespace spine
     }
     namespace core
     {
-        class Command;
+        //class Command;
 
         using CommandPtr = std::unique_ptr<Command>;
     }

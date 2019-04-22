@@ -115,7 +115,7 @@ TEST_F(QueryFactoryShould, QueryKnownSpineByIdWithMask)
     std::vector<std::string> masks {"some", "random", "paths"};
     std::vector<std::unique_ptr<ProjectId>> project_ids = make_project_ids();
 
-    QueryPtr query = query_factory_->by_ids_with_masks<CreateProject>( masks, project_ids );
+    QueryPtr query = query_factory_->by_ids_with_masks<CreateProject>(project_ids, masks);
 
     ASSERT_TRUE(query);
     ASSERT_TRUE(query->has_id());
@@ -163,48 +163,14 @@ TEST_F(QueryFactoryShould, CreateMessageWithoutPrefix)
     verifyContext(query->context());
 }
 
-//template <typename T>
-//T where(CompositeFilter... filters)
-//{
-//
-//}
-
-template <typename ...Filters, typename = std::unique_ptr<Filter>>
-void add_to_vector(std::vector<std::unique_ptr<Filter>>& vec, std::unique_ptr<Filter> filter) {
-
-    vec.emplace_back(std::move(filter));
-}
-
-template <typename ...Filters, typename = std::unique_ptr<Filter>>
-void add_to_vector(std::vector<std::unique_ptr<Filter>>& vec, std::unique_ptr<Filter> filter, Filters&&... args) {
-
-    vec.emplace_back(std::move(filter));
-    add_to_vector(vec, std::forward<Filters>(args)...);
-}
-
-template <typename ...Filters, typename = std::unique_ptr<Filter>>
-static std::unique_ptr<CompositeFilter> all(Filters&&... args)
-{
-    std::vector<std::unique_ptr<Filter>> filters_vector;
-
-    add_to_vector(filters_vector, std::forward<Filters>(args)...);
-
-    std::unique_ptr<CompositeFilter> composite_filter = make_composite_filter(filters_vector);
-    composite_filter->set_operator_(CompositeFilter::ALL);
-    return composite_filter;
-}
-
 TEST_F(QueryFactoryShould, CreateWithBuilder)
 {
     Int32Value pValue1;   pValue1.set_value(15);
     Int32Value pValue2;   pValue2.set_value(42);
     Int32Value pValue3;   pValue3.set_value(17);
 
-//    std::unique_ptr<Filter> filter1 = eq("field1", pValue1);
-//    std::unique_ptr<Filter> filter2 = ge("field4", pValue2);
-//    std::unique_ptr<Filter> filter3 = gt("field16", pValue3);
-
-    std::unique_ptr<CompositeFilter> all1 = all(eq("field1", pValue1), ge("field4", pValue2), gt("field16", pValue3));
+    std::unique_ptr<CompositeFilter> all_filter = all(eq("field1", pValue1), ge("field4", pValue2), gt("field16", pValue3));
+    std::unique_ptr<CompositeFilter> either_filter = either(eq("dsfdsf", pValue2), ge("field4", pValue3), gt("dfgdf", pValue1));
     int x = 1;
 
 }

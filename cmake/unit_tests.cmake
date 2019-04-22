@@ -2,6 +2,7 @@ set(TEST_SRCS
         test/actor_request_factory_test.cc
         test/command_factory_test.cc
         test/query_factory_test.cc
+        test/query_builder_test.cc
         test/topic_factory_test.cc
         test/common_factory_test.h
         test/actor_request_factory_params_test.cc)

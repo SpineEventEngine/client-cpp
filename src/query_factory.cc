@@ -24,6 +24,7 @@
 #include "spine/util/target_utils.hpp"
 
 #include <spine/core/actor_context.pb.h>
+#include <spine/client/query.pb.h>
 #include <google/protobuf/field_mask.pb.h>
 
 using namespace spine::core;
@@ -46,7 +47,6 @@ QueryPtr QueryFactory::for_query(std::unique_ptr<Target>&& target)
     query->set_allocated_id(create_query_id());
     query->set_allocated_context(clone(actor_context_));
     query->set_allocated_target(target.release());
-    query->set_allocated_field_mask(clone(FieldMask::default_instance()));
 
     return query;
 }
@@ -55,6 +55,27 @@ QueryPtr QueryFactory::for_query(std::unique_ptr<Target>&& target, std::unique_p
 {
     std::unique_ptr<Query> query = for_query(std::move(target));
     query->set_allocated_field_mask(field_mask.release());
+
+    return query;
+}
+
+QueryPtr QueryFactory::for_query(std::unique_ptr<Target>&& target, std::unique_ptr<FieldMask> && field_mask,
+                                 const std::string& order_by_column, OrderBy::Direction direction)
+{
+    std::unique_ptr<Query> query = for_query(std::move(target));
+    query->set_allocated_field_mask(field_mask.release());
+    query->set_allocated_orderby(make_order_by(order_by_column, direction).release());
+
+    return query;
+}
+
+QueryPtr QueryFactory::for_query(std::unique_ptr<Target>&& target, std::unique_ptr<FieldMask> && field_mask,
+                                 const std::string& order_by_column, OrderBy::Direction direction, std::uint32_t page_size)
+{
+    std::unique_ptr<Query> query = for_query(std::move(target));
+    query->set_allocated_field_mask(field_mask.release());
+    query->set_allocated_orderby(make_order_by(order_by_column, direction).release());
+    query->set_allocated_pagination( make_pagination(page_size).release());
 
     return query;
 }
@@ -90,6 +111,22 @@ QueryId *QueryFactory::create_query_id()
     query_id->set_value(query_id_stream.str());
 
     return query_id;
+}
+
+std::unique_ptr<OrderBy> QueryFactory::make_order_by(const string& order_by_column,
+                                                     const OrderBy::Direction& direction) const
+{
+    std::__1::unique_ptr<OrderBy> order_by { OrderBy::default_instance().New()};
+    order_by->set_column(order_by_column);
+    order_by->set_direction(direction);
+    return order_by;
+}
+
+std::unique_ptr<Pagination> QueryFactory::make_pagination(uint32_t page_size) const
+{
+    std::__1::unique_ptr<Pagination> pagination { Pagination::default_instance().New()};
+    pagination->set_page_size(page_size);
+    return pagination;
 }
 
 }}

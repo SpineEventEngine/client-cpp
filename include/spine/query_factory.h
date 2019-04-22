@@ -156,8 +156,7 @@ public:
     template <typename T, typename = enable_param_if_protobuf_message<T>,
               typename I, typename = enable_param_if_protobuf_message<I>
               >
-    QueryPtr by_ids_with_masks(const std::vector<std::string>& masks,
-                               const std::vector<std::unique_ptr<I>>& ids)
+    QueryPtr by_ids_with_masks(const std::vector<std::unique_ptr<I>>& ids, const std::vector<std::string>& masks)
     {
         return make_query(
                 T::descriptor()->file()->options().GetExtension(type_url_prefix),
@@ -190,15 +189,47 @@ private:
         return for_query(std::move(target), std::move(make_field_mask(masks)));
     }
 
+    QueryPtr make_query(const std::unique_ptr<Target>& target,
+                        const std::vector<std::string>& field_masks
+    )
+    {
+
+    }
+
+    QueryPtr make_query(const std::unique_ptr<Target>& target,
+                        const std::vector<std::string>& field_masks,
+                        const OrderBy& orderBy)
+    {
+
+    }
+
+    QueryPtr make_query(const std::unique_ptr<Target>& target,
+                        const std::vector<std::string>& field_masks,
+                        const OrderBy& orderBy,
+                        const Pagination& pagination)
+     {
+
+     }
+
+
 
     std::unique_ptr<Query> for_query(std::unique_ptr<Target>&& target);
     std::unique_ptr<Query> for_query(std::unique_ptr<Target>&& target,
                                      std::unique_ptr<google::protobuf::FieldMask> && field_mask);
+    std::unique_ptr<Query> for_query(std::unique_ptr<Target>&& target,
+                                     std::unique_ptr<google::protobuf::FieldMask> && field_mask,
+                                     const std::string& order_by_column, OrderBy::Direction direction);
+    std::unique_ptr<Query> for_query(std::unique_ptr<Target>&& target,
+                                     std::unique_ptr<google::protobuf::FieldMask> && field_mask,
+                                     const std::string& order_by_column, OrderBy::Direction direction,
+                                     std::uint32_t page_size);
 
     std::unique_ptr<google::protobuf::FieldMask> make_field_mask(const std::vector<std::string>& masks);
 private:
     std::unique_ptr<core::ActorContext> actor_context_;
     Poco::UUIDGenerator uuid_generator_;
+    std::unique_ptr<OrderBy> make_order_by(const string& order_by_column, const OrderBy::Direction& direction) const;
+    std::unique_ptr<Pagination> make_pagination(uint32_t page_size) const;
 };
 
 }} //namespace

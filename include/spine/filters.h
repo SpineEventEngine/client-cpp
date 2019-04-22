@@ -123,6 +123,44 @@ static std::unique_ptr<CompositeFilter> all(std::vector<std::unique_ptr<Filter>>
     return composite_filter;
 }
 
+template <typename T, typename ...Filters>
+static void add_to_vector(std::vector<std::unique_ptr<T>>& vec, std::unique_ptr<T> filter) {
+
+    vec.emplace_back(std::move(filter));
+}
+
+template <typename T, typename ...Filters>
+static void add_to_vector(std::vector<std::unique_ptr<T>>& vec, std::unique_ptr<T> filter, Filters&&... args) {
+
+    vec.emplace_back(std::move(filter));
+    add_to_vector(vec, std::forward<Filters>(args)...);
+}
+
+template <typename ...Filters, typename = std::unique_ptr<Filter>>
+static std::unique_ptr<CompositeFilter> compose_filter(Filters&&... args)
+{
+    std::vector<std::unique_ptr<Filter>> filters_vector;
+    add_to_vector(filters_vector, std::forward<Filters>(args)...);
+
+    return make_composite_filter(filters_vector);
+}
+
+template <typename ...Filters, typename = std::unique_ptr<Filter>>
+static std::unique_ptr<CompositeFilter> all(Filters&&... args)
+{
+    std::unique_ptr<CompositeFilter> filter = compose_filter(std::forward<Filters>(args)...);
+    filter->set_operator_(CompositeFilter::ALL);
+    return filter;
+}
+
+template <typename ...Filters, typename = std::unique_ptr<Filter>>
+static std::unique_ptr<CompositeFilter> either(Filters&&... args)
+{
+    std::unique_ptr<CompositeFilter> filter = compose_filter(std::forward<Filters>(args)...);
+    filter->set_operator_(CompositeFilter::EITHER);
+    return filter;
+}
+
 
 
 }

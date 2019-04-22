@@ -36,16 +36,18 @@
 
 #include <spine/client/entities.pb.h>
 #include <spine/client/subscription.pb.h>
+#include <spine/client/filters.pb.h>
 
 #include "spine/util/message_utils.hpp"
 #include "spine/util/any_utils.hpp"
+#include "spine/filters.h"
 
 namespace spine {
 namespace client {
 
-
+//TODO dedup
 template <typename T, typename = enable_param_if_protobuf_message<T>>
-std::unique_ptr<TargetFilters> make_target_filters(const std::vector<std::unique_ptr<T>>& ids)
+static std::unique_ptr<TargetFilters> make_target_filters(const std::vector<std::unique_ptr<T>>& ids)
 {
     std::unique_ptr<IdFilter> id_filter { IdFilter::default_instance().New() };
     for (auto& message : ids)
@@ -55,6 +57,37 @@ std::unique_ptr<TargetFilters> make_target_filters(const std::vector<std::unique
     }
     std::unique_ptr<TargetFilters> target_filters { TargetFilters::default_instance().New() };
     target_filters->set_allocated_id_filter(id_filter.release());
+
+    return target_filters;
+}
+
+static std::unique_ptr<TargetFilters> make_target_filters(std::vector<std::unique_ptr<CompositeFilter>>& composite_filters)
+{
+    std::unique_ptr<TargetFilters> target_filters { TargetFilters::default_instance().New() };
+    for (std::unique_ptr<CompositeFilter>& composite_filter : composite_filters)
+    {
+        target_filters->mutable_filter()->AddAllocated(composite_filter.release());
+    }
+    return target_filters;
+}
+
+template <typename T, typename = enable_param_if_protobuf_message<T>>
+static std::unique_ptr<TargetFilters> make_target_filters(const std::vector<std::unique_ptr<T>>& ids,
+                                                   std::vector<std::unique_ptr<CompositeFilter>>& composite_filters)
+{
+    std::unique_ptr<IdFilter> id_filter { IdFilter::default_instance().New() };
+    for (auto& message : ids)
+    {
+        std::unique_ptr<google::protobuf::Any> any = to_any(*message);
+        id_filter->mutable_ids()->AddAllocated(any.release());
+    }
+    std::unique_ptr<TargetFilters> target_filters { TargetFilters::default_instance().New() };
+    target_filters->set_allocated_id_filter(id_filter.release());
+
+    for (std::unique_ptr<CompositeFilter>& composite_filter : composite_filters)
+    {
+        target_filters->mutable_filter()->AddAllocated(composite_filter.release());
+    }
 
     return target_filters;
 }
@@ -70,7 +103,6 @@ inline std::unique_ptr<Target> compose_target(const std::string& prefix, const s
     }
     target->set_type(type_url);
     target->set_include_all(true);
-    target->set_allocated_filters(clone(TargetFilters::default_instance()));
 
     return target;
 }
@@ -82,7 +114,6 @@ std::unique_ptr<Target> compose_target(const std::string& prefix, const std::str
     std::unique_ptr<Target> target = std::move(compose_target(prefix, type));
     if( !ids.empty() )
     {
-        target->set_include_all(false);
         target->set_allocated_filters(make_target_filters(ids).release());
     }
     return target;
