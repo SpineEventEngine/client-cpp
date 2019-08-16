@@ -23,6 +23,8 @@
 
 #include <memory>
 
+#include "spine/util/message_utils.hpp"
+
 #include <spine/client/query.pb.h>
 #include <spine/client/subscription.pb.h>
 #include <spine/core/command.pb.h>
@@ -42,6 +44,7 @@ namespace spine
         class TopicFactory;
         class QueryFactory;
         class ActorRequestFactory;
+
 //        class Topic;
 //        class Query;
 

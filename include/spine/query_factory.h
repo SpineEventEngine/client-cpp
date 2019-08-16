@@ -29,6 +29,7 @@
 #include "spine/types.h"
 #include "spine/util/message_utils.hpp"
 #include "spine/util/target_utils.hpp"
+#include "spine/query_utils.h"
 
 namespace google {
 namespace protobuf {
@@ -45,7 +46,6 @@ namespace core
 
 namespace client
 {
-
 /**
  * Public API for creating \b Query instances, using the ActorRequestFactory
  * configuration.
@@ -57,10 +57,19 @@ namespace client
 
 class QueryFactory
 {
-public:
-    QueryFactory(std::unique_ptr<core::ActorContext>&& actor_context);
+private:
+    template <typename T, typename = enable_param_if_protobuf_message<T>>
+    class QueryBuilder;
 
 public:
+    explicit QueryFactory(std::unique_ptr<core::ActorContext>&& actor_context);
+
+    template <typename T, typename = enable_param_if_protobuf_message<T>>
+    QueryBuilder<T> select()
+    {
+        return std::move(QueryBuilder<T>(*this));
+    }
+
     /**
      * Creates a \b Query to read all states of a certain entity.
      *
@@ -70,10 +79,7 @@ public:
     template <typename T, typename = enable_param_if_protobuf_message<T>>
     QueryPtr all()
     {
-        return make_query(
-                T::descriptor()->file()->options().GetExtension(type_url_prefix),
-                T::descriptor()->full_name()
-        );
+        return make_query<T>();
     };
 
     /**
@@ -96,11 +102,7 @@ public:
     template <typename T, typename = enable_param_if_protobuf_message<T>>
     QueryPtr all_with_mask(const std::vector<std::string>& masks)
     {
-        return make_query(
-                T::descriptor()->file()->options().GetExtension(type_url_prefix),
-                T::descriptor()->full_name(),
-                masks
-        );
+        return make_query<T>(masks);
     };
 
     /**
@@ -123,11 +125,7 @@ public:
               >
     QueryPtr by_ids(const std::vector<std::unique_ptr<I>>& ids)
     {
-        return make_query(
-                T::descriptor()->file()->options().GetExtension(type_url_prefix),
-                T::descriptor()->full_name(),
-                ids
-        );
+        return make_query<T>(ids);
     };
 
     /**
@@ -158,60 +156,50 @@ public:
               >
     QueryPtr by_ids_with_masks(const std::vector<std::unique_ptr<I>>& ids, const std::vector<std::string>& masks)
     {
-        return make_query(
-                T::descriptor()->file()->options().GetExtension(type_url_prefix),
-                T::descriptor()->full_name(),
-                masks,
-                ids
-        );
+        return make_query<T>(
+                ids,
+                masks);
     };
 
-private:
-    QueryId *create_query_id();
-    QueryPtr make_query(const std::string& prefix, const std::string& type);
-    QueryPtr make_query(const std::string& prefix, const std::string& type,
-                        const std::vector<std::string>& masks);
-
+public:
     template <typename T, typename = enable_param_if_protobuf_message<T>>
-    QueryPtr make_query(const std::string& prefix, const std::string& type,
-                        const std::vector<std::unique_ptr<T>>& ids)
+    QueryPtr make_query()
     {
-        std::unique_ptr<Target> target = compose_target(prefix, type, ids);
+        std::unique_ptr<Target> target = compose_target(T::descriptor()->file()->options().GetExtension(type_url_prefix),
+                                                        T::descriptor()->full_name());
+        return for_query(std::move(target));
+    }
+
+    template <typename T, typename = enable_param_if_protobuf_message<T>,
+              typename I, typename = enable_param_if_protobuf_message<I>>
+    QueryPtr make_query(const std::vector<std::unique_ptr<I>>& ids)
+    {
+        std::unique_ptr<Target> target = compose_target(T::descriptor()->file()->options().GetExtension(type_url_prefix),
+                                                        T::descriptor()->full_name(),
+                                                        ids);
         return for_query(std::move(target));
     }
 
     template <typename T, typename = enable_param_if_protobuf_message<T>>
-    QueryPtr make_query(const std::string& prefix, const std::string& type,
-                        const std::vector<std::string>& masks,
-                        const std::vector<std::unique_ptr<T>>& ids)
+    QueryPtr make_query(const std::vector<std::string>& masks)
     {
-        std::unique_ptr<Target> target = compose_target(prefix, type, ids);
+        std::unique_ptr<Target> target = compose_target(T::descriptor()->file()->options().GetExtension(type_url_prefix),
+                                                        T::descriptor()->full_name());
         return for_query(std::move(target), std::move(make_field_mask(masks)));
     }
 
-    QueryPtr make_query(const std::unique_ptr<Target>& target,
-                        const std::vector<std::string>& field_masks
-    )
+    template <typename T, typename = enable_param_if_protobuf_message<T>,
+              typename I, typename = enable_param_if_protobuf_message<I>>
+    QueryPtr make_query(const std::vector<std::unique_ptr<I>>& ids,
+                        const std::vector<std::string>& masks)
     {
-
+        std::unique_ptr<Target> target = compose_target(T::descriptor()->file()->options().GetExtension(type_url_prefix),
+                                                        T::descriptor()->full_name(),
+                                                        ids);
+        return for_query(std::move(target), std::move(make_field_mask(masks)));
     }
 
-    QueryPtr make_query(const std::unique_ptr<Target>& target,
-                        const std::vector<std::string>& field_masks,
-                        const OrderBy& orderBy)
-    {
-
-    }
-
-    QueryPtr make_query(const std::unique_ptr<Target>& target,
-                        const std::vector<std::string>& field_masks,
-                        const OrderBy& orderBy,
-                        const Pagination& pagination)
-     {
-
-     }
-
-
+public:
 
     std::unique_ptr<Query> for_query(std::unique_ptr<Target>&& target);
     std::unique_ptr<Query> for_query(std::unique_ptr<Target>&& target,
@@ -224,12 +212,91 @@ private:
                                      const std::string& order_by_column, OrderBy::Direction direction,
                                      std::uint32_t page_size);
 
-    std::unique_ptr<google::protobuf::FieldMask> make_field_mask(const std::vector<std::string>& masks);
+private:
+    QueryId *create_query_id();
+
 private:
     std::unique_ptr<core::ActorContext> actor_context_;
     Poco::UUIDGenerator uuid_generator_;
-    std::unique_ptr<OrderBy> make_order_by(const string& order_by_column, const OrderBy::Direction& direction) const;
-    std::unique_ptr<Pagination> make_pagination(uint32_t page_size) const;
+
+};
+
+template <typename T, typename>
+class QueryFactory::QueryBuilder
+{
+public:
+    template <typename I, typename = enable_param_if_protobuf_message<I>>
+    QueryBuilder& byId(const std::vector<std::unique_ptr<I>>& ids)
+    {
+        for(auto& id : ids)
+        {
+            ids_.emplace_back(to_any(*id));
+        }
+        return *this;
+    }
+
+    QueryBuilder& withMasks(const std::vector<std::string>& masks)
+    {
+        std::copy(masks.begin(), masks.end(), std::back_inserter(field_masks_));
+        return *this;
+    }
+
+    QueryBuilder& orderBy(const std::string& column, const OrderBy::Direction& direction)
+    {
+        ordering_column_ = column;
+        direction_ = direction;
+
+        return *this;
+    }
+
+    QueryBuilder& limit(std::uint32_t count)
+    {
+        limit_ = count;
+        return *this;
+    }
+
+    template <typename ...Filters, typename = std::unique_ptr<CompositeFilter>>
+    QueryBuilder& where(Filters&&... args)
+    {
+        add_to_vector(composite_filters_, std::forward<Filters>(args)...);
+        return *this;
+    }
+
+    QueryPtr build()
+    {
+        std::unique_ptr<Target> target = compose_target(T::descriptor()->file()->options().GetExtension(type_url_prefix),
+                                                        T::descriptor()->full_name(),
+                                                        ids_,
+                                                        composite_filters_);
+        if(limit_ > 0)
+        {
+            if ( ordering_column_.empty() )
+            {
+                return QueryPtr{}; //TODO: exception?
+            }
+            return query_factory_.for_query(std::move(target), std::move(make_field_mask(field_masks_)),
+                                            ordering_column_, direction_, limit_);
+        }
+        if( !ordering_column_.empty() )
+        {
+            return query_factory_.for_query(std::move(target), std::move(make_field_mask(field_masks_)),
+                                            ordering_column_, direction_);
+        }
+        return query_factory_.for_query(std::move(target), std::move(make_field_mask(field_masks_)));
+    }
+public:
+    explicit QueryBuilder(QueryFactory& query_factory) : query_factory_(query_factory)
+    {
+
+    }
+private:
+    QueryFactory& query_factory_;
+    std::vector<std::unique_ptr<google::protobuf::Any>> ids_;
+    std::vector<std::string> field_masks_;
+    std::vector<std::unique_ptr<CompositeFilter>> composite_filters_;
+    std::string ordering_column_;
+    OrderBy::Direction direction_;
+    std::uint32_t limit_;
 };
 
 }} //namespace

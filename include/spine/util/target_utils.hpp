@@ -40,55 +40,42 @@
 
 #include "spine/util/message_utils.hpp"
 #include "spine/util/any_utils.hpp"
+#include "spine/query_utils.h"
 #include "spine/filters.h"
 
 namespace spine {
 namespace client {
 
-//TODO dedup
 template <typename T, typename = enable_param_if_protobuf_message<T>>
-static std::unique_ptr<TargetFilters> make_target_filters(const std::vector<std::unique_ptr<T>>& ids)
+static std::unique_ptr<IdFilter> make_id_filter(const std::vector<std::unique_ptr<T>>& ids)
 {
-    std::unique_ptr<IdFilter> id_filter { IdFilter::default_instance().New() };
+    std::unique_ptr<IdFilter> id_filter{IdFilter::default_instance().New()};
     for (auto& message : ids)
     {
         std::unique_ptr<google::protobuf::Any> any = to_any(*message);
         id_filter->mutable_ids()->AddAllocated(any.release());
     }
-    std::unique_ptr<TargetFilters> target_filters { TargetFilters::default_instance().New() };
-    target_filters->set_allocated_id_filter(id_filter.release());
 
-    return target_filters;
-}
-
-static std::unique_ptr<TargetFilters> make_target_filters(std::vector<std::unique_ptr<CompositeFilter>>& composite_filters)
-{
-    std::unique_ptr<TargetFilters> target_filters { TargetFilters::default_instance().New() };
-    for (std::unique_ptr<CompositeFilter>& composite_filter : composite_filters)
-    {
-        target_filters->mutable_filter()->AddAllocated(composite_filter.release());
-    }
-    return target_filters;
+    return id_filter;
 }
 
 template <typename T, typename = enable_param_if_protobuf_message<T>>
-static std::unique_ptr<TargetFilters> make_target_filters(const std::vector<std::unique_ptr<T>>& ids,
-                                                   std::vector<std::unique_ptr<CompositeFilter>>& composite_filters)
+static std::unique_ptr<TargetFilters> make_ids_and_target_filters(const std::vector<std::unique_ptr<T>>& ids,
+                                                                  std::vector<std::unique_ptr<CompositeFilter>>& composite_filters)
 {
-    std::unique_ptr<IdFilter> id_filter { IdFilter::default_instance().New() };
-    for (auto& message : ids)
-    {
-        std::unique_ptr<google::protobuf::Any> any = to_any(*message);
-        id_filter->mutable_ids()->AddAllocated(any.release());
-    }
     std::unique_ptr<TargetFilters> target_filters { TargetFilters::default_instance().New() };
-    target_filters->set_allocated_id_filter(id_filter.release());
-
-    for (std::unique_ptr<CompositeFilter>& composite_filter : composite_filters)
+    if( !ids.empty())
     {
-        target_filters->mutable_filter()->AddAllocated(composite_filter.release());
+        target_filters->set_allocated_id_filter(make_id_filter(ids).release());
     }
 
+    if( !composite_filters.empty() )
+    {
+        for (std::unique_ptr<CompositeFilter>& composite_filter : composite_filters)
+        {
+            target_filters->mutable_filter()->AddAllocated(composite_filter.release());
+        }
+    }
     return target_filters;
 }
 
@@ -109,17 +96,28 @@ inline std::unique_ptr<Target> compose_target(const std::string& prefix, const s
 
 template <typename T, typename = enable_param_if_protobuf_message<T>>
 std::unique_ptr<Target> compose_target(const std::string& prefix, const std::string& type,
-                                       const std::vector<std::unique_ptr<T>>& ids)
+                                       const std::vector<std::unique_ptr<T>>& ids,
+                                       std::vector<std::unique_ptr<CompositeFilter>>& composite_filters
+                                       )
 {
     std::unique_ptr<Target> target = std::move(compose_target(prefix, type));
-    if( !ids.empty() )
+    if( !ids.empty() || !composite_filters.empty())
     {
-        target->set_allocated_filters(make_target_filters(ids).release());
+        target->set_allocated_filters(make_ids_and_target_filters(ids, composite_filters).release());
     }
     return target;
 }
 
+template <typename T, typename = enable_param_if_protobuf_message<T>>
+std::unique_ptr<Target> compose_target(const std::string& prefix, const std::string& type,
+                                       const std::vector<std::unique_ptr<T>>& ids)
+{
+    std::vector<std::unique_ptr<CompositeFilter>> empty;
+    return compose_target(prefix, type, ids, empty);
 }
+
+}
+
 }
 
 #endif //SPINE_TARGET_UTILS_H

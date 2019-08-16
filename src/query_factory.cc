@@ -29,6 +29,7 @@
 
 using namespace spine::core;
 using namespace google::protobuf;
+using namespace google::protobuf::util;
 
 namespace spine {
 namespace client {
@@ -75,32 +76,9 @@ QueryPtr QueryFactory::for_query(std::unique_ptr<Target>&& target, std::unique_p
     std::unique_ptr<Query> query = for_query(std::move(target));
     query->set_allocated_field_mask(field_mask.release());
     query->set_allocated_orderby(make_order_by(order_by_column, direction).release());
-    query->set_allocated_pagination( make_pagination(page_size).release());
+    query->set_allocated_pagination(make_pagination(page_size).release());
 
     return query;
-}
-
-QueryPtr QueryFactory::make_query(const std::string& prefix, const std::string& type)
-{
-    std::unique_ptr<Target> target = compose_target(prefix, type);
-    return for_query(std::move(target));
-}
-
-QueryPtr QueryFactory::make_query(const std::string& prefix, const std::string& type,
-                                  const std::vector<std::string>& masks)
-{
-    std::unique_ptr<Target> target = compose_target(prefix, type);
-    return for_query(std::move(target), std::move(make_field_mask(masks)));
-}
-
-std::unique_ptr<FieldMask> QueryFactory::make_field_mask(const std::vector<std::string>& masks)
-{
-    std::unique_ptr<FieldMask> field_mask {FieldMask::default_instance().New() };
-
-    RepeatedPtrField< string> paths (masks.begin(), masks.end());
-    field_mask->mutable_paths()->Swap(&paths);
-
-    return field_mask;
 }
 
 QueryId *QueryFactory::create_query_id()
@@ -111,22 +89,6 @@ QueryId *QueryFactory::create_query_id()
     query_id->set_value(query_id_stream.str());
 
     return query_id;
-}
-
-std::unique_ptr<OrderBy> QueryFactory::make_order_by(const string& order_by_column,
-                                                     const OrderBy::Direction& direction) const
-{
-    std::__1::unique_ptr<OrderBy> order_by { OrderBy::default_instance().New()};
-    order_by->set_column(order_by_column);
-    order_by->set_direction(direction);
-    return order_by;
-}
-
-std::unique_ptr<Pagination> QueryFactory::make_pagination(uint32_t page_size) const
-{
-    std::__1::unique_ptr<Pagination> pagination { Pagination::default_instance().New()};
-    pagination->set_page_size(page_size);
-    return pagination;
 }
 
 }}

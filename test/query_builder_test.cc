@@ -26,7 +26,7 @@
 #include "unit_tests_no_prefix.pb.h"
 #include <spine/client/query.pb.h>
 
-#include "spine/query_builder.h"
+#include "spine/query_factory.h"
 #include "spine/filters.h"
 
 #include <google/protobuf/wrappers.pb.h>
@@ -58,9 +58,7 @@ TEST_F(QueryBuilderShould, CreateWithBuilder)
     std::unique_ptr<CompositeFilter> all_filter = all(eq("field1", pValue1), ge("field4", pValue2), gt("field16", pValue3));
     std::unique_ptr<CompositeFilter> either_filter = either(eq("dsfdsf", pValue2), ge("field4", pValue3), gt("dfgdf", pValue1));
 
-    QueryBuilder<TestMessage> builder;
-
-    QueryPtr query = builder
+    QueryPtr query = query_factory_->select<TestMessage>()
                         .byId(ids)
                         .withMasks(masks)
                         .limit(15)
@@ -73,9 +71,6 @@ TEST_F(QueryBuilderShould, CreateWithBuilder)
                             )
                         )
                         .build();
-
-
-
 
     int x = 1;
 

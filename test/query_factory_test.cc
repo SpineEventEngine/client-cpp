@@ -26,7 +26,6 @@
 #include "unit_tests_no_prefix.pb.h"
 #include <spine/client/query.pb.h>
 
-#include "spine/query_builder.h"
 #include "spine/filters.h"
 
 #include <google/protobuf/wrappers.pb.h>
